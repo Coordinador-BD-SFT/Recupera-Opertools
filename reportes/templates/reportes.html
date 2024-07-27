@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table class="table table-success table-striped">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Tipo Reporte</th>
+            <th scope="col">Chats</th>
+            <th scope="col">SMS Database</th>
+            <th scope="col">Date Creation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reporte in reportes %}
+        <tr>
+            <th scope="row">{{reporte.id}}</th>
+            <td>{{reporte.title}}</td>
+            <td>{{reporte.tipo_reporte}}</td>
+            <td>{{reporte.chats}}</td>
+            <td>{{reporte.basedata}}</td>
+            <td>{{reporte.created_at}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
