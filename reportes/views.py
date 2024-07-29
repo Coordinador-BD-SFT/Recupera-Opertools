@@ -9,6 +9,9 @@ from .forms import UploadChatBaseForm
 def reportes(request):
     reportes = ReporteWhatsapp.objects.all()
     # return HttpResponse(f'Solicitud exitosa; Reportes:\n {reportes}')
+    # reporte = ReporteWhatsapp.objects.get(pk=2)
+    # file = reporte.chats.
+
     return render(
         request,
         'reportes.html',
