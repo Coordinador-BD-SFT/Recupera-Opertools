@@ -1,10 +1,14 @@
 from django import forms
-from .models import ReporteWhatsapp
+from . import models
 
 # create your forms here
 
 
-class UploadChatBaseForm(forms.ModelForm):
+class Reporteform(forms.ModelForm):
     class Meta:
-        model = ReporteWhatsapp
-        fields = ['title', 'tipo_reporte', 'chats', 'basedata']
+        model = models.Reporte
+        fields = ['name', 'campaign', 'chats_file',
+                  'envio_sms_file', 'report_type', 'hora']
+        widgets = {
+            'hora': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+        }

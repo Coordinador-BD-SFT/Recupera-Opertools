@@ -1,31 +1,54 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import ReporteWhatsapp
-from .forms import UploadChatBaseForm
-
+from . import models
+from . import forms
 # Create your views here.
 
 
-def reportes(request):
-    reportes = ReporteWhatsapp.objects.all()
-    # return HttpResponse(f'Solicitud exitosa; Reportes:\n {reportes}')
-    # reporte = ReporteWhatsapp.objects.get(pk=2)
-    # file = reporte.chats.
+def index(request):
+    tipos_reporte = models.TipoReporte.objects.all()
+
+    return render(
+        request,
+        'index.html',
+        context={'tipos_reporte': tipos_reporte}
+    )
+
+
+def reporte(request, tipo_reporte_name):
+    reportes = models.Reporte.objects.filter(report_type=tipo_reporte_name)
+    report_type = models.TipoReporte.objects.get(name=tipo_reporte_name)
 
     return render(
         request,
         'reportes.html',
-        context={'reportes': reportes}
+        context={
+            'reportes': reportes,
+            'report_type': report_type,
+        }
     )
 
 
-def ReporteWspForm(request):
+def reporte_form(request, tipo_reporte_name):
+    report_type = get_object_or_404(models.TipoReporte, name=tipo_reporte_name)
+    print(report_type)
     if request.method == 'POST':
-        form = UploadChatBaseForm(request.POST, request.FILES)
+        form = forms.Reporteform(request.POST, request.FILES)
         if form.is_valid():
-            print('Petition processed successfully!')
             form.save()
-            return redirect('reportes')
+            return HttpResponseRedirect(f'/reportes/{tipo_reporte_name}')
     else:
-        form = UploadChatBaseForm()
-        return render(request, 'crear_reporte.html', context={'form': form})
+        form = forms.Reporteform()
+
+    return render(
+        request,
+        'reporte_form.html',
+        context={
+            'form': form,
+            'report_type': report_type,
+        }
+    )
+
+
+def reporte_detalle(request, tipo_reporte_name, reporte_id):
+    return HttpResponse('En construccion')
