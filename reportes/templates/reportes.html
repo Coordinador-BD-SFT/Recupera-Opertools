@@ -17,7 +17,7 @@
             <tr>
                 <th scope="row">{{ reporte.id }}</th>
                 <td>
-                    <a href="{% url 'reportes:reporte_detalle' report_type.name reporte.id %}">
+                    <a class="icon-link" href="{% url 'reportes:reporte_detalle' report_type.name reporte.id %}">
                         {{ reporte.name }}
                     </a>
                 </td>
@@ -28,12 +28,8 @@
         </tbody>
         {% endfor %}
     </table>
-    <button type="submit" class="btn btn-dark">
-        <a href="{% url 'reportes:crear' report_type.name %}">Crear</a>
-    </button>
-    <button type="submit" class="btn btn-secondary">
-        <a href="{% url 'reportes:index' %}">Volver</a>
-    </button>
+    <a class="btn btn-primary" href="{% url 'reportes:crear' report_type.name %}" role="button">Crear</a>
+    <a class="btn btn-secondary" href="{% url 'reportes:index' %}" role="button">Volver</a>
 </div>
 
 {% endblock %}
