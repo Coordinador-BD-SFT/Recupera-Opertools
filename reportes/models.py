@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils import timezone
+from django.http import FileResponse
 from utils.dataframes import whatsapp
+from pathlib import Path
+import pandas as pd
+
 
 # Create your models here.
 
@@ -33,10 +37,17 @@ class Reporte(models.Model):
         return self.name
 
     def crear_reporte(self):
-        print(whatsapp.chat_filter(
+        reporte = whatsapp.data_base_filter(
             ['3208310164', '3202673427'],
+            self.envio_sms_file,
             self.chats_file
-        ))
+        )
+        filtered_base = reporte[0]
+        no_encontrado = reporte[1]
+        path = Path(f'files/download/{self.name}.xlsx')
+        file = filtered_base.to_excel(path, index=False)
+        print(no_encontrado)
+        return FileResponse(open(path, 'rb'), as_attachment=True, filename=self.name)
 
     def save(self):
         if self.pk == None:
