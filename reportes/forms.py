@@ -5,7 +5,7 @@ from . import models
 
 
 class Reporteform(forms.ModelForm):
-    VALID_EXTENSIONS = ['.csv', '.json', '.xls']
+    VALID_EXTENSIONS = ['.csv', '.json', '.xlsx']
 
     class Meta:
         model = models.Reporte
