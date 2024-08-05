@@ -55,7 +55,6 @@ def reporte_detalle(request, tipo_reporte_name, reporte_id):
     reporte = get_object_or_404(models.Reporte, id=reporte_id)
     file_names = {
         'chats_file_name': os.path.basename(reporte.chats_file.name) if reporte.chats_file else 'No file',
-        'envio_sms_file_name': os.path.basename(reporte.envio_sms_file.name) if reporte.chats_file else 'No file',
     }
 
     return render(

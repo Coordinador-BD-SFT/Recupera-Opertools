@@ -9,8 +9,7 @@ class TipoReporteAdmin(admin.ModelAdmin):
 
 
 class ReporteAdmin(admin.ModelAdmin):
-    fields = ('name', 'campaign', 'chats_file',
-              'envio_sms_file', 'report_type', 'hora')
+    fields = ('name', 'campaign', 'chats_file', 'report_type', 'hora')
     list_display = ('id', 'name', 'campaign',
                     'report_type', 'hora', 'created_at')
 

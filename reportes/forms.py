@@ -10,7 +10,7 @@ class Reporteform(forms.ModelForm):
     class Meta:
         model = models.Reporte
         fields = ['name', 'campaign', 'chats_file',
-                  'envio_sms_file', 'report_type', 'hora']
+                  'numero_inicio', 'numero_final', 'report_type', 'hora']
         widgets = {
             'hora': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
         }
@@ -23,15 +23,6 @@ class Reporteform(forms.ModelForm):
                 raise forms.ValidationError(
                     f"Las extensiones soportadas son: {', '.join(self.VALID_EXTENSIONS)}.")
         return chats
-
-    def clean_envio_sms_file(self):
-        sms = self.cleaned_data.get('envio_sms_file')
-
-        if sms:
-            if not any(sms.name.endswith(ext) for ext in self.VALID_EXTENSIONS):
-                raise forms.ValidationError(
-                    f"Las extensiones soportadas son: {', '.join(self.VALID_EXTENSIONS)}.")
-        return sms
 
 
 class SMSBaseForm(forms.ModelForm):
