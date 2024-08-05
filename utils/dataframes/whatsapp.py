@@ -67,7 +67,6 @@ def data_base_filter(intervalo, path_base, path_chats):
 
     numeros = chat_filter(intervalo, path_chats)
     filtrado = info[info['Dato_Contacto'].isin(numeros)]
-    # edad_mora = info[info['Edad_Mora'] == '']
     no_encontrado = []
     for num in numeros:
         if num not in str(filtrado['Dato_Contacto']):
@@ -75,3 +74,5 @@ def data_base_filter(intervalo, path_base, path_chats):
 
     return filtrado, no_encontrado
 # SMS sending .xls file management until here
+
+# Update sms sending database management
