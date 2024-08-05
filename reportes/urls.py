@@ -9,5 +9,5 @@ urlpatterns = [
     path('<str:tipo_reporte_name>', views.reporte, name='reporte'),
     path('<str:tipo_reporte_name>/crear', views.reporte_form, name='crear'),
     path('<str:tipo_reporte_name>/<int:reporte_id>',
-         views.reporte_detalle, name='reporte_detalle')
+         views.reporte_detalle, name='reporte_detalle'),
 ]

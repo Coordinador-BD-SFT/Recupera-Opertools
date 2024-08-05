@@ -32,3 +32,9 @@ class Reporteform(forms.ModelForm):
                 raise forms.ValidationError(
                     f"Las extensiones soportadas son: {', '.join(self.VALID_EXTENSIONS)}.")
         return sms
+
+
+class SMSBaseForm(forms.ModelForm):
+    class Meta:
+        model = models.SMSBase
+        fields = ['tipo_reporte', 'name', 'sms_base']

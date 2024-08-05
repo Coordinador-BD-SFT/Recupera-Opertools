@@ -15,5 +15,11 @@ class ReporteAdmin(admin.ModelAdmin):
                     'report_type', 'hora', 'created_at')
 
 
+class SMSBaseAdmin(admin.ModelAdmin):
+    fields = ('tipo_reporte', 'name', 'sms_base')
+    list_display = ('tipo_reporte', 'name', 'sms_base', 'created_at')
+
+
 admin.site.register(models.TipoReporte, TipoReporteAdmin)
+admin.site.register(models.SMSBase, SMSBaseAdmin)
 admin.site.register(models.Reporte, ReporteAdmin)
