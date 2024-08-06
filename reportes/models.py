@@ -1,7 +1,8 @@
-from django.db import models
-from django.utils import timezone
-from django.http import FileResponse
+from django.core.files.storage import default_storage
 from utils.dataframes import whatsapp
+from django.http import FileResponse
+from django.utils import timezone
+from django.db import models
 from pathlib import Path
 import pandas as pd
 import os
@@ -51,8 +52,19 @@ class Reporte(models.Model):
 
         # Creamos un dataframe con la lista retornada por reporte
         no_encontrado = reporte[1]
+
+        # probando agregar columna No encontrado
+        print(len(no_encontrado))
+        lon = len(no_encontrado)
+        marca = ['zNO EXISTE'] * lon
+        cuenta = ['N/A'] * lon
+        identificacion = ['N/A'] * lon
+
         numeros_append = pd.DataFrame({
             'Dato_Contacto': no_encontrado,
+            'Edad_Mora': marca,
+            'Cuenta_Next': cuenta,
+            'Identificacion': identificacion,
         })
 
         # Concatenamos los dataframes
@@ -95,17 +107,29 @@ class SMSBase(models.Model):
     def __str__(self):
         return self.name
 
+    def limpiar_base(self):
+        base = pd.read_excel(self.sms_base, usecols=[
+            'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
+
     def actualizar_base(self, nueva_base):
-        # Creamos el dataframe de la base antigua
-        if self.sms_base:
-            df_antigua = pd.read_excel(self.sms_base.path)
-        else:
-            df_antigua = pd.DataFrame()
+        # Creamos los dataframes de las bases nueva y antigua
+        old_base = pd.read_excel(self.sms_base, usecols=[
+                                 'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
+        new_base = pd.read_excel(nueva_base, usecols=[
+                                 'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
 
         # Concatenamos la nueva base con la antigua
-        df_nueva = pd.read_excel(nueva_base.path)
-        df_unido = pd.concat([df_antigua, df_nueva], ignore_index=True)
+        df_unido = pd.concat([old_base, new_base], ignore_index=True)
+
+        # Contamos duplicados para obtener informacion
+        print(df_unido.duplicated().sum())
 
         # Limpiamos la base de los duplicados y la retornamos
         file = df_unido.drop_duplicates(keep='last')
-        return file.to_excel(f'files/upload/sms_databases/{self.name}/sms.xlsx', index=False)
+        file.to_excel(
+            f'files/upload/sms_databases/{self.name}/sms.xlsx', index=False)
+
+    def save(self):
+        if self.pk == None:
+            self.limpiar_base()
+        super().save()

@@ -24,8 +24,25 @@ class Reporteform(forms.ModelForm):
                     f"Las extensiones soportadas son: {', '.join(self.VALID_EXTENSIONS)}.")
         return chats
 
+    def clean_numero_inicio(self):
+        num = self.cleaned_data.get('numero_inicio')
+        num = [char for char in num if char != ' ']
+        num = ''.join(num)
+        return num
 
-class SMSBaseForm(forms.ModelForm):
-    class Meta:
-        model = models.SMSBase
-        fields = ['tipo_reporte', 'name', 'sms_base']
+    def clean_numero_final(self):
+        num = self.cleaned_data.get('numero_final')
+        num = [char for char in num if char != ' ']
+        num = ''.join(num)
+        return num
+
+
+class SMSBaseUpdateForm(forms.Form):
+    bases = (
+        ('mora_30', 'MORA 30'),
+        ('especiales', 'ESPECIALES'),
+        ('castigo', 'CASTIGO'),
+    )
+    base_type = forms.ChoiceField(
+        choices=bases, required=True, label='Tipo de SMSs')
+    nueva_base = forms.FileField(required=True, label='Nueva base de SMS')
