@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, FileResponse, Http404
 from utils.dataframes import whatsapp
 from django.urls import reverse
 from . import models
-from . import forms
 from io import BytesIO
+from . import forms
+import pandas as pd
 import os
 # Create your views here.
 
@@ -71,6 +72,20 @@ def reporte_detalle(request, tipo_reporte_name, reporte_id):
     )
 
 
+def reporte_download(request, tipo_reporte_name, reporte_id):
+    report_type = get_object_or_404(models.TipoReporte, name=tipo_reporte_name)
+    reporte = get_object_or_404(models.Reporte, pk=reporte_id)
+
+    try:
+        response = FileResponse(
+            open(f'files/download/{reporte.name}.xlsx', 'rb'), as_attachment=True)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = f'attachment; filename="{reporte.name}.xlsx"'
+        return response
+    except FileNotFoundError:
+        raise Http404('Archivo no encontrado')
+
+
 def sms_bases(request, tipo_reporte_name):
     report_type = models.TipoReporte.objects.get(name=tipo_reporte_name)
     sms_bases = models.SMSBase.objects.all()
@@ -93,7 +108,7 @@ def sms_base_update(request, report_type_name, sms_base_id):
         if form.is_valid():
             archivo = request.FILES['nueva_base']
             sms_base.actualizar_base(archivo)
-            print('buen camino!')
+            print(f'Base envio SMS {sms_base.name} actualizada con exito!')
             return HttpResponseRedirect(f'/reportes/{report_type_name}')
 
     else:
@@ -108,6 +123,21 @@ def sms_base_update(request, report_type_name, sms_base_id):
             'report_type': report_type,
         }
     )
+
+
+def sms_base_download(request, report_type_name, sms_base_id):
+    report_type = get_object_or_404(models.TipoReporte, name=report_type_name)
+    sms_base = get_object_or_404(models.SMSBase, pk=sms_base_id)
+
+    try:
+        file = pd.read_excel(sms_base.sms_base)
+        response = FileResponse(
+            open(sms_base.sms_base.path, 'rb'), as_attachment=True)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = f'attachment; filename="{sms_base.name}.xlsx"'
+        return response
+    except FileNotFoundError as err:
+        raise Http404('Archivo no encontrado')
 
 
 def success(request):

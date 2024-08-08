@@ -122,7 +122,8 @@ class SMSBase(models.Model):
         df_unido = pd.concat([old_base, new_base], ignore_index=True)
 
         # Contamos duplicados para obtener informacion
-        print(df_unido.duplicated().sum())
+        print(
+            f'Se encontraron {df_unido.duplicated().sum()} registros repetidos.\nLimpiando...')
 
         # Limpiamos la base de los duplicados y la retornamos
         file = df_unido.drop_duplicates(keep='last')

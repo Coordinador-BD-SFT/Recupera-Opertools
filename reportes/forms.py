@@ -38,11 +38,4 @@ class Reporteform(forms.ModelForm):
 
 
 class SMSBaseUpdateForm(forms.Form):
-    bases = (
-        ('mora_30', 'MORA 30'),
-        ('especiales', 'ESPECIALES'),
-        ('castigo', 'CASTIGO'),
-    )
-    base_type = forms.ChoiceField(
-        choices=bases, required=True, label='Tipo de SMSs')
     nueva_base = forms.FileField(required=True, label='Nueva base de SMS')
