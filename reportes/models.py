@@ -29,7 +29,7 @@ class Reporte(models.Model):
     name = models.CharField(max_length=100)
     campaign = models.CharField(max_length=15, choices=campaigns_list)
     chats_file = models.FileField(upload_to='files/upload/chats/')
-    numero_inicio = models.CharField(max_length=11)
+    numero_inicio = models.CharField(max_length=11, blank=True)
     numero_final = models.CharField(max_length=11)
     hora = models.TimeField()
     report_type = models.ForeignKey(
@@ -54,7 +54,7 @@ class Reporte(models.Model):
         no_encontrado = reporte[1]
 
         # probando agregar columna No encontrado
-        print(len(no_encontrado))
+        # print(len(no_encontrado))
         lon = len(no_encontrado)
         marca = ['zNO EXISTE'] * lon
         cuenta = ['N/A'] * lon
@@ -70,7 +70,7 @@ class Reporte(models.Model):
         # Concatenamos los dataframes
         file_no_encontrado = pd.concat(
             [filtered_base, numeros_append], ignore_index=True)
-        print(no_encontrado)
+        # print(no_encontrado)
 
         # Creamos una ruta para el archivo que se va a servir
         path = Path(f'files/download/{self.name}.xlsx')

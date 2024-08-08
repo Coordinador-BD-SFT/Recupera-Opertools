@@ -19,7 +19,11 @@ def chat_filter(numeros_intervalo, path):
         num = num[0]
         num = num[2:]
         numbers.append(num)
-    intervalo = clean_rows(numbers, numeros_intervalo[0], numeros_intervalo[1])
+    intervalo = clean_rows(
+        numbers,
+        num_ini=numeros_intervalo[0],
+        num_fin=numeros_intervalo[1],
+    )
     # indices = clean_rows(numeros, '3208310164', '3202673427')
     # print(indices)
     # inicio = 0
@@ -27,7 +31,7 @@ def chat_filter(numeros_intervalo, path):
     return intervalo
 
 
-def clean_rows(lista, num_ini, num_fin):
+def clean_rows(lista, num_fin, num_ini=False):
     """
     Make an interval of numbers function for. It takes a list of phone numbers, an
     initial number and a final number and returns the list filtered within the interval.
@@ -36,7 +40,10 @@ def clean_rows(lista, num_ini, num_fin):
     num_ini -> str: start of the interval.
     num_fin -> str: end of the interval.
     """
-    num_ini = lista.index(num_ini)
+    if not num_ini:
+        num_ini = lista.index(lista[0])
+    else:
+        num_ini = lista.index(num_ini)
     num_fin = lista.index(num_fin)
     return lista[num_ini:num_fin]
 # Chat .xls file management until here

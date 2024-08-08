@@ -25,7 +25,7 @@ class Reporteform(forms.ModelForm):
         return chats
 
     def clean_numero_inicio(self):
-        num = self.cleaned_data.get('numero_inicio')
+        num = self.cleaned_data.get('numero_inicio', '')
         num = [char for char in num if char != ' ']
         num = ''.join(num)
         return num
