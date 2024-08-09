@@ -12,6 +12,8 @@ def chat_filter(numeros_intervalo, path):
     numeros_intervalo -> list: max length must be 2.
     path -> str: Reference to a chat excel file with phone_number column.
     """
+    # Proximamente logica para aceptar .json y .csv
+
     numeros = pd.read_excel(path, usecols=['phone_number'], dtype=str)
     phones = numeros.to_numpy()
     numbers = []
@@ -24,10 +26,6 @@ def chat_filter(numeros_intervalo, path):
         num_ini=numeros_intervalo[0],
         num_fin=numeros_intervalo[1],
     )
-    # indices = clean_rows(numeros, '3208310164', '3202673427')
-    # print(indices)
-    # inicio = 0
-    # fin = 50
     return intervalo
 
 
@@ -65,6 +63,8 @@ def data_base_filter(intervalo, path_base, path_chats):
     filtrado -> Dataframe with founds numbers
     no_encontrado -> List of numbers with no mathc in the dataframe
     """
+    # proximamente Añadir logica para la compatibilidad con .json y .csv
+
     info = pd.read_excel(
         path_base,
         usecols=['Dato_Contacto', 'Identificacion',
@@ -82,4 +82,20 @@ def data_base_filter(intervalo, path_base, path_chats):
     return filtrado, no_encontrado
 # SMS sending .xls file management until here
 
-# Update sms sending database management
+# File structure validation management
+
+
+def file_verify(file, cols):
+    """
+    Function for verify if the file given have the required columns to be procesed.
+
+    PARAMS
+    file -> A reference to a .xlsx file (.json/.csv soon)
+    cols -> list: columns needed in the file
+
+    RETURN
+    It return a boolean depending on if the file meet or not with the cols specified.
+    """
+    df = pd.read_excel(file)
+    df_cols = df.columns
+    return all(col in df_cols for col in cols)

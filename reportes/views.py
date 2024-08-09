@@ -78,9 +78,8 @@ def reporte_download(request, tipo_reporte_name, reporte_id):
 
     try:
         response = FileResponse(
-            open(f'files/download/{reporte.name}.xlsx', 'rb'), as_attachment=True)
+            open(f'files/download/{reporte.name}.xlsx', 'rb'), as_attachment=True, filename=f'{reporte.name}.xlsx')
         response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = f'attachment; filename="{reporte.name}.xlsx"'
         return response
     except FileNotFoundError:
         raise Http404('Archivo no encontrado')
@@ -132,9 +131,8 @@ def sms_base_download(request, report_type_name, sms_base_id):
     try:
         file = pd.read_excel(sms_base.sms_base)
         response = FileResponse(
-            open(sms_base.sms_base.path, 'rb'), as_attachment=True)
+            open(sms_base.sms_base.path, 'rb'), as_attachment=True, filename=f'{sms_base.name}.xlsx')
         response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = f'attachment; filename="{sms_base.name}.xlsx"'
         return response
     except FileNotFoundError as err:
         raise Http404('Archivo no encontrado')

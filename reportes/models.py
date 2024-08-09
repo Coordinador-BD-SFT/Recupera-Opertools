@@ -53,8 +53,7 @@ class Reporte(models.Model):
         # Creamos un dataframe con la lista retornada por reporte
         no_encontrado = reporte[1]
 
-        # probando agregar columna No encontrado
-        # print(len(no_encontrado))
+        # Creamos dataframe con los registros de los NO encontrados
         lon = len(no_encontrado)
         marca = ['zNO EXISTE'] * lon
         cuenta = ['N/A'] * lon
