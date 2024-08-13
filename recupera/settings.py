@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
     'reportes.apps.ReportesConfig',
+    'mensajeria.apps.MensajeriaConfig'
 ]
 
 MIDDLEWARE = [

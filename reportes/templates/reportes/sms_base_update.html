@@ -7,6 +7,6 @@
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Actualizar</button>
     </form>
-    <a class="btn btn-secondary" href="{% url 'reportes:reporte' report_type.name %}" role="button">Volver</a>
+    <a class="btn btn-secondary" href="{% url 'reportes:sms_bases' report_type.name %}" role="button">Volver</a>
 </div>
 {% endblock content %}

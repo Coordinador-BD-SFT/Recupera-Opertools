@@ -15,18 +15,19 @@ def index(request):
 
     return render(
         request,
-        'index.html',
+        'reportes/index.html',
         context={'tipos_reporte': tipos_reporte}
     )
 
 
 def reporte(request, tipo_reporte_name):
-    reportes = models.Reporte.objects.filter(report_type=tipo_reporte_name)
+    reportes = models.Reporte.objects.filter(
+        report_type=tipo_reporte_name).order_by('-id')[:10]
     report_type = models.TipoReporte.objects.get(name=tipo_reporte_name)
 
     return render(
         request,
-        'reportes.html',
+        'reportes/reportes.html',
         context={
             'reportes': reportes,
             'report_type': report_type,
@@ -46,7 +47,7 @@ def reporte_form(request, tipo_reporte_name):
 
     return render(
         request,
-        'reporte_form.html',
+        'reportes/reporte_form.html',
         context={
             'form': form,
             'report_type': report_type,
@@ -63,7 +64,7 @@ def reporte_detalle(request, tipo_reporte_name, reporte_id):
 
     return render(
         request,
-        'reporte_detalle.html',
+        'reportes/reporte_detalle.html',
         context={
             'reporte': reporte,
             'report_type': report_type,
@@ -91,7 +92,7 @@ def sms_bases(request, tipo_reporte_name):
 
     return render(
         request,
-        'sms_bases.html',
+        'reportes/sms_bases.html',
         context={
             'report_type': report_type,
             'sms_bases': sms_bases,
@@ -115,7 +116,7 @@ def sms_base_update(request, report_type_name, sms_base_id):
 
     return render(
         request,
-        'sms_base_update.html',
+        'reportes/sms_base_update.html',
         context={
             'form': form,
             'sms_base': sms_base,
