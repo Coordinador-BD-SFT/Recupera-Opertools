@@ -21,7 +21,8 @@ def index(request):
 
 
 def reporte(request, tipo_reporte_name):
-    reportes = models.Reporte.objects.filter(report_type=tipo_reporte_name)
+    reportes = models.Reporte.objects.filter(
+        report_type=tipo_reporte_name).order_by('-id')[:10]
     report_type = models.TipoReporte.objects.get(name=tipo_reporte_name)
 
     return render(
