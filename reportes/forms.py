@@ -57,12 +57,12 @@ class SMSBaseUpdateForm(forms.Form):
                        'Cuenta_Next', 'Edad_Mora']
 
         if base:
-            if not whatsapp.file_verify(base, cols_needed):
+            if not (any(base.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(base, cols_needed)):
                 raise forms.ValidationError(
                     f"""
                         Hubo un error al procesar el archivo, por favor revise el tipo de archivo o su contenido.
                         Las extensiones soportadas son: {', '.join(self.VALID_EXTENSIONS)}.
-                        Las columnas necesarias son: {', '.join(cols_needed)}.
+                        Las columnas/propiedades necesarias son: {', '.join(cols_needed)}.
                         """
                 )
         return base
