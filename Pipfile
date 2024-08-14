@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 pandas = "*"
 openpyxl = "*"
+selenium = "*"
+webdriver-manager = "*"
 
 [dev-packages]
 
