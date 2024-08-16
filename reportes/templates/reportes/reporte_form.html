@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -6,7 +7,7 @@
     <h1>Crear</h1>
     <form  action="{% url 'reportes:crear' report_type.name %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
     <a class="btn btn-secondary" href="{% url 'reportes:reporte' report_type.name %}" role="button">Volver</a>

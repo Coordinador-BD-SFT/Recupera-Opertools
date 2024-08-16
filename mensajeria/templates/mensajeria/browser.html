@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container">
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy }}
         <button class="btn btn-primary" type="submit">Buscar</button>
     </form>
     <a class="btn btn-secondary" href="{% url 'mensajeria:index' %}" role="button">volver</a>

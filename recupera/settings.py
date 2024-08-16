@@ -12,15 +12,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
-from django.forms.renderers import TemplatesSetting
-
-
-# Define custom renderization and styles for your forms
-class CustomFormRenderer(TemplatesSetting):
-    form_template_name = 'form_snippet.html'
-
-
-FORM_RENDERER = 'recupera.settings.CustomFormRenderer'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
     'reportes.apps.ReportesConfig',
-    'mensajeria.apps.MensajeriaConfig'
+    'mensajeria.apps.MensajeriaConfig',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +127,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Third-part packages viariables
+
+# Crispy forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

@@ -9,6 +9,8 @@ pandas = "*"
 openpyxl = "*"
 selenium = "*"
 webdriver-manager = "*"
+django-crispy-forms = "*"
+crispy-bootstrap5 = "*"
 
 [dev-packages]
 

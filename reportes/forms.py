@@ -2,6 +2,8 @@ from utils.dataframes import whatsapp
 from django import forms
 from . import models
 import pandas as pd
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field
 
 # create your forms here
 
@@ -16,6 +18,20 @@ class Reporteform(forms.ModelForm):
         widgets = {
             'hora': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('name', css_class='form-control'),
+            Field('campaign', css_class='form-select'),
+            Field('chats_file', css_class='form-control'),
+            Field('numero_inicio', css_class='form-control'),
+            Field('numero_final', css_class='form-control'),
+            Field('report_type', css_class='form-select'),
+            Field('hora', css_class='form-control'),
+        )
 
     def clean_chats_file(self):
         chats = self.cleaned_data.get('chats_file')
@@ -50,6 +66,13 @@ class SMSBaseUpdateForm(forms.Form):
     VALID_EXTENSIONS = ['.csv', '.json', '.xlsx']
 
     nueva_base = forms.FileField(required=True, label='Nueva base de SMS')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('nueva_base', css_class='form-control')
+        )
 
     def clean_nueva_base(self):
         base = self.cleaned_data.get('nueva_base')

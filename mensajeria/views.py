@@ -1,5 +1,5 @@
 from . import forms
-from utils.scrapping import whatsapp
+from utils.scrapping import vicidial_scrapper
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 
@@ -20,7 +20,7 @@ def browser(request):
             url = form.cleaned_data['url']
 
             # ejecutamos script de scrapping
-            whatsapp.search(url)
+            vicidial_scrapper.search(url)
 
             return HttpResponse('buscando...')
     else:
