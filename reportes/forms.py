@@ -24,13 +24,17 @@ class Reporteform(forms.ModelForm):
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Field('name', css_class='form-control'),
-            Field('campaign', css_class='form-select'),
-            Field('chats_file', css_class='form-control'),
-            Field('numero_inicio', css_class='form-control'),
-            Field('numero_final', css_class='form-control'),
-            Field('report_type', css_class='form-select'),
-            Field('hora', css_class='form-control'),
+            Field('name', css_class='form-control', id='validationCustom01'),
+            Field('campaign', css_class='form-select', id='validationCustom01'),
+            Field('chats_file', css_class='form-control',
+                  id='validationCustom01'),
+            Field('numero_inicio', css_class='form-control',
+                  id='validationCustom01'),
+            Field('numero_final', css_class='form-control',
+                  id='validationCustom01'),
+            Field('report_type', css_class='form-select',
+                  id='validationCustom01'),
+            Field('hora', css_class='form-control', id='validationCustom01'),
         )
 
     def clean_chats_file(self):
@@ -71,7 +75,8 @@ class SMSBaseUpdateForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Field('nueva_base', css_class='form-control')
+            Field('nueva_base', css_class='form-control',
+                  id='validationCustom01')
         )
 
     def clean_nueva_base(self):

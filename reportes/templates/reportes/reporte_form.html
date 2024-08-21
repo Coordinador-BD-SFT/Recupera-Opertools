@@ -3,9 +3,9 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container-sm">
     <h1>Crear</h1>
-    <form  action="{% url 'reportes:crear' report_type.name %}" method="post" enctype="multipart/form-data">
+    <form novalidate action="{% url 'reportes:crear' report_type.name %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Guardar</button>
