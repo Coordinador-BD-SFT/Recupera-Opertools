@@ -4,5 +4,5 @@ from . import views
 app_name = 'mensajeria'
 urlpatterns = [
     path('', views.index, name='index'),
-    path('browser', views.browser, name='browser'),
+    path('whatsapp_scraping', views.whatsapp_scraping, name='whatsapp_scraping'),
 ]

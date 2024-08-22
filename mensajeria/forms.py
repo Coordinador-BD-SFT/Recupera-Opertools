@@ -3,13 +3,12 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Field, Layout
 
 
-class BrowserForm(forms.Form):
-    url = forms.URLField(max_length=200, required=True,
-                         label='Recupera Browser')
+class WhatsappScrapingForm(forms.Form):
+    messages = forms.FileField(required=True, label='Mensajes')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper
+        self.helper = FormHelper()
         self.helper.layout = Layout(
-            Field('url', css_class='form-control')
+            Field('messages', css_class='form-control', id='validationCustom01')
         )
