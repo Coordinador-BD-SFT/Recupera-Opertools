@@ -42,7 +42,7 @@ def get_whatsapp(driver, sleep=2):
         time.sleep(sleep)
 
     except Exception as err:
-        print(f'Exception -> {err}')
+        print(f'Error en get whatsapp -> {err}')
 
 
 def search_num(driver, num, sleep=2):
@@ -61,23 +61,23 @@ def search_num(driver, num, sleep=2):
         time.sleep(sleep)
 
         # Validamos si numero es whatsapp
-        chat = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((
-                By.CLASS_NAME,
-                '_ak8q'
-            ))
-        )
-
-        if chat:
-            # chat.get_attribute('innerHTML') ==
+        try:
+            chat = WebDriverWait(driver, 7).until(
+                EC.presence_of_element_located((
+                    By.CLASS_NAME,
+                    '_ak8q'
+                ))
+            )
             chat.click()
-        else:
-            return f'Fase 1 -> Encontrar numero: {num}\nFallido...\nFinalizando proceso...'
+            return f'Fase 1 -> Encontrar numero: {num}\nCompletada con exito...', True
 
-        return f'Fase 1 -> Encontrar numero: {num}\nCompletada con exito...'
+        except Exception:
+            chat = False
+            novedad = f'Fase 1 -> Encontrar numero: {num}\nFallido...\nFinalizando proceso...', False
+            return chat, novedad
 
     except selexceptions.NoSuchElementException as err:
-        print(f'Error -> {err}')
+        print(f'Error en search num -> {err}')
 
 
 def send_msj(driver, msj, sleep=2):
@@ -89,7 +89,7 @@ def send_msj(driver, msj, sleep=2):
         text_box.click()
         text_box.clear()
         text_box.send_keys(msj)
-        time.sleep(sleep)
+        time.sleep(1)
         text_box.send_keys(Keys.ENTER)
         time.sleep(sleep)
         # send_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((
@@ -101,4 +101,4 @@ def send_msj(driver, msj, sleep=2):
         return f'Fase 2 -> Enviar mensaje: Finalizado con exito.\nContinuando...'
 
     except selexceptions.NoSuchElementException as err:
-        print(f'Err -> {err}')
+        print(f'Error en send mjs -> {err}')

@@ -27,21 +27,43 @@ def whatsapp_scraping(request):
                 os.path.splitext(messages.name)[1]
             )
 
-            first_row = df.iloc[0]
-            dato_contacto = first_row['Dato_Contacto']
-            mensaje = first_row['SMS']
+            # first_row = df.iloc[0]
+            # dato_contacto = first_row['Dato_Contacto']
+            # mensaje = first_row['SMS']
 
             driver = whatsapp_scraper.get_driver()
+            not_wsp = []
+            yes_wsp = 0
+            total = 0
 
             try:
-                whatsapp_scraper.get_whatsapp(driver)
-                whatsapp_scraper.search_num(driver, dato_contacto)
-                whatsapp_scraper.send_msj(driver, mensaje)
+                for idx, row in df.iterrows():
+                    row = list(row)
+                    dato_contacto = row[0]
+                    mensaje = row[1]
+                    whatsapp_scraper.get_whatsapp(driver)
+                    is_wsp = whatsapp_scraper.search_num(driver, dato_contacto)
+                    if is_wsp[0]:
+                        whatsapp_scraper.send_msj(driver, mensaje)
+                        yes_wsp += 1
+                        print(f'Mensajes enviados hasta el momento: {yes_wsp}')
+                    else:
+                        not_wsp.append(dato_contacto)
+                    print(f'Total so far: {total}')
+
                 whatsapp_scraper.quit_driver(driver)
+                # for idx, row in df.iterrows():
+                #     row = list(row)
+                #     dato_contacto = row[0]
+                #     mensaje = row[1]
+                #     print(f'Registro -> {dato_contacto} | {mensaje}')
+
+                # return HttpResponse(f'Proceso terminado.\nUltimo registro -> {dato_contacto} | {mensaje}')
+                return f'Proceso Terminado.\nMensajes enviados ->{yes_wsp}\nNumeros que no poseen whatsapp -> {len(not_wsp)}'
             except Exception as err:
                 print(f'Error -> {err}')
 
-            # return HttpResponse(f'Celular: {dato_contacto}\nMensaje: {mensaje} ')
+            return HttpResponse(f'Celular: {dato_contacto}\nMensaje: {mensaje} ')
 
     else:
         form = forms.WhatsappScrapingForm()
