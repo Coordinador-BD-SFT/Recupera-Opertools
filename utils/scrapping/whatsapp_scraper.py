@@ -31,74 +31,108 @@ def quit_driver(driver):
 def get_whatsapp(driver, sleep=2):
     try:
         driver.get('https://web.whatsapp.com/')
-        # iniciamos el driver
-        wait = WebDriverWait(driver, 300)
-        new_chat_btn = wait.until(EC.element_to_be_clickable(
+        new_chat_btn = WebDriverWait(driver, 300).until(EC.element_to_be_clickable(
             (
                 By.XPATH,
                 '//*[@id="app"]/div/div[2]/div[3]/header/header/div/span/div/span/div[1]/div/span'
             )))
-        new_chat_btn.click()
         time.sleep(sleep)
 
+    except selexceptions.NoSuchElementException as err:
+        print(
+            f'Error al intentar encontrar el elemento (get_whatsapp) -> {err}')
+    except selexceptions.TimeoutException as err:
+        print(f'Tiempo de espera agotado (get_whatsapp) -> {err}')
+
+
+def new_chat_btn_exist():
+    try:
+        new_chat_btn = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
+            By.XPATH,
+            '//*[@id="app"]/div/div[2]/div[3]/header/header/div/span/div/span/div[1]/div/span'
+        )))
+        if new_chat_btn:
+            return new_chat_btn
+        else:
+            return False
     except Exception as err:
-        print(f'Error en get whatsapp -> {err}')
+        print(f'Error en new chat click -> {err}')
 
 
 def search_num(driver, num, sleep=2):
     try:
-        # Clickeamos el boton de nuevo chat y le enviamos el numero
-        # new_chat_btn = driver.find_element(
-        #     By.XPATH,
-        #     '//*[@id="app"]/div/div[2]/div[3]/header/header/div/span/div/span/div[1]/div/span'
-        # )
-        # new_chat_btn.click()
-        text_box = driver.find_element(
+        # Buscamos y clickeamos boton de nevo chat
+        new_chat_btn = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
+            By.XPATH,
+            '//*[@id="app"]/div/div[2]/div[3]/header/header/div/span/div/span/div[1]/div/span'
+        )))
+        if new_chat_btn:
+            time.sleep(1)
+            new_chat_btn.click()
+
+        # Buscamos y seleccionamos caja de texto y enviamos numeor a buscar
+        text_box = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
             By.XPATH,
             '//*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div[1]/div[2]/div[2]/div/div/p'
-        )
+        )))
+        time.sleep(0.5)
         text_box.send_keys(num)
-        time.sleep(sleep)
+        time.sleep(1)
 
         # Validamos si numero es whatsapp
-        try:
-            chat = WebDriverWait(driver, 7).until(
-                EC.presence_of_element_located((
-                    By.CLASS_NAME,
-                    '_ak8q'
-                ))
-            )
-            chat.click()
-            return f'Fase 1 -> Encontrar numero: {num}\nCompletada con exito...', True
+        chat_exist = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
+            By.CLASS_NAME,
+            '_ak8q'
+        )))
 
-        except Exception:
-            chat = False
-            novedad = f'Fase 1 -> Encontrar numero: {num}\nFallido...\nFinalizando proceso...', False
-            return chat, novedad
+        if chat_exist:
+            chat_exist.click()
+            return True
+        else:
+            return False
 
     except selexceptions.NoSuchElementException as err:
         print(f'Error en search num -> {err}')
+        text_box = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
+            By.XPATH,
+            '//*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div[1]/div[2]/div[2]/div/div/p'
+        )))
+        text_box.click()
+        text_box.clear()
+        return False
+    except selexceptions.ElementClickInterceptedException:
+        text_box = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
+            By.XPATH,
+            '//*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div[1]/div[2]/div[2]/div/div/p'
+        )))
+        text_box.click()
+        text_box.clear()
 
 
 def send_msj(driver, msj, sleep=2):
     try:
-        text_box = WebDriverWait(driver, 10).until(EC.presence_of_element_located((
+        # Buscamos caja de texto
+        time.sleep(sleep)
+        text_box = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
             By.XPATH,
             '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[1]/p'
         )))
-        text_box.click()
-        text_box.clear()
-        text_box.send_keys(msj)
-        time.sleep(1)
-        text_box.send_keys(Keys.ENTER)
+        if text_box:
+            print('Caja de texto encontrada')
+            text_box.click()
+            text_box.clear()
+            text_box.send_keys(msj)
+            time.sleep(1)
+            text_box.send_keys(Keys.ENTER)
+        else:
+            print(f'No se encontro la caja de texto.\nReiniciando funcion...')
+            time.sleep(sleep)
+            send_msj(driver, msj)
+        Keys.ESCAPE
         time.sleep(sleep)
-        # send_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((
-        #     By.XPATH,
-        #     '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[2]/button'
-        # )))
-        # send_btn.click()
-
-        return f'Fase 2 -> Enviar mensaje: Finalizado con exito.\nContinuando...'
 
     except selexceptions.NoSuchElementException as err:
-        print(f'Error en send mjs -> {err}')
+        print(f'Error en send msj -> {err}')
+
+    except selexceptions.StaleElementReferenceException as err:
+        pass

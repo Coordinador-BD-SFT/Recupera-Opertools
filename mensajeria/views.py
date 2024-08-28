@@ -1,10 +1,14 @@
 import os
+from datetime import datetime
+import time
+import pandas as pd
 from . import forms
 from utils.scrapping import vicidial_scraper
 from utils.scrapping import whatsapp_scraper
 from utils.dataframes import churn
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
+from selenium.common import exceptions as selexceptions
 
 # Create your views here.
 
@@ -27,43 +31,59 @@ def whatsapp_scraping(request):
                 os.path.splitext(messages.name)[1]
             )
 
-            # first_row = df.iloc[0]
-            # dato_contacto = first_row['Dato_Contacto']
-            # mensaje = first_row['SMS']
-
-            driver = whatsapp_scraper.get_driver()
+            # driver = whatsapp_scraper.get_driver()
+            # whatsapp_scraper.get_whatsapp(driver)
             not_wsp = []
-            yes_wsp = 0
-            total = 0
+            df['tipologia'] = [None] * len(df)
+
+            # def auto_send(row, driver):
+            def auto_send(row):
+                idx = row.name
+                try:
+                    dato_contacto = row['Dato_Contacto']
+                    mensaje = row['SMS']
+                    # is_wsp = whatsapp_scraper.search_num(driver, dato_contacto)
+                    is_wsp = False if (idx % 30) == 0 else True
+                    if is_wsp:
+                        # whatsapp_scraper.send_msj(driver, mensaje)
+                        df.at[idx, 'tipologia'] = 'ENVIADO'
+                        enviados = len(df[df['tipologia'] == 'ENVIADO'])
+                        print(f'Enviados: {enviados}')
+                        # df['tipologia'] = df['tipologia'].replace(
+                        #     None, 'ENVIADO')
+                    else:
+                        df.at[idx, 'tipologia'] = 'No es WhatsApp'
+                        # df['tipologia'] = df['tipologia'].replace(
+                        #     None, 'No es WhatsApp')
+                        not_wsp.append(dato_contacto)
+                        print(
+                            f'Num: {dato_contacto} no es whatsapp - en la fila->{idx}')
+                    df.to_excel(
+                        f'files/download/auto_wsp/Auto_Envio_wsp{messages.name}', index=False)
+
+                    print(
+                        f'{idx} - {dato_contacto}, {row["tipologia"]}, {datetime.now()}')
+
+                # except (Exception, selexceptions.NoSuchWindowException) as err:
+                except Exception as err:
+                    print(
+                        f'Ocurrio un error en el indice {idx}\nReiniciando proceso...\nError -> {err}')
+                    time.sleep(10)
+                    # driver = whatsapp_scraper.get_driver()
+                    # whatsapp_scraper.get_whatsapp(driver)
+                    # auto_send(row, driver)
+                    auto_send(row)
 
             try:
-                for idx, row in df.iterrows():
-                    row = list(row)
-                    dato_contacto = row[0]
-                    mensaje = row[1]
-                    whatsapp_scraper.get_whatsapp(driver)
-                    is_wsp = whatsapp_scraper.search_num(driver, dato_contacto)
-                    if is_wsp[0]:
-                        whatsapp_scraper.send_msj(driver, mensaje)
-                        yes_wsp += 1
-                        print(f'Mensajes enviados hasta el momento: {yes_wsp}')
-                    else:
-                        not_wsp.append(dato_contacto)
-                    print(f'Total so far: {total}')
+                # df.apply(auto_send, axis=1, args=(driver,))
+                df.apply(auto_send, axis=1)
 
-                whatsapp_scraper.quit_driver(driver)
-                # for idx, row in df.iterrows():
-                #     row = list(row)
-                #     dato_contacto = row[0]
-                #     mensaje = row[1]
-                #     print(f'Registro -> {dato_contacto} | {mensaje}')
+                # whatsapp_scraper.quit_driver(driver)
 
-                # return HttpResponse(f'Proceso terminado.\nUltimo registro -> {dato_contacto} | {mensaje}')
-                return f'Proceso Terminado.\nMensajes enviados ->{yes_wsp}\nNumeros que no poseen whatsapp -> {len(not_wsp)}'
+                return HttpResponse(f'Proceso completado con exito!\nTotal de iteraciones -> {len(df)}')
+
             except Exception as err:
                 print(f'Error -> {err}')
-
-            return HttpResponse(f'Celular: {dato_contacto}\nMensaje: {mensaje} ')
 
     else:
         form = forms.WhatsappScrapingForm()
