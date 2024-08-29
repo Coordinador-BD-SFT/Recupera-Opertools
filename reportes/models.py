@@ -4,6 +4,7 @@ from django.http import FileResponse
 from django.utils import timezone
 from django.db import models
 from pathlib import Path
+from datetime import datetime
 import pandas as pd
 import os
 
@@ -26,7 +27,6 @@ class Reporte(models.Model):
         ('especiales', 'ESPECIALES'),
         ('castigo', 'CASTIGO'),
     )
-    name = models.CharField(max_length=100)
     campaign = models.CharField(max_length=15, choices=campaigns_list)
     chats_file = models.FileField(upload_to='files/upload/chats/')
     numero_inicio = models.CharField(max_length=11, blank=True)
@@ -34,10 +34,19 @@ class Reporte(models.Model):
     hora = models.TimeField()
     report_type = models.ForeignKey(
         TipoReporte, on_delete=models.CASCADE, to_field='name')
-    created_at = models.DateTimeField(auto_now_add=timezone.now)
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        date = timezone.now().strftime('%Y-%m-%d')
+        self.name = f'whatsapp-{self.campaign}-{date}-{self.hora}.xlsx'
+        self.name = self.name.replace(':', '-')
+        if self.pk == None:
+            self.crear_reporte()
+        super().save(*args, **kwargs)
 
     def crear_reporte(self):
         # Invocamos a database filter para filtrar los que hicieron match.
@@ -72,14 +81,9 @@ class Reporte(models.Model):
         # print(no_encontrado)
 
         # Creamos una ruta para el archivo que se va a servir
-        path = Path(f'files/download/{self.name}.xlsx')
+        path = Path(f'files/download/{self.name}')
         final_file = file_no_encontrado.to_excel(path, index=False)
         return FileResponse(open(path, 'rb'), as_attachment=True, filename=self.name)
-
-    def save(self):
-        if self.pk == None:
-            self.crear_reporte()
-        super().save()
 
 
 # Modelo SMSBase: Se encarga de administrar las bases de datos de mensajes

@@ -7,6 +7,7 @@ from io import BytesIO
 from . import forms
 import pandas as pd
 import os
+from datetime import datetime
 # Create your views here.
 
 
@@ -22,8 +23,9 @@ def index(request):
 
 def reporte(request, tipo_reporte_name):
     reportes = models.Reporte.objects.filter(
-        report_type=tipo_reporte_name).order_by('-id')[:10]
+        report_type=tipo_reporte_name).order_by('-id')[:5]
     report_type = models.TipoReporte.objects.get(name=tipo_reporte_name)
+    sms_bases = models.SMSBase.objects.all()
 
     return render(
         request,
@@ -31,6 +33,7 @@ def reporte(request, tipo_reporte_name):
         context={
             'reportes': reportes,
             'report_type': report_type,
+            'sms_bases': sms_bases,
         }
     )
 
@@ -79,7 +82,10 @@ def reporte_download(request, tipo_reporte_name, reporte_id):
 
     try:
         response = FileResponse(
-            open(f'files/download/{reporte.name}.xlsx', 'rb'), as_attachment=True, filename=f'{reporte.name}.xlsx')
+            open(f'files/download/{reporte.name}', 'rb'),
+            as_attachment=True,
+            filename=reporte.name
+        )
         response['Content-Type'] = 'application/octet-stream'
         return response
     except FileNotFoundError:
