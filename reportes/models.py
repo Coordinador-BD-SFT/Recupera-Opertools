@@ -137,3 +137,11 @@ class SMSBase(models.Model):
         if self.pk == None:
             self.limpiar_base()
         super().save()
+
+
+class Scraper(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=timezone.now)
+
+    def __str__(self):
+        return self.name

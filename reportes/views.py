@@ -13,11 +13,15 @@ from datetime import datetime
 
 def index(request):
     tipos_reporte = models.TipoReporte.objects.all()
+    scrapers = models.Scraper.objects.all()
 
     return render(
         request,
         'reportes/index.html',
-        context={'tipos_reporte': tipos_reporte}
+        context={
+            'tipos_reporte': tipos_reporte,
+            'scrapers': scrapers,
+        }
     )
 
 
@@ -143,6 +147,18 @@ def sms_base_download(request, report_type_name, sms_base_id):
         return response
     except FileNotFoundError as err:
         raise Http404('Archivo no encontrado')
+
+
+def scrapers(request, scraper_id):
+    scraper = get_object_or_404(models.Scraper, id=scraper_id)
+
+    return render(
+        request,
+        'scrapper.html',
+        context={
+            'scraper': scraper,
+        }
+    )
 
 
 def success(request):
