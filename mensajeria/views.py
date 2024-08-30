@@ -31,54 +31,55 @@ def whatsapp_scraping(request):
                 os.path.splitext(messages.name)[1]
             )
 
-            # driver = whatsapp_scraper.get_driver()
-            # whatsapp_scraper.get_whatsapp(driver)
-            not_wsp = []
-            df['tipologia'] = [None] * len(df)
-
-            # def auto_send(row, driver):
-            def auto_send(row):
+            # def auto_send(row):
+            def auto_send(row, driver, not_wsp):
                 idx = row.name
                 try:
                     dato_contacto = row['Dato_Contacto']
                     mensaje = row['SMS']
-                    # is_wsp = whatsapp_scraper.search_num(driver, dato_contacto)
-                    is_wsp = False if (idx % 30) == 0 else True
+                    is_wsp = whatsapp_scraper.search_num(driver, dato_contacto)
+                    # is_wsp = False if (idx % 30) == 0 else True
                     if is_wsp:
-                        # whatsapp_scraper.send_msj(driver, mensaje)
+                        whatsapp_scraper.send_msj(driver, mensaje)
                         df.at[idx, 'tipologia'] = 'ENVIADO'
                         enviados = len(df[df['tipologia'] == 'ENVIADO'])
+                        print(
+                            f'{idx} - {dato_contacto}, ENVIADO, {datetime.now()}')
                         print(f'Enviados: {enviados}')
-                        # df['tipologia'] = df['tipologia'].replace(
-                        #     None, 'ENVIADO')
                     else:
                         df.at[idx, 'tipologia'] = 'No es WhatsApp'
-                        # df['tipologia'] = df['tipologia'].replace(
-                        #     None, 'No es WhatsApp')
                         not_wsp.append(dato_contacto)
+                        # print(
+                        #     f'Num: {dato_contacto} no es whatsapp - en la fila->{idx}')
                         print(
-                            f'Num: {dato_contacto} no es whatsapp - en la fila->{idx}')
+                            f'{idx} - {dato_contacto}, No es WhatsApp, {datetime.now()}')
                     df.to_excel(
                         f'files/download/auto_wsp/Auto_Envio_wsp{messages.name}', index=False)
 
-                    print(
-                        f'{idx} - {dato_contacto}, {row["tipologia"]}, {datetime.now()}')
-
-                # except (Exception, selexceptions.NoSuchWindowException) as err:
-                except Exception as err:
+                except (Exception, selexceptions.NoSuchWindowException) as err:
+                    # except Exception as err:
                     print(
                         f'Ocurrio un error en el indice {idx}\nReiniciando proceso...\nError -> {err}')
-                    time.sleep(10)
-                    # driver = whatsapp_scraper.get_driver()
-                    # whatsapp_scraper.get_whatsapp(driver)
-                    # auto_send(row, driver)
-                    auto_send(row)
+                    driver.quit()
+                    time.sleep(5)
+                    driver = whatsapp_scraper.get_driver()
+                    time.sleep(2)
+                    whatsapp_scraper.get_whatsapp(driver)
+
+                    # Reintentar iteracion
+                    auto_send(row, driver, not_wsp)
+                    # auto_send(row)
 
             try:
-                # df.apply(auto_send, axis=1, args=(driver,))
-                df.apply(auto_send, axis=1)
+                not_wsp = []
+                df['tipologia'] = [None] * len(df)
+                driver = whatsapp_scraper.get_driver()
+                whatsapp_scraper.get_whatsapp(driver)
 
-                # whatsapp_scraper.quit_driver(driver)
+                df.apply(lambda row: auto_send(row, driver, not_wsp), axis=1)
+                # df.apply(auto_send, axis=1)
+
+                whatsapp_scraper.quit_driver(driver)
 
                 return HttpResponse(f'Proceso completado con exito!\nTotal de iteraciones -> {len(df)}')
 

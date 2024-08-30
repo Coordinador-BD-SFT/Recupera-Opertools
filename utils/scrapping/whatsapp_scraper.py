@@ -91,22 +91,9 @@ def search_num(driver, num, sleep=2):
         else:
             return False
 
-    except selexceptions.NoSuchElementException as err:
-        print(f'Error en search num -> {err}')
-        text_box = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
-            By.XPATH,
-            '//*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div[1]/div[2]/div[2]/div/div/p'
-        )))
-        text_box.click()
-        text_box.clear()
+    except (selexceptions.NoSuchElementException, selexceptions.ElementClickInterceptedException):
+        driver.refresh()
         return False
-    except selexceptions.ElementClickInterceptedException:
-        text_box = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
-            By.XPATH,
-            '//*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div[1]/div[2]/div[2]/div/div/p'
-        )))
-        text_box.click()
-        text_box.clear()
 
 
 def send_msj(driver, msj, sleep=2):
@@ -118,7 +105,6 @@ def send_msj(driver, msj, sleep=2):
             '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[1]/p'
         )))
         if text_box:
-            print('Caja de texto encontrada')
             text_box.click()
             text_box.clear()
             text_box.send_keys(msj)
