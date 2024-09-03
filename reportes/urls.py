@@ -1,9 +1,14 @@
 from django.urls import path
 from . import views
 
+"""
+Modulo de definición de las URLs de la app
+"""
 
+# (convención) Definimos el nombre de la app para poder referenciar URLs más fácilmente
 app_name = 'reportes'
 
+# (Convención) Lista de funciones path que definen las URLs del proyecto
 urlpatterns = [
     path('', views.index, name='index'),
     path('<str:tipo_reporte_name>', views.reporte, name='reporte'),

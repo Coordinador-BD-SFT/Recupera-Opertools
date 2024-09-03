@@ -1,7 +1,18 @@
 from django.contrib import admin
 from . import models
-# Register your models here.
 
+"""
+En este archivo se definen las clases administrador las cuales permiten
+manejar la informacion y las instancias de cada moelo que registremos dentro
+de una subclase de admin.ModelAdmin
+fields -> Se refiere a los campos del formulario que deben aparecer en el Admin Site
+exclude -> Se refiere a los camops que debe excluir el formulario en el Admin Site
+list_display -> Se refiere a los campos que se mostraran en la lista de instancias
+    del modelo en el Admin Site
+"""
+
+
+# Register your models here.
 
 class TipoReporteAdmin(admin.ModelAdmin):
     fields = ('name',)
@@ -19,6 +30,7 @@ class SMSBaseAdmin(admin.ModelAdmin):
     list_display = ('id', 'tipo_reporte', 'name', 'sms_base', 'created_at')
 
 
+# Registramos las clases, con su modelo relacionado, en el sitio del Administrador
 admin.site.register(models.TipoReporte, TipoReporteAdmin)
 admin.site.register(models.SMSBase, SMSBaseAdmin)
 admin.site.register(models.Reporte, ReporteAdmin)
