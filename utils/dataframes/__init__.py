@@ -1,3 +1,3 @@
 """
-Module for treat pandas library acepted files like .json, .csv, or .xls
+Módulo de manejo de dataframes con la libreria de pandas
 """

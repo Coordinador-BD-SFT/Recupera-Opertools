@@ -4,23 +4,34 @@ from pathlib import Path
 
 # Chats .xls file management
 
-def chat_filter(numeros_intervalo, path):
+def chat_filter(
+    numeros_intervalo: list,
+    path: str
+):
     """
-    Chat excel file filter function, It takes a referece to the file and a pair
-    of numbers in a list and returns a list of phone numbers.
+    Retorna una lista de numeros en base a un intervalo y a un archivo
 
     numeros_intervalo -> list: max length must be 2.
     path -> str: Reference to a chat excel file with phone_number column.
     """
+
     # Proximamente logica para aceptar .json y .csv
 
+    # Obtenemos el dataframe
     numeros = pd.read_excel(path, usecols=['phone_number'], dtype=str)
+    # convertimos la columna a un array numpy
     phones = numeros.to_numpy()
+    # Creamos una lista para almacenarlos
     numbers = []
+
     for num in phones:
+        # Accedemos al primer elemento de la tupla
         num = num[0]
+        # Quitamos el identificador (57) del string
         num = num[2:]
+        # Aregamos a la lista
         numbers.append(num)
+
     intervalo = clean_rows(
         numbers,
         num_ini=numeros_intervalo[0],
@@ -29,19 +40,22 @@ def chat_filter(numeros_intervalo, path):
     return intervalo
 
 
-def clean_rows(lista, num_fin, num_ini=False):
+def clean_rows(
+    lista: list,
+    num_fin: str,
+    num_ini: str = False
+
+
+):
     """
-    Make an interval of numbers function for. It takes a list of phone numbers, an
-    initial number and a final number and returns the list filtered within the interval.
+    Crea un intervalo de numeros a parir de una lista recibiendo un numero inicial y un
+    número final (no incluido)
 
     lista -> list: list of phone numbers.
     num_ini -> str: start of the interval.
-    num_fin -> str: end of the interval.
+    num_fin -> str: end of the interval (not included).
     """
-    if not num_ini:
-        num_ini = lista.index(lista[0])
-    else:
-        num_ini = lista.index(num_ini)
+    num_ini = num_ini if not num_ini else lista.index(lista[0])
     num_fin = lista.index(num_fin)
     return lista[num_ini:num_fin]
 # Chat .xls file management until here
@@ -49,22 +63,23 @@ def clean_rows(lista, num_fin, num_ini=False):
 
 # SMS sending .xls file management
 
-def data_base_filter(intervalo, path_base, path_chats):
+def data_base_filter(
+    intervalo: list,
+    path_base: str,
+    path_chats: str
+):
     """
-    Takes a reference to a database, a reference to a numbers excel, a pair
-    of numbers and returns the same database filtered based on the pair of numbers.
+    Toma una referencia a una base de registros, una referencia a una serie de numeros
+    y retorna la isma base filtrada en base al intervelo creado con la lista de numeros
 
     PARAMS
     intervalo -> list: max length must be 2.
     path_base -> str: SMS_send_Database excel file.
     path_chats -> str: Chats excel file (Chrome extension).
-
-    RETURNS
-    filtrado -> Dataframe with founds numbers
-    no_encontrado -> List of numbers with no mathc in the dataframe
     """
     # proximamente Añadir logica para la compatibilidad con .json y .csv
 
+    # Creamos el dataframe a partir del archivo
     info = pd.read_excel(
         path_base,
         usecols=['Dato_Contacto', 'Identificacion',
@@ -72,30 +87,36 @@ def data_base_filter(intervalo, path_base, path_chats):
         dtype=str
     )
 
+    # Obtenemos la lista de números a cruzar
     numeros = chat_filter(intervalo, path_chats)
+    # Cruzamos los datos
     filtrado = info[info['Dato_Contacto'].isin(numeros)]
+
+    # Obtenemos los numeros que no se encuentran
     no_encontrado = []
     for num in numeros:
         if num not in str(filtrado['Dato_Contacto']):
             no_encontrado.append(num)
 
+    # Retornamos el dataframe filtrado y la lista de números
     return filtrado, no_encontrado
 # SMS sending .xls file management until here
 
 # File structure validation management
 
 
-def file_verify(file, cols):
+def file_verify(
+    file: str,
+    cols: list
+):
     """
-    Function for verify if the file given have the required columns to be procesed.
+    Función para verificar si el archivo contiene las columnas requeridas
 
     PARAMS
     file -> A reference to a .xlsx file (.json/.csv soon)
     cols -> list: columns needed in the file
-
-    RETURN
-    It return a boolean depending on if the file meet or not with the cols specified.
     """
+
     df = pd.read_excel(file)
     df_cols = df.columns
     return all(col in df_cols for col in cols)

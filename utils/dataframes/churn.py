@@ -3,16 +3,21 @@ import openpyxl
 from pathlib import Path
 
 
-def get_info(path, cols=[], ext='.xlsx'):
+def get_info(
+    path: str,
+    cols: list = [],
+    ext: str = '.xlsx'
+):
     """
-    This function takes a file and returns a dataframe with the clolumns specified
-    in string format
+    Toma una referencia a un archivo y devuelve un dataframe con las columnas necesarias
+    en formato string
 
     PARAMS
-    path -> str: Reference to a file
-    cols -> list: cols needed for data extracting
-    ext -> The extension of the file referenced
+    path -> str: Referencia a un archivo
+    cols -> list: columnas necesarias para el manejo de la informacion
+    ext -> str: La extension del archivo referenciado
     """
+    # Creamos el dataframe dependiendo de la extensión
     try:
         if ext == '.xlsx':
             df = pd.read_excel(path, usecols=cols, dtype=str)
@@ -24,6 +29,7 @@ def get_info(path, cols=[], ext='.xlsx'):
         else:
             raise pd.errors.EmptyDataError(
                 'Ocurrio un error el intentar procesar el archivo')
+        # Retronamos el dataframe
         return df
     except ValueError as err:
         print(f'ERROR: {err}')
