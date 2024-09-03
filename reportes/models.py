@@ -13,15 +13,39 @@ import os
 
 # Modelo TipoReporte: Categoriza los tipos de reporte que maneja la app
 class TipoReporte(models.Model):
+    """
+    Modelo encargado de ancapsular los reportes por categorias.
+
+    parametros:
+    name -> str: Nombre del tipo/categoria de reporte.
+    created_at -> datetime: Fecha y hora de creación del objeto.
+    """
     name = models.CharField(max_length=50, unique=True)
-    created_at = models.DateTimeField(auto_now_add=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Función que retorna el campo nombre de la instancia en cuestión.
+        """
         return self.name
 
 
 # Modelo Reporte: Se encarga de crear los reportes cruzando los archivos .xlsx (mas adelante .csv y .json)
 class Reporte(models.Model):
+    """
+    Modelo para crear y almacenar un reporte en base a un dataframe que contiene chats de whatsapp y cuentas
+    asignadas con su repectiva campaña
+
+    Parametros:
+    campaign -> str|choices: Nombre de la  campaña con la que debe asociar los numeros del dataframe.
+    chats_file -> file: Archivo que contiene los numeros que deben ser cruzados con las bases de datos de SMS.
+    numero_inicio -> str: Numero inicial del intervalo que va a utilizar el cruce.
+    numero_final -> str: Numero final(no incluido) del intervalo que va a utilizar el cruce.
+    hora -> time: Hora selecionada por el usuario en la cual desea ver que se realizó el reporte. (Fines únicamente visuales)
+    report_type -> Foreign Key: LLave foránea que categoriza el reporte con un tipo de reporte mediante su nombre.
+    name -> str: Campo generado automaticamente con fines de nombrar el reporte y su archivo generado automaticamente.
+    created_at -> datetime: Fecha y hora de creación del objeto.
+    """
     campaigns_list = (
         ('mora_30', 'MORA 30'),
         ('especiales', 'ESPECIALES'),
@@ -38,29 +62,54 @@ class Reporte(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Función que retorna el nombre campo name del objeto
+        """
         return self.name
 
     def save(self, *args, **kwargs):
+        """
+        (DEPRECATED)
+        Función que sobreescribe el metodo save de django.db.models.Model
+        con el fin de crear el archivo del rpeorte al momento de crear una instancia
+        del modelo.
+        """
+
+        # Obtenemos la fecha actual para uncluir en el nombre
         date = timezone.now().strftime('%Y-%m-%d')
+
+        # Definimos el campo nombre de la instancia
         self.name = f'whatsapp-{self.campaign}-{date}-{self.hora}.xlsx'
+        # Reemplazamos caracteres no aceptados para nombrar archivos
         self.name = self.name.replace(':', '-')
+
+        # Ejecutamos el metodo crear_reporte de la instancia si es que
+        # esta no se ha guardado aún evaluando si tiene o no pk (ID)
         if self.pk == None:
             self.crear_reporte()
+
+        # Llamamos al metodo save() de django.db.models.Model para
+        # guardar correctamente la instancia.
         super().save(*args, **kwargs)
 
     def crear_reporte(self):
-        # Invocamos a database filter para filtrar los que hicieron match.
+        """
+        Función para cruzar un dataframe que contiene números de whatsapp con una base de datos de SMS
+        para crear un reporte personalizado
+        """
+
+        # Invocamos a data_base_filter para filtrar los que hicieron match.
         reporte = whatsapp.data_base_filter(
+            # Seteamos el intervalo
             [self.numero_inicio, self.numero_final],
+            # Referenciamos la base de SMS de la campaña asociada
             Path(f'files/upload/sms_databases/{self.campaign}/sms.xlsx'),
+            # Archivo con numeros de whatsapp
             self.chats_file,
         )
 
-        # Obtenemos el dataframe con los que hicieron match
-        filtered_base = reporte[0]
-
-        # Creamos un dataframe con la lista retornada por reporte
-        no_encontrado = reporte[1]
+        # Obtenemos el dataframe con los que hicieron match y la lista de los números no encontrados
+        filtered_base, no_encontrado = reporte
 
         # Creamos dataframe con los registros de los NO encontrados
         lon = len(no_encontrado)
@@ -83,18 +132,31 @@ class Reporte(models.Model):
         # Creamos una ruta para el archivo que se va a servir
         path = Path(f'files/download/{self.name}')
         final_file = file_no_encontrado.to_excel(path, index=False)
-        return FileResponse(open(path, 'rb'), as_attachment=True, filename=self.name)
+        # return FileResponse(open(path, 'rb'), as_attachment=True, filename=self.name)
 
 
-# Modelo SMSBase: Se encarga de administrar las bases de datos de mensajes
+def ruta_dinamica(instance):
+    """
+    Función para dinamizar el guardado de un archivo en base a su nombre
 
-# Funcion para dinamizar ruta de guardado
-def ruta_dinamica(instance, filename):
+    Parámetros:
+    instance -> models.Model: Instancia de un modelo que contenga un campo name.
+    """
     if not instance.pk:
         return f'files/upload/sms_databases/{instance.name}/sms.xlsx'
 
 
 class SMSBase(models.Model):
+    """
+    Modelo encargado de administrar las bases de datos de envios SMS
+    de las diferentes campañas
+
+    Parámetros:
+    tipo_reporte -> Foreign Key: Relaciona la instancia con un tipo de reporte con el fin de categorizar la base.
+    name -> str|choices: Nombre asignado al modelo basado en campañas existentes.
+    sms_base -> file: Archivo con registros de envio de SMS.
+    created_at -> datetime: Fecha y hora de creación del objeto.
+    """
     sms_type = (
         ('mora_30', 'MORA 30'),
         ('especiales', 'ESPECIALES'),
@@ -105,16 +167,29 @@ class SMSBase(models.Model):
         TipoReporte, on_delete=models.CASCADE, to_field='name')
     name = models.CharField(max_length=50, choices=sms_type)
     sms_base = models.FileField(upload_to=ruta_dinamica)
-    created_at = models.DateTimeField(auto_now_add=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Función que retorna el campo nombre de la instancia
+        """
         return self.name
 
     def limpiar_base(self):
+        """
+        Función que elimina las columnas innecesarias del archivo
+        """
         base = pd.read_excel(self.sms_base, usecols=[
             'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
 
     def actualizar_base(self, nueva_base):
+        """
+        Función que agrega nuevos registros al campo sms_base de la instancia, descartando duplicados
+
+        Parámetros:
+        nueva_base -> file: Archivo con nueovs registros para la actualizar la base existente
+        """
+
         # Creamos los dataframes de las bases nueva y antigua
         old_base = pd.read_excel(self.sms_base, usecols=[
                                  'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
@@ -134,6 +209,11 @@ class SMSBase(models.Model):
             f'files/upload/sms_databases/{self.name}/sms.xlsx', index=False)
 
     def save(self):
+        """
+        Reescribimos el método save para que el campo sms_base sea limpiado antes de que
+        se guarde la instancia
+        """
         if self.pk == None:
             self.limpiar_base()
+        # Invocamos a save() del modelo padre para que se guarde correctamente la instancia
         super().save()
