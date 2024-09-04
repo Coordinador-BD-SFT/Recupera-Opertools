@@ -55,7 +55,7 @@ def clean_rows(
     num_ini -> str: start of the interval.
     num_fin -> str: end of the interval (not included).
     """
-    num_ini = num_ini if not num_ini else lista.index(lista[0])
+    num_ini = lista.index(lista[0]) if not num_ini else lista.index(num_ini)
     num_fin = lista.index(num_fin)
     return lista[num_ini:num_fin]
 # Chat .xls file management until here
