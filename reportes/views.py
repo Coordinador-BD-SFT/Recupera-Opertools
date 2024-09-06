@@ -7,23 +7,29 @@ from io import BytesIO
 from . import forms
 import pandas as pd
 import os
+from datetime import datetime
 # Create your views here.
 
 
 def index(request):
     tipos_reporte = models.TipoReporte.objects.all()
+    scrapers = models.Scraper.objects.all()
 
     return render(
         request,
         'reportes/index.html',
-        context={'tipos_reporte': tipos_reporte}
+        context={
+            'tipos_reporte': tipos_reporte,
+            'scrapers': scrapers,
+        }
     )
 
 
 def reporte(request, tipo_reporte_name):
     reportes = models.Reporte.objects.filter(
-        report_type=tipo_reporte_name).order_by('-id')[:10]
+        report_type=tipo_reporte_name).order_by('-id')[:5]
     report_type = models.TipoReporte.objects.get(name=tipo_reporte_name)
+    sms_bases = models.SMSBase.objects.all()
 
     return render(
         request,
@@ -31,6 +37,7 @@ def reporte(request, tipo_reporte_name):
         context={
             'reportes': reportes,
             'report_type': report_type,
+            'sms_bases': sms_bases,
         }
     )
 
@@ -79,7 +86,10 @@ def reporte_download(request, tipo_reporte_name, reporte_id):
 
     try:
         response = FileResponse(
-            open(f'files/download/{reporte.name}.xlsx', 'rb'), as_attachment=True, filename=f'{reporte.name}.xlsx')
+            open(f'files/download/{reporte.name}', 'rb'),
+            as_attachment=True,
+            filename=reporte.name
+        )
         response['Content-Type'] = 'application/octet-stream'
         return response
     except FileNotFoundError:
@@ -137,6 +147,18 @@ def sms_base_download(request, report_type_name, sms_base_id):
         return response
     except FileNotFoundError as err:
         raise Http404('Archivo no encontrado')
+
+
+def scrapers(request, scraper_id):
+    scraper = get_object_or_404(models.Scraper, id=scraper_id)
+
+    return render(
+        request,
+        'scrapper.html',
+        context={
+            'scraper': scraper,
+        }
+    )
 
 
 def success(request):

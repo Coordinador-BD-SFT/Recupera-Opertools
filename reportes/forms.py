@@ -13,7 +13,7 @@ class Reporteform(forms.ModelForm):
 
     class Meta:
         model = models.Reporte
-        fields = ['name', 'campaign', 'chats_file',
+        fields = ['campaign', 'chats_file',
                   'numero_inicio', 'numero_final', 'report_type', 'hora']
         widgets = {
             'hora': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
@@ -24,7 +24,6 @@ class Reporteform(forms.ModelForm):
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Field('name', css_class='form-control', id='validationCustom01'),
             Field('campaign', css_class='form-select', id='validationCustom01'),
             Field('chats_file', css_class='form-control',
                   id='validationCustom01'),

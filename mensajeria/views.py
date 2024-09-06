@@ -3,11 +3,12 @@ from datetime import datetime
 import time
 import pandas as pd
 from . import forms
-from utils.scrapping import vicidial_scraper
 from utils.scrapping import whatsapp_scraper
+from utils.scrapping.common import get_driver, quit_driver
 from utils.dataframes import churn
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
+from selenium.common import exceptions as selexceptions
 from selenium.common import exceptions as selexceptions
 
 # Create your views here.
