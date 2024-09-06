@@ -38,5 +38,6 @@ urlpatterns = [
         views.sms_base_download,
         name='sms_base_download'
     ),
+    path('scrapers/<scraper_id>', views.scrapers, name='scrapers'),
     path('success', views.success, name='success'),
 ]

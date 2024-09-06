@@ -14,13 +14,13 @@
     </div>
     <div class="container">
         <h1 class="text-center">Obtener informacion del navegador</h1>
-        {% for scraper in scrapers %}
+        {% comment %} {% for scraper in scrapers %}
         <a class="list-group-item list-group-item-action" href="{% url 'reportes:wsp_churn_scraper' %}">
             <p class="text-center">
                 {{ scraper }}
             </p>
         </a>
-        {% endfor %}
+        {% endfor %} {% endcomment %}
     </div>
 </div>
 {% endblock %}

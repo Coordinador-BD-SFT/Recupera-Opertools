@@ -10,18 +10,20 @@ from selenium import webdriver
 import time
 
 
-def get_vicidial_IVRs(driver):
+def get_driver():
+    driver = None
     try:
-        driver.get('https://192.227.124.58/vicidial/admin.php')
+        # Instalamos el driver
+        service = ChromeService(ChromeDriverManager().install())
+        # Iniciamos el driver
+        driver = webdriver.Chrome(service=service)
 
-        driver.switch_to.alert.send_keys('recupera')
-        time.sleep(5)
+        # driver.switch_to.alert.send_keys()
+        return driver
+    except selexceptions.WebDriverException as err:
+        print(f'Error -> {err}')
 
-        common.quit_driver(driver)
 
-        # listas = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((
-        #     By.XPATH,
-        #     '/html/body/center/table[1]/tbody/tr[1]/td[1]/table/tbody/tr[8]/td/a'
-        # )))
-    except selexeptions.NoAlertPresentException as err:
-        print(f'Error: {err}')
+def quit_driver(driver):
+    if driver is not None:
+        driver.quit()

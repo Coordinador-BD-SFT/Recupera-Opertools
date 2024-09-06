@@ -16,12 +16,16 @@ def index(request):
 
     # Traemos todas las instancias de TipoReporte de la base de datos
     tipos_reporte = models.TipoReporte.objects.all()
+    scrapers = models.Scraper.objects.all()
 
     # Renderizamos vista
     return render(
         request,
         'reportes/index.html',
-        context={'tipos_reporte': tipos_reporte}
+        context={
+            'tipos_reporte': tipos_reporte,
+            'scrapers': scrapers,
+        }
     )
 
 
@@ -186,6 +190,18 @@ def sms_base_download(request, report_type_name, sms_base_id):
     except FileNotFoundError as err:
         # Si el archivo no es encontrado manejamos excepcion
         raise Http404('Archivo no encontrado')
+
+
+def scrapers(request, scraper_id):
+    scraper = get_object_or_404(models.Scraper, id=scraper_id)
+
+    return render(
+        request,
+        'scrapper.html',
+        context={
+            'scraper': scraper,
+        }
+    )
 
 
 def success(request):
