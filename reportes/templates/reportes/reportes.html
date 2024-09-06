@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% include "sidebar.html" %}
+
 <div class="container shadow-sm p-3 mb-5 bg-body-tertiary rounded">
     <a class=" btn btn-primary" href="{% url 'reportes:sms_bases' report_type.name  %}" role="button">Bases de
         SMS</a>

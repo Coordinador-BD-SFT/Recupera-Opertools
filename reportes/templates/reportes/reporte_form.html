@@ -3,6 +3,8 @@
 
 {% block content %}
 
+{% include "sidebar.html" %}
+
 <div class="container-sm">
     <h1>Crear</h1>
     <form novalidate action="{% url 'reportes:crear' report_type.name %}" method="post" enctype="multipart/form-data">

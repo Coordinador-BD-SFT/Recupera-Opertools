@@ -1,26 +1,90 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}
+Reportes
+{% endblock web_name %}
+
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/index.css' %}">
+{% endblock link_tags %}
 
 {% block content %}
-<div class="d-flex p-2">
-    <div class="container list-group">
-        <h1 class="text-center">Tipos Reporte</h1>
+
+{% include "sidebar.html" %}
+
+<section class="mainsection">
+    <div class="container reportes">
+        <h2 class="text-center">Reportes</h2>
         {% for reporte in tipos_reporte %}
-        <a class="list-group-item list-group-item-action" href="{% url 'reportes:reporte' reporte.name %}">
-            <p class="text-center">
+        <a class="reportes-list" href="{% url 'reportes:reporte' reporte.name %}" role="button">
+            <span class="button_top reportes-list">
                 {{ reporte.name }}
-            </p>
+            </span>
         </a>
         {% endfor %}
     </div>
-    <div class="container">
-        <h1 class="text-center">Obtener informacion del navegador</h1>
-        {% comment %} {% for scraper in scrapers %}
-        <a class="list-group-item list-group-item-action" href="{% url 'reportes:wsp_churn_scraper' %}">
-            <p class="text-center">
-                {{ scraper }}
-            </p>
-        </a>
-        {% endfor %} {% endcomment %}
+    <div class="container vicidial">
+        <h2 class="text-center">Plataforma Vicidial</h2>
+        <div class="grid-container">
+            <div class="grid-item">
+                <a href="https://192.227.124.58/vicidial/admin.php" role="button" target="_blank">
+                    <span class="button_top"> Limpiar listas
+                    </span>
+                </a>
+            </div>
+            <div class="grid-item">
+                <a href="#" role="button">
+                    <span class="button_top"> Reiniciar listas
+                    </span>
+                </a>
+            </div>
+            <div class="grid-item">
+                <a href="#" role="button">
+                    <span class="button_top"> Descargar listas
+                    </span>
+                </a>
+            </div>
+            <div class="grid-item">
+                <a href="#" role="button">
+                    <span class="button_top"> Cargar listas
+                    </span>
+                </a>
+            </div>
+        </div>
     </div>
-</div>
+    <img src="{% static 'reportes/images/file.jpg' %}" alt="Regupera SAS logo" class="img-fluid image-container">
+    <div class="container telematica">
+        <h2 class="text-center">Telemática</h2>
+        <div class="grid-container">
+            <div class="grid-item">
+                <a href="{% url 'reportes:whatsapp_scraping' %}" role="button">
+                    <span class="button_top"> WHATSAPP
+                    </span>
+
+                </a>
+            </div>
+            <div class="grid-item">
+                <a href="#" role="button">
+                    <span class="button_top"> MAIL
+                    </span>
+
+                </a>
+            </div>
+            <div class="grid-item">
+                <a href="#" role="button">
+                    <span class="button_top"> SMS
+                    </span>
+                </a>
+            </div>
+            <div class="grid-item">
+                <a href="#" role="button">
+                    <span class="button_top"> CALL
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

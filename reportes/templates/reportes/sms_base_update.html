@@ -2,6 +2,9 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+
+{% include "sidebar.html" %}
+
 <div class="container">
     <form novalidate action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
