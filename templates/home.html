@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block content %}
+
+{% include "sidebar.html" %}
 <h1 class="text-center">Bienvenidos a la plataforma de automatizacion Recupera SAS</h1>
 <br>
 <section class="d-flex p-2">
@@ -13,7 +15,7 @@
             Crear un reporte de whatsapp
         </a>
         <a href="reportes/whatsapp/sms_bases" class="list-group-item list-group-item-action">Actualizar bases de SMS</a>
-        <a href="{% url 'mensajeria:index' %}" class="list-group-item list-group-item-action">
+        <a href="{% url 'reportes:whatsapp_scraping' %}" class="list-group-item list-group-item-action">
             Enviar masivos via WhatsApp
         </a>
         <!-- <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link item</a> -->
@@ -36,10 +38,9 @@
                 Featured
             </div>
             <div class="card-body">
-                <h5 class="card-title">App de Mensajería</h5>
-                <p class="card-text">Dentro de esta app podrás enviar masivamente mensajes de whatsapp con unos pocos
-                    clicks.</p>
-                <a href="{% url 'mensajeria:index' %}" class="btn btn-primary">Ir a la APP</a>
+                <h5 class="card-title">App Gestión de clientes</h5>
+                <p class="card-text">Dentro de esta app podrás ver, actualizar manipular y filtrar a tu antojo la asignacion de clientes actual.</p>
+                <a href="#" class="btn btn-primary">Ir a la APP</a>
             </div>
         </div>
     </div>
