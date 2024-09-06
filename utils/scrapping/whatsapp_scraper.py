@@ -10,24 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import exceptions as selexceptions
 
 
-def get_driver():
-    driver = None
-    try:
-        # Instalamos el driver
-        service = ChromeService(ChromeDriverManager().install())
-        # Iniciamos el driver
-        driver = webdriver.Chrome(service=service)
-
-        return driver
-    except selexceptions.WebDriverException as err:
-        print(f'Error -> {err}')
-
-
-def quit_driver(driver):
-    if driver is not None:
-        driver.quit()
-
-
 def get_whatsapp(driver, sleep=2):
     try:
         driver.get('https://web.whatsapp.com/')

@@ -2,8 +2,8 @@ import os
 import datetime
 import pandas as pd
 from . import forms
-from utils.scrapping import vicidial_scraper
 from utils.scrapping import whatsapp_scraper
+from utils.scrapping.common import get_driver, quit_driver
 from utils.dataframes import churn
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
@@ -30,7 +30,7 @@ def whatsapp_scraping(request):
                 os.path.splitext(messages.name)[1]
             )
 
-            driver = whatsapp_scraper.get_driver()
+            driver = get_driver()
             not_wsp = []
             yes_wsp = 0
             df['tipologia'] = [None] * len(df)
@@ -52,7 +52,7 @@ def whatsapp_scraping(request):
                         f'files/download/auto_wsp/Auto_Envio_wsp{messages.name}', index=False)
                     print(f'Total hasta ahora: {idx}')
 
-                whatsapp_scraper.quit_driver(driver)
+                quit_driver(driver)
 
                 return HttpResponse(f'Proceso completado con exito!\nColumnas iteradas -> {idx}\nMensajes enviados -> {yes_wsp}\nUltimo numero -> {dato_contacto}')
 
