@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
     'reportes.apps.ReportesConfig',
-    'mensajeria.apps.MensajeriaConfig',
     'crispy_forms',
     'crispy_bootstrap5',
 ]
@@ -68,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'reportes.context_processors.global_context',
             ],
         },
     },

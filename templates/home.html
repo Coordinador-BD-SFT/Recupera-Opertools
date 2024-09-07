@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock link_tags %}
+
+{% block web_name %} Recupera SAS {% endblock web_name %}
+
 {% block content %}
 
 {% include "sidebar.html" %}
@@ -29,7 +35,10 @@
                 <h5 class="card-title">App de Reportería</h5>
                 <p class="card-text">En esta app, encontrarás herramientas para agilizar los procesos
                     operativos.<br>Para saber mas, ingresa pulsando en el boton de ir a la app.</p>
-                <a href="{% url 'reportes:index' %}" class="btn btn-primary">Ir a la APP</a>
+                <a href="{% url 'reportes:index' %}" role="button">
+                    <span class="button_top"> Ir a la APP
+                    </span>
+                </a>
             </div>
         </div>
         <br><br>
@@ -40,7 +49,10 @@
             <div class="card-body">
                 <h5 class="card-title">App Gestión de clientes</h5>
                 <p class="card-text">Dentro de esta app podrás ver, actualizar manipular y filtrar a tu antojo la asignacion de clientes actual.</p>
-                <a href="#" class="btn btn-primary">Ir a la APP</a>
+                <a href="#" class="#" role="button">
+                    <span class="button_top"> Ir a la APP
+                    </span>
+                </a>
             </div>
         </div>
     </div>
