@@ -39,6 +39,7 @@ urlpatterns = [
         name='sms_base_download'
     ),
     path('scrapers/<scraper_id>', views.scrapers, name='scrapers'),
+    path('vicidial/clean_lists', views.clean_lists, name='clean_lists'),
     path('telematica/whatsapp', views.whatsapp_scraping, name='whatsapp_scraping'),
     path('success', views.success, name='success'),
 ]

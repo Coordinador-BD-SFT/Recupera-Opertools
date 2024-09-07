@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from selenium.common import exceptions as selexceptions
 from utils.dataframes import whatsapp, churn
 from utils.scrapping.common import get_driver, quit_driver
+from utils.scrapping import whatsapp_scraper, vicidial_scraper
 from django.urls import reverse
 from datetime import datetime
 from . import models
@@ -249,7 +250,7 @@ def whatsapp_scraping(request):
                         f'Ocurrio un error en el indice {idx}\nReiniciando proceso...\nError -> {err}')
                     driver.quit()
                     time.sleep(5)
-                    driver = whatsapp_scraper.get_driver()
+                    driver = get_driver()
                     time.sleep(2)
                     whatsapp_scraper.get_whatsapp(driver)
 
@@ -260,13 +261,13 @@ def whatsapp_scraping(request):
             try:
                 not_wsp = []
                 df['tipologia'] = [None] * len(df)
-                driver = whatsapp_scraper.get_driver()
+                driver = get_driver()
                 whatsapp_scraper.get_whatsapp(driver)
 
                 df.apply(lambda row: auto_send(row, driver, not_wsp), axis=1)
                 # df.apply(auto_send, axis=1)
 
-                whatsapp_scraper.quit_driver(driver)
+                quit_driver(driver)
 
                 return HttpResponse(f'Proceso completado con exito!\nTotal de iteraciones -> {len(df)}')
 
@@ -282,6 +283,17 @@ def whatsapp_scraping(request):
         context={
             'form': form
         }
+    )
+
+
+def clean_lists(request):
+    driver = get_driver()
+    vicidial_scraper.get_vicidial_IVRs(driver)
+    quit_driver(driver)
+
+    return render(
+        request,
+        'success.html'
     )
 
 

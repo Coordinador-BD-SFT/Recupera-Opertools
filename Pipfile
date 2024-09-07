@@ -11,6 +11,8 @@ selenium = "*"
 webdriver-manager = "*"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
+pyautogui = "*"
+python-decouple = "*"
 
 [dev-packages]
 

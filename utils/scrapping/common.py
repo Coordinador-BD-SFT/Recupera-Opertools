@@ -13,10 +13,13 @@ import time
 def get_driver():
     driver = None
     try:
+        chrome_options = Options()
+        # ignoramos errores de certificados
+        chrome_options.add_argument('--ignore-certificate-errors')
         # Instalamos el driver
         service = ChromeService(ChromeDriverManager().install())
         # Iniciamos el driver
-        driver = webdriver.Chrome(service=service)
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
         # driver.switch_to.alert.send_keys()
         return driver
