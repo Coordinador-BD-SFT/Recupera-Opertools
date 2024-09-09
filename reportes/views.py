@@ -287,8 +287,28 @@ def whatsapp_scraping(request):
 
 
 def clean_lists(request):
+    # Definimos los links que visitara el scraper
     driver = get_driver()
-    vicidial_scraper.get_vicidial_IVRs(driver)
+
+    for link in request.vicidial_links.values():
+        vicidial_scraper.get_vicidial_lists(driver, url=link, metodo='clean')
+
+    quit_driver(driver)
+
+    return render(
+        request,
+        'success.html'
+    )
+
+
+def download_lists(request):
+    driver = get_driver()
+
+    for link in request.vicidial_links.values():
+        vicidial_scraper.get_vicidial_lists(
+            driver, url=link, metodo='download'
+        )
+
     quit_driver(driver)
 
     return render(
