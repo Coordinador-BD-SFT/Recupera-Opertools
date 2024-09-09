@@ -8,5 +8,5 @@ def global_context(request):
             'reporte_wsp': reverse('reportes:crear', kwargs={'tipo_reporte_name': 'whatsapp'}),
             'sms_bases': reverse('reportes:sms_bases', kwargs={'tipo_reporte_name': 'whatsapp'}),
             'masivos_wsp': reverse('reportes:whatsapp_scraping'),
-        }
+        },
     }
