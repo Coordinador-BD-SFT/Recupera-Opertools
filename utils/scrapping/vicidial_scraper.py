@@ -1,7 +1,7 @@
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.common import exceptions as selexeptions
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -14,6 +14,7 @@ from django.conf import settings
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from typing import Literal
+from pathlib import Path, WindowsPath
 
 
 def login_keys():
@@ -151,9 +152,15 @@ def clean_lists(driver: WebDriver):
         )
         # Limpiamos la lista
         if clean_btn:
-            # clean_btn.click()
-            print('Limpiando... \n')
-            # time.sleep(1.8)
+            clean_btn.click()
+            print('Limpiando...')
+            comfirm_tag = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
+                By.XPATH,
+                '/html/body/center/table[1]/tbody/tr[1]/td[2]/table/tbody/tr[4]/td/font/b'
+            )))
+            if comfirm_tag:
+                driver.back()
+                print(f'Lista limpiada con exito!\n')
             driver.back()
 
     except selexeptions.NoSuchElementException as err:
@@ -161,6 +168,13 @@ def clean_lists(driver: WebDriver):
 
 
 def download_lists(driver: WebDriver):
+    """
+    Descarga las listas que tienen rgistros
+
+    :param driver: Instancia de WebDriver para interactuar con el navegador
+    :type driver: selenium.webdriver.chrome.webriver.WebDriver
+    """
+
     try:
         download_link = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((
             By.XPATH,
@@ -170,3 +184,166 @@ def download_lists(driver: WebDriver):
         print('OK...\n')
     except selexeptions.NoSuchElementException as err:
         print(f'Error -> {err}')
+
+
+def upload_lists(
+    driver: WebDriver,
+    # link: str,
+    file: WindowsPath
+):
+    """
+    Carga los archivos de listas de IVRs y Transaccionales en la plataforma vicidial
+
+    :param driver: Instancia de WebDriver para interactuar con el navegador
+    :type driver: selenium.webdriver.chrome.webriver.WebDriver
+
+    :param link: Link a plataforma vicidial IVRs o Transaccionales
+    :type link: str
+
+    :param file: Referencia a archivo a cargar
+    :type file: pathlib.WindowsPath
+    """
+
+    try:
+        # Navegamos a link de cargue de listas
+        upload_link = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((
+            By.XPATH,
+            '/html/body/center/table[1]/tbody/tr[1]/td[1]/table/tbody/tr[14]/td/a'
+        )))
+        upload_link.click()
+
+        # RELLENAMOS PRIMER FORMULARIO
+        # File input
+        file_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[1]/td[2]/input'
+        )
+        file_input.send_keys(os.path.abspath(file))
+
+        # List override input
+        list_override_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[2]/td[2]/font/select'
+        )
+        # Creamos una instancia de Select con el campo
+        list_override_input = Select(list_override_input)
+        # Iteramos las opciones para seleccionar la correspondiente
+        for option in list_override_input.options:
+            if file.stem in option.text:
+                list_override_input.select_by_visible_text(option.text)
+                print(f'Select input 1: {option.text}')
+                break
+
+        # Country code input (+57)
+        country_code_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[3]/td[2]/font/select'
+        )
+        country_code_input = Select(country_code_input)
+        country_code_input.select_by_visible_text('57 - COL')
+        print('Country code selected: 57 - COL')
+
+        # File type input
+        file_type_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[4]/td[2]/font/input[2]'
+        )
+        # Clickeamos el radio imput si no esta seleccionado
+        if not file_type_input.is_selected():
+            file_type_input.click()
+        print(f'File type input: Archivo personalizado')
+        # Enviamos el formulario
+        submit_btn_1 = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[12]/td/input[1]'
+        )
+        submit_btn_1.submit()
+        print('FORMULARIO PARTE 1 -> OK...')
+
+        # RELLENAMOS SEGUNDO FORMULARIO
+        # vendor_lead_code_input
+        vendor_lead_code_input = WebDriverWait(driver, 20).until(EC.presence_of_element_located((
+            By.XPATH,
+            '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[2]/td[2]/select'
+        )))
+        vendor_lead_code_input = Select(vendor_lead_code_input)
+        vendor_lead_code_input.select_by_index(1)
+        options = vendor_lead_code_input.options
+        print(f'vendor_lead_code_input -> {options[1].text}')
+
+        # source_id_input
+        source_id_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[3]/td[2]/select'
+        )
+        source_id_input = Select(source_id_input)
+        source_id_input.select_by_index(2)
+        options = source_id_input.options
+        print(f'source_id_input -> {options[2].text}')
+
+        # phone_number_input
+        phone_number_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[4]/td[2]/select'
+        )
+        phone_number_input = Select(phone_number_input)
+        phone_number_input.select_by_index(3)
+        options = phone_number_input.options
+        print(f'phone_number_input -> {options[3].text}')
+
+        # title_input
+        title_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[5]/td[2]/select'
+        )
+        title_input = Select(title_input)
+        title_input.select_by_index(4)
+        options = title_input.options
+        print(f'title_input -> {options[4].text}')
+
+        # first_name_input
+        first_name_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[6]/td[2]/select'
+        )
+        first_name_input = Select(first_name_input)
+        first_name_input.select_by_index(5)
+        options = first_name_input.options
+        print(f'first_name_input -> {options[5].text}')
+
+        # last_name_input
+        last_name_input = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[8]/td[2]/select'
+        )
+        last_name_input = Select(last_name_input)
+        last_name_input.select_by_index(7)
+        options = last_name_input.options
+        print(f'last_name_input -> {options[7].text}')
+
+        # Obtenenos la etiqeta que contiene los inputs del segundo formulario
+        tr_input_list = driver.find_element(
+            By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[25]/th'
+        )
+        tr_input_list = tr_input_list.find_elements(By.TAG_NAME, 'input')
+        submit_btn_2 = tr_input_list[0]
+        print(submit_btn_2)
+
+        # Enviamos el formulario
+        # submit_btn_2 = driver.find_element(
+        #     By.XPATH, '/html/body/table[2]/tbody/tr/td/form/table/tbody/tr[25]/th/input[1]'
+        # )
+        submit_btn_2.click()
+
+        print('FORMULARIO PARTE 2 --> OK')
+
+        comfirm_tag = WebDriverWait(driver, 60).until(EC.presence_of_element_located((
+            By.XPATH,
+            '/html/body/table[2]/tbody/tr/td/center/font/b[2]'
+        )))
+
+        if comfirm_tag:
+            lists_module = driver.find_element(
+                By.XPATH, '/html/body/table[1]/tbody/tr/td[5]/a'
+            )
+            lists_module.click()
+            print(f'{file.stem} cargado con exito!\n')
+        else:
+            raise selexeptions.NoSuchElementException(
+                f'No se pudo confirmar el cargue de la lista {file.stem}'
+            )
+
+    except (selexeptions.WebDriverException, selexeptions.NoSuchElementException, selexeptions.TimeoutException) as err:
+        print(f'Error -> {err}')
+
+    # Volvemos un paso para evitar conflictos entre iteraciones

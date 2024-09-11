@@ -1,11 +1,15 @@
 from django.http import HttpResponse, HttpResponseRedirect, FileResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from selenium.common import exceptions as selexceptions
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from utils.dataframes import whatsapp, churn
 from utils.scrapping.common import get_driver, quit_driver
 from utils.scrapping import whatsapp_scraper, vicidial_scraper
 from django.urls import reverse
 from datetime import datetime
+from pathlib import Path
 from . import models
 from io import BytesIO
 from . import forms
@@ -215,7 +219,8 @@ def whatsapp_scraping(request):
             messages = form.cleaned_data['messages']
             df = churn.get_info(
                 messages,
-                ['Dato_Contacto', 'SMS'],
+                # ['Dato_Contacto', 'SMS'],
+                ['Dato_Contacto', 'Cuenta', 'SMS'],
                 os.path.splitext(messages.name)[1]
             )
 
@@ -310,6 +315,51 @@ def download_lists(request):
         )
 
     quit_driver(driver)
+
+    return render(
+        request,
+        'success.html'
+    )
+
+
+def upload_lists(request):
+    # Obtenemos el navegador
+    driver = get_driver()
+
+    # Obtenemos la carpeta con las listas
+    files_dir = Path('files/upload/listas_prueba')
+
+    # Obtenemos ls links para montar las listas
+    for link in request.vicidial_links.values():
+        # Navegamos a la url e iniciamos sesión
+        driver.get(link)
+        vicidial_scraper.login_keys()
+        # Obtenemos el modulo de listas
+        lists_link = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((
+            By.XPATH,
+            '/html/body/center/table[1]/tbody/tr[1]/td[1]/table/tbody/tr[8]/td/a'
+        )))
+        lists_link.click()
+        time.sleep(1)
+        # Iteramos el directorio para subir los elmentos
+        for file in files_dir.iterdir():
+            # Condicionamos por tipo de lista
+            if ('TRANS' in file.stem and '192.227.120.75' in link):
+                print(f'Cargando {file.stem}...')
+                # Logica para subir el archivo
+                vicidial_scraper.upload_lists(driver, file)
+            elif ('IVR' in file.stem and '192.227.124.58' in link):
+                print(f'Cargando {file.stem}...')
+                # logica para subir el archivo
+                vicidial_scraper.upload_lists(driver, file)
+            else:
+                stems = ['IVR', 'TRANS']
+                if not any(stem in file.stem for stem in stems):
+                    print('El archivo no corresponde')
+                else:
+                    continue
+
+    driver.quit()
 
     return render(
         request,
