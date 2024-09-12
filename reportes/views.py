@@ -7,7 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from utils.dataframes import whatsapp, churn
 from utils.scrapping.common import get_driver, quit_driver
 from utils.scrapping import whatsapp_scraper, vicidial_scraper
-from django.urls import reverse
+from django.views.generic.edit import FormView
+from django.urls import reverse, reverse_lazy
 from datetime import datetime
 from pathlib import Path
 from . import models
@@ -227,6 +228,8 @@ def whatsapp_scraping(request):
             # def auto_send(row):
             def auto_send(row, driver, not_wsp):
                 idx = row.name
+                if (int(idx) % 200) == 0:
+                    time.sleep(300)
                 try:
                     dato_contacto = row['Dato_Contacto']
                     mensaje = row['SMS']
@@ -327,9 +330,10 @@ def upload_lists(request):
     driver = get_driver()
 
     # Obtenemos la carpeta con las listas
-    files_dir = Path('files/upload/listas_prueba')
+    files_dir = Path('files/upload/listas')
 
     # Obtenemos ls links para montar las listas
+    print('Cargando listas...')
     for link in request.vicidial_links.values():
         # Navegamos a la url e iniciamos sesión
         driver.get(link)
@@ -367,6 +371,30 @@ def upload_lists(request):
     )
 
 
+class UpdateLists(FormView):
+    form_class = forms.UpdateListsForm
+    template_name = 'reportes/update_lists.html'
+    success_url = reverse_lazy('reportes:success')
+
+    def form_valid(self, form):
+        # files = form.cleaned_data['lists_files']
+        files = self.request.FILES.getlist('lists_files')
+        lists_dir = Path('files/upload/listas')
+        for file in lists_dir.iterdir():
+            os.remove(file)
+        # Agregamos los nuevos
+        for file in files:
+            file_path = lists_dir / file.name
+            with open(file_path, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+
+        return super().form_valid(form)
+
+
 def success(request):
     # Vista para retornar una vista de <¡exito!>
-    return HttpResponse('<h1>Proceso completado con exito</h1>')
+    return render(
+        request,
+        'success.html'
+    )

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block web_name %}Actualizar listas{% endblock web_name %}
+{% block content %}
+{% include "sidebar.html" %}
+<div class="container">
+    <form novalidate method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-primary" type="submit">Actualizar</button>
+    </form>
+    <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">volver</a>
+</div>
+{% endblock content %}
