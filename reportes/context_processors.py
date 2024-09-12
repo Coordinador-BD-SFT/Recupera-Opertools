@@ -1,5 +1,6 @@
 from django.http import request
 from django.shortcuts import reverse, redirect
+from django.urls import reverse_lazy
 
 
 def global_context(request):
@@ -9,4 +10,5 @@ def global_context(request):
             'sms_bases': reverse('reportes:sms_bases', kwargs={'tipo_reporte_name': 'whatsapp'}),
             'masivos_wsp': reverse('reportes:whatsapp_scraping'),
         },
+        'succes': reverse_lazy('reportes:success')
     }
