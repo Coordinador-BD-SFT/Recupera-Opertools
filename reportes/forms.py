@@ -139,3 +139,41 @@ class WhatsappScrapingForm(forms.Form):
             # Agregamos clases e identificadores Bootstrap5
             Field('messages', css_class='form-control', id='validationCustom01')
         )
+
+
+class MultipleFileInput(forms.ClearableFileInput):
+    """
+    Agrega posibilidad de leer multiples archivos en un solo campo de formulario
+    """
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    """
+    Campo para subir múltiples archivos en un solo input
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('widget', MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, value, initial=None):
+        if isinstance(value, (list, tuple)):
+            return [super(MultipleFileField, self).clean(file) for file in value if file]
+        return super(MultipleFileField, self).clean(value)
+
+
+class UpdateListsForm(forms.Form):
+    """
+    Formulario para actualizar la carpeta de donde se obtienen las listas a cargar
+    """
+    lists_files = MultipleFileField(label='selecciona los nuevos archivos')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('lists_files', css_class='form_control',
+                  id='formFileMultiple')
+        )
