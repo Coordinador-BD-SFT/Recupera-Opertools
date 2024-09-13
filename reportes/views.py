@@ -214,48 +214,52 @@ def scrapers(request, scraper_id):
 
 
 def whatsapp_scraping(request):
+    # Vista que controla el envio masivo automatico de whatsapp
     if request.method == 'POST':
         form = forms.WhatsappScrapingForm(request.POST, request.FILES)
         if form.is_valid():
+            # Obtenemos el archivo con los numeros y mensajes y lo filtramos
             messages = form.cleaned_data['messages']
             df = churn.get_info(
                 messages,
-                # ['Dato_Contacto', 'SMS'],
                 ['Dato_Contacto', 'Cuenta', 'SMS'],
                 os.path.splitext(messages.name)[1]
             )
 
-            # def auto_send(row):
+           # Definimos una funcion para aplicar a cada fila del dataframe
             def auto_send(row, driver, not_wsp):
+                # Creamos el indice
                 idx = row.name
+                # Pausamos la operacion por 5 min cada 200 mensajes
                 if (int(idx) % 200) == 0:
                     time.sleep(300)
                 try:
+                    # Obtenemos el número y el mensaje
                     dato_contacto = row['Dato_Contacto']
                     mensaje = row['SMS']
+                    # Buscamos el numero con selenium
                     is_wsp = whatsapp_scraper.search_num(driver, dato_contacto)
-                    # is_wsp = False if (idx % 30) == 0 else True
                     if is_wsp:
+                        # Si existe, enviamos el mensaje y modificamos el dataframe
                         whatsapp_scraper.send_msj(driver, mensaje)
                         df.at[idx, 'tipologia'] = 'ENVIADO'
                         enviados = len(df[df['tipologia'] == 'ENVIADO'])
+                        # Brindamos informacion en la terminal
                         print(
-                            f'{idx} - {dato_contacto}, ENVIADO, {datetime.now()}')
-                        print(f'Enviados: {enviados}')
+                            f'{idx} - {dato_contacto}, ENVIADO, {datetime.now()}\nEnviados: {enviados}')
                     else:
+                        # Si no existe, modificamos el dataframe e imprimimos informacin en la terminal
                         df.at[idx, 'tipologia'] = 'No es WhatsApp'
-                        not_wsp.append(dato_contacto)
-                        # print(
-                        #     f'Num: {dato_contacto} no es whatsapp - en la fila->{idx}')
                         print(
                             f'{idx} - {dato_contacto}, No es WhatsApp, {datetime.now()}')
+                    # Rescribimos el dataframe en cada iteracion para no perder la información en caso de algún fallo
                     df.to_excel(
                         f'files/download/auto_wsp/Auto_Envio_wsp{messages.name}', index=False)
 
                 except (Exception, selexceptions.NoSuchWindowException) as err:
-                    # except Exception as err:
                     print(
                         f'Ocurrio un error en el indice {idx}\nReiniciando proceso...\nError -> {err}')
+                    # En caso de error, reiniciamos la funcion para no perder el indice en el que estabamos
                     driver.quit()
                     time.sleep(5)
                     driver = get_driver()
@@ -264,16 +268,16 @@ def whatsapp_scraping(request):
 
                     # Reintentar iteracion
                     auto_send(row, driver, not_wsp)
-                    # auto_send(row)
 
             try:
-                not_wsp = []
+                # Creamos una columna para mapear datos
                 df['tipologia'] = [None] * len(df)
                 driver = get_driver()
+                # Navegamos a whatsapp web
                 whatsapp_scraper.get_whatsapp(driver)
 
+                # Ejecutamos una funcion para cada fila del dataframe (mas eficiente que un for)
                 df.apply(lambda row: auto_send(row, driver, not_wsp), axis=1)
-                # df.apply(auto_send, axis=1)
 
                 quit_driver(driver)
 
@@ -299,6 +303,7 @@ def clean_lists(request):
     driver = get_driver()
 
     for link in request.vicidial_links.values():
+        # Por cada link de listas ejecutamos la funcion
         vicidial_scraper.get_vicidial_lists(driver, url=link, metodo='clean')
 
     quit_driver(driver)
@@ -313,6 +318,7 @@ def download_lists(request):
     driver = get_driver()
 
     for link in request.vicidial_links.values():
+        # Por cada link de listas ejecutamos la función
         vicidial_scraper.get_vicidial_lists(
             driver, url=link, metodo='download'
         )
@@ -376,7 +382,6 @@ class UpdateLists(FormView):
     template_name = 'reportes/update_lists.html'
     success_url = reverse_lazy('reportes:success')
     files_dir = Path('files/upload/listas')
-    inside_files = [file.stem for file in files_dir.iterdir()]
 
     def form_valid(self, form):
         # files = form.cleaned_data['lists_files']
@@ -395,8 +400,11 @@ class UpdateLists(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["inside_files"] = self.inside_files
+        context["inside_files"] = self.get_files(self.files_dir)
         return context
+
+    def get_files(self, path):
+        return [file.stem for file in path.iterdir()]
 
 
 def success(request):

@@ -8,11 +8,27 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import exceptions as selexceptions
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 
-def get_whatsapp(driver, sleep=2):
+def get_whatsapp(
+    driver: WebDriver,
+    sleep: int = 2
+):
+    """
+    Navega a whatsapp en una nueva instancia del navegador esperando hasta 5min a que se inicie sesion
+    en ase a la búsqueda de un elemento
+
+    :param driver: Instancia de WebDriver para interactuar con el navegador
+    :type driver: selenium.webdriver.chrome.webdriver.WebDriver
+
+    :param sleep: Define dinámicamente cuanto tiempo debe esperar el codigo para seguir ejecutandose
+    :type sleep: int
+    """
     try:
+        # Navegamos a whatsapp web
         driver.get('https://web.whatsapp.com/')
+        # Esperamos a que se inicie sesión con base a un elemento del dom
         new_chat_btn = WebDriverWait(driver, 300).until(EC.element_to_be_clickable(
             (
                 By.XPATH,
@@ -21,13 +37,15 @@ def get_whatsapp(driver, sleep=2):
         time.sleep(sleep)
 
     except selexceptions.NoSuchElementException as err:
-        print(
-            f'Error al intentar encontrar el elemento (get_whatsapp) -> {err}')
+        print(f'Error al intentar encontrar el elemento -> {err}')
     except selexceptions.TimeoutException as err:
-        print(f'Tiempo de espera agotado (get_whatsapp) -> {err}')
+        print(f'Tiempo de espera agotado -> {err}')
 
 
 def new_chat_btn_exist():
+    """
+    verifica si el boton de nuevo chat esta presente en el DOM
+    """
     try:
         new_chat_btn = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
             By.XPATH,
@@ -41,7 +59,23 @@ def new_chat_btn_exist():
         print(f'Error en new chat click -> {err}')
 
 
-def search_num(driver, num, sleep=2):
+def search_num(
+    driver: WebDriver,
+    num: str,
+    sleep: int = 2
+):
+    """
+    Busca un número telefonico en whatsapp y verifica si existe, caso contrario refresca el navegador
+
+    :param driver: Instancia de WebDriver para interactuar con el navegador
+    :type driver: selenium.webdriver.chrome.webdriver.WebDriver
+
+    :param num: Numero telefonico a buscar en whatsapp
+    :type num: str
+
+    :param sleep: Define dinámicamente cuanto tiempo debe esperar el codigo para seguir ejecutandose
+    :type sleep: int
+    """
     try:
         # Buscamos y clickeamos boton de nevo chat
         new_chat_btn = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
@@ -52,7 +86,7 @@ def search_num(driver, num, sleep=2):
             time.sleep(1)
             new_chat_btn.click()
 
-        # Buscamos y seleccionamos caja de texto y enviamos numeor a buscar
+        # Buscamos y seleccionamos caja de texto y enviamos número a buscar
         text_box = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
             By.XPATH,
             '//*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div[1]/div[2]/div[2]/div/div/p'
@@ -78,7 +112,23 @@ def search_num(driver, num, sleep=2):
         return False
 
 
-def send_msj(driver, msj, sleep=2):
+def send_msj(
+    driver: WebDriver,
+    msj: str,
+    sleep: int = 2
+):
+    """
+    Localiza la caja de texto del chat abierto y envia un mensaje
+
+    :param driver: Instancia de WebDriver para interactuar con el navegador
+    :type driver: selenium.webdriver.chrome.webdriver.WebDriver
+
+    :param msj:
+    :type msj:
+
+    :param sleep: Define dinámicamente cuanto tiempo debe esperar el codigo para seguir ejecutandose
+    :type sleep: int
+    """
     try:
         # Buscamos caja de texto
         time.sleep(sleep)
@@ -86,6 +136,7 @@ def send_msj(driver, msj, sleep=2):
             By.XPATH,
             '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[1]/p'
         )))
+        # Enviamos el mensaje
         if text_box:
             text_box.click()
             text_box.clear()
