@@ -375,6 +375,8 @@ class UpdateLists(FormView):
     form_class = forms.UpdateListsForm
     template_name = 'reportes/update_lists.html'
     success_url = reverse_lazy('reportes:success')
+    files_dir = Path('files/upload/listas')
+    inside_files = [file.stem for file in files_dir.iterdir()]
 
     def form_valid(self, form):
         # files = form.cleaned_data['lists_files']
@@ -390,6 +392,11 @@ class UpdateLists(FormView):
                     destination.write(chunk)
 
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["inside_files"] = self.inside_files
+        return context
 
 
 def success(request):

@@ -5,12 +5,22 @@
 {% block web_name %}Actualizar listas{% endblock web_name %}
 {% block content %}
 {% include "sidebar.html" %}
-<div class="container">
-    <form novalidate method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button class="btn btn-primary" type="submit">Actualizar</button>
-    </form>
-    <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">volver</a>
-</div>
+<sec class="d-flex p-2">
+    <div class="container">
+        <form novalidate method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-primary" type="submit">Actualizar</button>
+        </form>
+        <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">volver</a>
+    </div>
+    <div class="container">
+        <ul class="list-group">
+            <li class="list-group-item active">Listas actuales</li>
+            {% for file in inside_files %}
+            <li class="list-group-item">{{ file }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</sec>
 {% endblock content %}
