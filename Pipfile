@@ -4,17 +4,17 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
-pandas = "*"
-openpyxl = "*"
-selenium = "*"
-webdriver-manager = "*"
-django-crispy-forms = "*"
-crispy-bootstrap5 = "*"
-pyautogui = "*"
-python-decouple = "*"
+'django' = "5.1.*"
+'pandas' = "2.2.*"
+'openpyxl' = "3.1.*"
+'selenium' = "4.24.*"
+'webdriver-manager' = "4.0.*"
+'django-crispy-forms' = "2.3"
+'crispy-bootstrap5' = "2024.2"
+'pyautogui' = "0.9.54"
+'python-decouple' = "3.8"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = ">=3.12"
