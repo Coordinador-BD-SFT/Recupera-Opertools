@@ -217,11 +217,3 @@ class SMSBase(models.Model):
             self.limpiar_base()
         # Invocamos a save() del modelo padre para que se guarde correctamente la instancia
         super().save()
-
-
-class Scraper(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    created_at = models.DateTimeField(auto_now_add=timezone.now)
-
-    def __str__(self):
-        return self.name

@@ -317,7 +317,6 @@ def upload_lists(
         )
         tr_input_list = tr_input_list.find_elements(By.TAG_NAME, 'input')
         submit_btn_2 = tr_input_list[0]
-        print(submit_btn_2)
 
         # Enviamos el formulario
         # submit_btn_2 = driver.find_element(
