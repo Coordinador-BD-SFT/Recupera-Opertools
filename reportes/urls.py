@@ -38,12 +38,13 @@ urlpatterns = [
         views.sms_base_download,
         name='sms_base_download'
     ),
-    path('scrapers/<scraper_id>', views.scrapers, name='scrapers'),
+    # path('scrapers/<scraper_id>', views.scrapers, name='scrapers'),
     path('vicidial/clean_lists', views.clean_lists, name='clean_lists'),
     path('vicidial/download_lists', views.download_lists, name='download_lists'),
     path('vicidial/upload_lists', views.upload_lists, name='upload_lists'),
     path('vicidial/update_lists', views.UpdateLists.as_view(), name='update_lists'),
     path('vicidial/lists_reports', views.lists_reports, name='lists_reports'),
     path('telematica/whatsapp', views.whatsapp_scraping, name='whatsapp_scraping'),
+    path('telematica/sms', views.reports_sms, name='reports_sms'),
     path('process/success', views.success, name='success'),
 ]

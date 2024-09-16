@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block web_name %}Reporte recursos SMS{% endblock web_name %}
+{% block content %}
+{% include "sidebar.html" %}
+
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">HORA</th>
+                <th scope="col">MARCA</th>
+                <th scope="col">RECURSO</th>
+                <th scope="col">RECUENTO</th>
+                <th scope="col">CAMAÑA</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in records %}
+            <tr>
+                <td>{{ item.hora }}</td>
+                <td>{{ item.marca }}</td>
+                <td>SMS SAEM</td>
+                <td>{{ item.recuento }}</td>
+                <td>CLARO</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th scope="row">TOTAL</th>
+                <th scope="row">{{ total }}</th>
+            </tr>
+        </tbody>
+    </table>
+    <div class="container">
+        <p class="text-xl-end">Tiempo de ejecución{{ execution_time }}</p>
+    </div>
+</div>
+
+{% endblock content %}

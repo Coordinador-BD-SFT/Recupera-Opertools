@@ -9,12 +9,15 @@ from utils.scrapping.common import get_driver, quit_driver
 from utils.scrapping import whatsapp_scraper, vicidial_scraper
 from django.views.generic.edit import FormView
 from django.urls import reverse, reverse_lazy
+from utils.dataframes import telematica
 from datetime import datetime
+from functools import reduce
 from pathlib import Path
 from . import models
 from io import BytesIO
 from . import forms
 import pandas as pd
+import math
 import time
 import os
 # Create your views here.
@@ -25,15 +28,12 @@ def index(request):
 
     # Traemos todas las instancias de TipoReporte de la base de datos
     tipos_reporte = models.TipoReporte.objects.all()
-    scrapers = models.Scraper.objects.all()
-
     # Renderizamos vista
     return render(
         request,
         'reportes/index.html',
         context={
             'tipos_reporte': tipos_reporte,
-            'scrapers': scrapers,
         }
     )
 
@@ -199,18 +199,6 @@ def sms_base_download(request, report_type_name, sms_base_id):
     except FileNotFoundError as err:
         # Si el archivo no es encontrado manejamos excepcion
         raise Http404('Archivo no encontrado')
-
-
-def scrapers(request, scraper_id):
-    scraper = get_object_or_404(models.Scraper, id=scraper_id)
-
-    return render(
-        request,
-        'scrapper.html',
-        context={
-            'scraper': scraper,
-        }
-    )
 
 
 def whatsapp_scraping(request):
@@ -409,19 +397,49 @@ class UpdateLists(FormView):
 
 def lists_reports(request):
     # Funcion para renderizar reportes sobre las listas de IVRs y Transaccionales
-    from utils.dataframes import listas
+
+    # Tomamos el tiempo en el que comienza la tarea
+    start_time = time.time()
+    # Referenciamos el directorio de las listas
     files_dir = Path('files/upload/listas')
+    # Obtenemos el tipo de lista a iterar proxiamente formulario)
     columna = 'FIRST NAME'
 
-    dataframe = listas.read_lists(files_dir, 'IVR')
-    values = listas.count_reg_per_camppaign(dataframe, columna)
+    dataframe = telematica.read_lists(files_dir, 'TRANS')
+    values = telematica.count_reg_per_camppaign(dataframe, columna)
+
+    end_time = time.time()
+    execution_time = end_time - start_time
 
     return render(
         request,
         'reportes/lists_reports.html',
         context={
-            'v_keys': values.keys(),
-            'v_values': values.values(),
+            'values': values.items(),
+            'execution_time': round(execution_time, 3),
+        }
+    )
+
+
+def reports_sms(request):
+    start_time = time.time()
+
+    files_dir = Path('files/upload/envio_sms')
+
+    records = telematica.read_sms(files_dir)
+
+    total = reduce(lambda x, y: x + y.recuento, records, 0)
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+
+    return render(
+        request,
+        'reportes/reports_sms.html',
+        context={
+            'records': records,
+            'execution_time': round(execution_time, 3),
+            'total': total,
         }
     )
 
