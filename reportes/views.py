@@ -407,6 +407,25 @@ class UpdateLists(FormView):
         return [file.stem for file in path.iterdir()]
 
 
+def lists_reports(request):
+    # Funcion para renderizar reportes sobre las listas de IVRs y Transaccionales
+    from utils.dataframes import listas
+    files_dir = Path('files/upload/listas')
+    columna = 'FIRST NAME'
+
+    dataframe = listas.read_lists(files_dir, 'IVR')
+    values = listas.count_reg_per_camppaign(dataframe, columna)
+
+    return render(
+        request,
+        'reportes/lists_reports.html',
+        context={
+            'v_keys': values.keys(),
+            'v_values': values.values(),
+        }
+    )
+
+
 def success(request):
     # Vista para retornar una vista de <¡exito!>
     return render(

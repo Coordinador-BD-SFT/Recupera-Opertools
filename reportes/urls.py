@@ -43,6 +43,7 @@ urlpatterns = [
     path('vicidial/download_lists', views.download_lists, name='download_lists'),
     path('vicidial/upload_lists', views.upload_lists, name='upload_lists'),
     path('vicidial/update_lists', views.UpdateLists.as_view(), name='update_lists'),
+    path('vicidial/lists_reports', views.lists_reports, name='lists_reports'),
     path('telematica/whatsapp', views.whatsapp_scraping, name='whatsapp_scraping'),
     path('process/success', views.success, name='success'),
 ]

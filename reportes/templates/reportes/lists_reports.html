@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block web_name %}Reportes IVR/TRANS{% endblock web_name %}
+
+{% block content %}
+{% include "sidebar.html" %}
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                {% for key in v_keys %}
+                <th scope="col">{{ key }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for value in v_values %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
