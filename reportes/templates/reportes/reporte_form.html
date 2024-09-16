@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
+{% block web_name %}crear un reporte {{ report_type.name }}{% endblock web_name %}
 {% block content %}
 
 {% include "sidebar.html" %}

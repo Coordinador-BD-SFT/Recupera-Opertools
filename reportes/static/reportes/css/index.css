@@ -2,32 +2,27 @@
 .mainsection {
     display: grid;
     grid-template-columns: repeat(2, 45%);
-    grid-template-rows: repeat(2, 250px);
+    grid-template-rows: auto;
     gap: 15px;
-    /* Espacio entre los elementos de la grilla */
     height: 90vh;
-    /* Ajusta la altura según sea necesario */
     width: 90vw;
-    /* Ajusta el ancho según sea necesario */
     margin: auto;
     /* Centra la sección en el contenedor padre si es necesario */
 }
 
 /* Estilo para los contenedores internos */
 .container {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    /* Título y contenido */
-    gap: 10px;
-    /* Espacio entre el título y el contenido */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Espacio entre los elementos internos */
     padding: 10px;
     border-radius: 10px;
-    /* Borde redondeado */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Sombra sutil */
     background-color: #fff;
-    /* Fondo blanco para mejor visibilidad */
     border: 1px solid #e5e5e5;
+    height: 100%;
+    /* Ocupa la altura completa del contenedor principal */
 }
 
 /* Estilo para el título centrado */
@@ -40,11 +35,8 @@
 .grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    /* Dos columnas de igual tamaño */
     grid-template-rows: repeat(2, auto);
-    /* Dos filas de tamaño automático */
     gap: 10px;
-    /* Espacio entre los elementos de la grilla */
 }
 
 /* Estilo para los elementos de la grilla */
@@ -54,28 +46,23 @@
     align-items: center;
 }
 
+/* Estilo para los enlaces y botones */
 a {
-    /* Variables */
-    --button_radius: 0.75em;
-    --button_color: #e8e8e8;
-    --button_outline_color: #000000;
+    text-decoration: none;
     font-size: 17px;
     font-weight: bold;
-    border: none;
-    border-radius: var(--button_radius);
-    background: var(--button_outline_color);
-    text-decoration: none;
 }
 
+/* Estilo para los botones */
 .button_top {
     display: block;
     box-sizing: border-box;
-    border: 2px solid var(--button_outline_color);
-    border-radius: var(--button_radius);
+    border: 2px solid #000000;
+    border-radius: 0.75em;
     padding: 0.75em 1.5em;
-    background: var(--button_color);
-    color: var(--button_outline_color);
-    transform: translateY(-0.2em);
+    background: #e8e8e8;
+    color: #000000;
+    text-align: center;
     transition: transform 0.1s ease;
     width: 210px;
     height: 60px;
@@ -83,17 +70,13 @@ a {
 }
 
 a:hover .button_top {
-    /* Pull the button upwards when hovered */
     transform: translateY(-0.33em);
 }
 
 a:active .button_top {
-    /* Push the button downwards when pressed */
     transform: translateY(0);
 }
 
-
-/* Estilo para los botones */
 .btn-primary {
     display: inline-block;
     padding: 10px 20px;
@@ -103,7 +86,6 @@ a:active .button_top {
     border-radius: 5px;
 }
 
-/* Opcional: Estilo para los botones en estado hover */
 .btn-primary:hover {
     background-color: #0056b3;
 }
@@ -113,15 +95,16 @@ a:active .button_top {
     height: 60px;
 }
 
-
 /* Estilo para la imagen */
 .img-fluid {
     align-self: center;
     justify-self: center;
-    width: 440px;
-    /* Ajusta la imagen al tamaño del contenedor */
-    height: 240px;
+    width: 100%;
+    /* Ajusta la imagen al ancho del contenedor */
+    height: auto;
     /* Mantiene la proporción de la imagen */
+    max-width: 440px;
+    /* Ajusta el tamaño máximo si es necesario */
 }
 
 .navbar-brand {
@@ -144,7 +127,10 @@ a:active .button_top {
 }
 
 .reportes-list {
-    width: 510px;
-    height: 60px;
+    width: 100%;
+    height: auto;
     justify-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
