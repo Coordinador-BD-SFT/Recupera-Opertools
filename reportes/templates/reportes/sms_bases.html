@@ -1,29 +1,51 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block web_name %}Bases de SMS{% endblock web_name %}
+
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/sms_bases.css' %}">
+{% endblock link_tags %}
+
 {% block content %}
 
-{% include "sidebar.html" %}
-
 <div class="container">
+    <h2 class="text-center">Bases de envío de mensajes</h2><br>
     <ul class="list-group">
         {% for sms_base in sms_bases %}
         <li class="list-group-item" aria-current="true">
-            <div>
-                {{ sms_base.name }}
+            <div class="d-flex justify-content-between">
+                <span class="align-middle">
+                    {% if sms_base.name == 'mora_30' %}
+                    MORA 30
+                    {% endif %}
+                    {% if sms_base.name == 'especiales' %}
+                    ESPECIALES
+                    {% endif %}
+                    {% if sms_base.name == 'castigo' %}
+                    CASTIGO
+                    {% endif %}
+                </span>
+                <div class="btn-group">
+                    <a class="btn btn-primary" href="{% url 'reportes:sms_update' report_type.name sms_base.id %}">
+                        Actualizar
+                    </a>
+                    <a href="{% url 'reportes:sms_base_download' report_type.name sms_base.id %}"
+                        class="btn btn-warning">
+                        Descargar
+                    </a>
+                </div>
+
             </div>
-            <div class="d-flex justify-content-end">
-                <a class="btn btn-primary" href="{% url 'reportes:sms_update' report_type.name sms_base.id %}">
-                    Actualizar
-                </a>
-                <a href="{% url 'reportes:sms_base_download' report_type.name sms_base.id %}" class="btn btn-warning">
-                    Descargar
-                </a>
+            <div>
             </div>
         </li>
         {% endfor %}
     </ul>
     <br>
-    <a class="btn btn-secondary" href="{% url 'reportes:reporte' report_type.name %}" role="button">Volver</a>
+    <div class="d-flex justify-content-center back-btn-container">
+        <a class="btn btn-secondary back-btn" href="{% url 'reportes:reporte' report_type.name %}"
+            role="button">Volver</a>
+    </div>
 </div>
 {% endblock content %}

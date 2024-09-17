@@ -1,16 +1,23 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block web_name %} Auto Envío WhatsApp {% endblock web_name %}
 
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/whatsapp_scraping.css' %}">
+{% endblock link_tags %}
+
 {% block content %}
-{% include "sidebar.html" %}
 <div class="container">
+    <h2 class="text-center">Enviar mensajes masivamente vía WhatsApp</h2>
     <form novalidate method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
-        <button class="btn btn-primary" type="submit">Enviar</button>
+        <div class="btn-group">
+            <button class="btn btn-primary" type="submit">Enviar</button>
+            <a class="btn btn-secondary" href="{% url 'reportes:index' %}" role="button">volver</a>
+        </div>
     </form>
-    <a class="btn btn-secondary" href="{% url 'reportes:index' %}" role="button">volver</a>
 </div>
 {% endblock content %}

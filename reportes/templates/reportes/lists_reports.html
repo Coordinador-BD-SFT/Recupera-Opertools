@@ -1,10 +1,16 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block web_name %}Reportes IVR/TRANS{% endblock web_name %}
 
+{% block link_tag %}
+<link rel="stylesheet" href="{% static 'reportes/css/lists_reports.css' %}">
+{% endblock link_tag %}
+
 {% block content %}
-{% include "sidebar.html" %}
 
 <div class="container">
+    <h2 class="text-center">Reporte recursos IVR/Transaccionales</h2>
     <ul class="list-group">
         <li class="list-group-item active d-flex p-2">
             <div class="container">

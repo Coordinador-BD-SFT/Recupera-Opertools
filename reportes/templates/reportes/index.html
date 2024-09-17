@@ -10,87 +10,67 @@ Reportes
 {% endblock link_tags %}
 
 {% block content %}
-
-{% include "sidebar.html" %}
-
-<section class="mainsection">
-    <div class="container reportes">
-        <h2 class="text-center">Reportes</h2>
-        {% for reporte in tipos_reporte %}
-        <a class="reportes-list" href="{% url 'reportes:reporte' reporte.name %}" role="button">
-            <span class="button_top reportes-list">
-                {{ reporte.name }}
-            </span>
-        </a>
-        {% endfor %}
+<section class="container content">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Reportes</h2>
+            <div class="d-flex flex-wrap">
+                {% for reporte in tipos_reporte %}
+                <a class="btn btn-primary m-2" href="{% url 'reportes:reporte' reporte.name %}" role="button">
+                    {{ reporte.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    <div class="container vicidial">
-        <h2 class="text-center">Plataforma Vicidial</h2>
-        <div class="grid-container">
-            <div class="grid-item">
-                <a href="{% url "reportes:clean_lists" %}" role="button">
-                    <span class="button_top"> Limpiar listas
-                    </span>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Plataforma Vicidial</h2>
+            <div class="d-flex flex-wrap">
+                <a class="btn btn-primary m-2" href="{% url 'reportes:clean_lists' %}" role="button">
+                    Limpiar listas
                 </a>
-            </div>
-            <div class="grid-item">
-                <a href="{% url 'reportes:update_lists' %}" role="button">
-                    <span class="button_top"> Actualizar listas
-                    </span>
+                <a class="btn btn-primary m-2" href="{% url 'reportes:update_lists' %}" role="button">
+                    Actualizar listas
                 </a>
-            </div>
-            <div class="grid-item">
-                <a href="{% url 'reportes:download_lists' %}" role="button">
-                    <span class="button_top"> Descargar listas
-                    </span>
+                <a class="btn btn-primary m-2" href="{% url 'reportes:download_lists' %}" role="button">
+                    Descargar listas
                 </a>
-            </div>
-            <div class="grid-item">
-                <a href="{% url 'reportes:upload_lists' %}" role="button">
-                    <span class="button_top"> Cargar listas
-                    </span>
+                <a class="btn btn-primary m-2" href="{% url 'reportes:upload_lists' %}" role="button">
+                    Cargar listas
                 </a>
-            </div>
-            <div class="grid-item">
-                <a href="{% url 'reportes:lists_reports' %}" role="button">
-                    <span class="button_top"> Reportes
-                    </span>
+                <a class="btn btn-primary m-2" href="{% url 'reportes:lists_reports' %}" role="button">
+                    Reportes
                 </a>
             </div>
         </div>
     </div>
-    <img src="{% static 'reportes/images/file.jpg' %}" alt="Regupera SAS logo" class="img-fluid image-container">
-    <div class="container telematica">
-        <h2 class="text-center">Telemática</h2>
-        <div class="grid-container">
-            <div class="grid-item">
-                <a href="{% url 'reportes:whatsapp_scraping' %}" role="button">
-                    <span class="button_top"> WHATSAPP
-                    </span>
 
-                </a>
-            </div>
-            <div class="grid-item">
-                <a href="#" role="button">
-                    <span class="button_top"> MAIL
-                    </span>
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <img src="{% static 'reportes/images/file.jpg' %}" alt="Regupera SAS logo" class="img-fluid">
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Telemática</h2>
+            <div class="d-flex flex-wrap">
+                <a class="btn btn-primary m-2" href="{% url 'reportes:whatsapp_scraping' %}" role="button">
+                    WHATSAPP
                 </a>
-            </div>
-            <div class="grid-item">
-                <a href="{% url 'reportes:reports_sms' %}" role="button">
-                    <span class="button_top"> SMS
-                    </span>
+                <a class="btn btn-primary m-2" href="#" role="button">
+                    MAIL
                 </a>
-            </div>
-            <div class="grid-item">
-                <a href="#" role="button">
-                    <span class="button_top"> CALL
-                    </span>
+                <a class="btn btn-primary m-2" href="{% url 'reportes:reports_sms' %}" role="button">
+                    SMS
+                </a>
+                <a class="btn btn-primary m-2" href="#" role="button">
+                    CALL
                 </a>
             </div>
         </div>
     </div>
 </section>
-
 {% endblock %}

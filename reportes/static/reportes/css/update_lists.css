@@ -1,0 +1,19 @@
+hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    /* Color de la línea */
+    margin: 20px 0;
+    /* Espaciado arriba y abajo */
+}
+
+.vertical-line {
+    width: 1px;
+    /* Ancho de la línea */
+    background-color: #aaaaaa;
+    /* Color de la línea */
+    height: 200px;
+    /* Altura de la línea */
+    margin: 0 auto;
+    /* Centrar horizontalmente, opcional */
+}

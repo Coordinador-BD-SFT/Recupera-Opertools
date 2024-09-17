@@ -3,17 +3,29 @@
 {% load static %}
 
 {% block web_name %}Actualizar listas{% endblock web_name %}
+
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/update_lists.css' %}">
+{% endblock link_tags %}
+
 {% block content %}
-{% include "sidebar.html" %}
+<h2 class="text-center">Registros de listas IVR y/o Transaccional</h2>
+<hr>
+
+<br>
 <sec class="d-flex p-2">
     <div class="container">
+        <h4 class="text-center">Actualizar listas</h4>
         <form novalidate method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form|crispy }}
-            <button class="btn btn-primary" type="submit">Actualizar</button>
+            <div class="d-flex justify-content-center btn-group">
+                <button class="btn btn-primary" type="submit">Actualizar</button>
+                <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">volver</a>
+            </div>
         </form>
-        <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">volver</a>
     </div>
+    <div class="vertical-line"></div>
     <div class="container">
         <ul class="list-group">
             <li class="list-group-item active">Listas actuales</li>

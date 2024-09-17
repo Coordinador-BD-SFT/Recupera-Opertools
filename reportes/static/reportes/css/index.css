@@ -1,136 +1,52 @@
-/* Estilo para la sección principal */
-.mainsection {
-    display: grid;
-    grid-template-columns: repeat(2, 45%);
-    grid-template-rows: auto;
-    gap: 15px;
-    height: 90vh;
-    width: 90vw;
-    margin: auto;
-    /* Centra la sección en el contenedor padre si es necesario */
+/* index.css */
+
+/* Asegura que el contenedor tenga un espaciado adecuado */
+.container.content {
+    padding: 20px;
 }
 
-/* Estilo para los contenedores internos */
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    /* Espacio entre los elementos internos */
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #fff;
-    border: 1px solid #e5e5e5;
-    height: 100%;
-    /* Ocupa la altura completa del contenedor principal */
-}
-
-/* Estilo para el título centrado */
-.text-center {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-/* Estilo para la grilla interna en vicidial y telematica */
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 250px);
-    gap: 10px;
-}
-
-/* Estilo para los elementos de la grilla */
-.grid-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Estilo para los enlaces y botones */
-a {
-    text-decoration: none;
-    font-size: 17px;
-    font-weight: bold;
-}
-
-/* Estilo para los botones */
-.button_top {
-    display: block;
-    box-sizing: border-box;
-    border: 2px solid #000000;
-    border-radius: 0.75em;
-    padding: 0.75em 1.5em;
-    background: #e8e8e8;
-    color: #000000;
-    text-align: center;
-    transition: transform 0.1s ease;
-    width: 210px;
-    height: 60px;
-    text-align: center;
-}
-
-a:hover .button_top {
-    transform: translateY(-0.33em);
-}
-
-a:active .button_top {
-    transform: translateY(0);
-}
-
+/* Mejora el estilo de los botones */
 .btn-primary {
-    display: inline-block;
+    margin: 5px;
     padding: 10px 20px;
-    color: white;
-    background-color: #007bff;
-    text-decoration: none;
-    border-radius: 5px;
+    font-size: 16px;
+    text-transform: uppercase;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.btn {
-    width: 180px;
-    height: 60px;
-}
-
-/* Estilo para la imagen */
+/* Estilo para las imágenes dentro del contenido */
 .img-fluid {
-    align-self: center;
-    justify-self: center;
-    width: 100%;
-    /* Ajusta la imagen al ancho del contenedor */
+    max-width: 250px;
     height: auto;
-    /* Mantiene la proporción de la imagen */
-    max-width: 440px;
-    /* Ajusta el tamaño máximo si es necesario */
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-.navbar-brand {
-    background-color: white;
-    border: none;
-    border-radius: 0;
-    justify-content: end;
+/* Espaciado adicional entre secciones */
+.row.mb-4 {
+    margin-bottom: 40px;
 }
 
-.sidebar-link {
-    background-color: #333;
-    border: none;
-    border-radius: 0;
+/* Estilo para los encabezados */
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
 }
 
-.header {
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
+/* Ajustes para el diseño flexible de los botones */
+.d-flex.flex-wrap {
+    justify-content: flex-start;
+    /* Alinea los botones a la izquierda */
 }
 
-.reportes-list {
-    width: 100%;
-    height: auto;
-    justify-self: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Asegura que el contenedor se vea bien en dispositivos más pequeños */
+@media (max-width: 768px) {
+    .btn-primary {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
 }
