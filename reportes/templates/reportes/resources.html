@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}Reportes - Recursos{% endblock web_name %}
+
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/resources.css' %}">
+{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Reportes de recursos</h2>
+    <p class="text-center">En este módulo podrás crear los reportes de recursos para cada tipo de recurso disponible</p>
+    <ul class="list-group">
+        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+            <p class="text-center">The current link item</p>
+        </a>
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:sms_resources' %}">
+            <p class="text-center">SMS SAEM</p>
+        </a>
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:lists_resources' %}">
+            <p class="text-center">IVR transaccional/intercom</p>
+        </a>
+    </ul>
+    <div class="container d-flex justify-content-center">
+        <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">Volver</a>
+    </div>
+</div>
+{% endblock content %}

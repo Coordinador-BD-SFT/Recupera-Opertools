@@ -12,16 +12,11 @@ Reportes
 {% block content %}
 <section class="container content">
     <div class="row mb-4">
-        <div class="col-md-12">
-            <h2>Reportes</h2>
-            <div class="d-flex flex-wrap">
-                {% for reporte in tipos_reporte %}
-                <a class="btn btn-primary m-2" href="{% url 'reportes:reporte' reporte.name %}" role="button">
-                    {{ reporte.name }}
-                </a>
-                {% endfor %}
-            </div>
-        </div>
+        <h2 class="text-center">Módulo de reportería</h2>
+        <a href="{% url 'reportes:tipos_reporte' %}" class="btn btn-primary" role="button">
+            Ir al módulo
+        </a>
+    </div>
     </div>
 
     <div class="row mb-4">
@@ -40,7 +35,7 @@ Reportes
                 <a class="btn btn-primary m-2" href="{% url 'reportes:upload_lists' %}" role="button">
                     Cargar listas
                 </a>
-                <a class="btn btn-primary m-2" href="{% url 'reportes:lists_reports' %}" role="button">
+                <a class="btn btn-primary m-2" href="{% url 'reportes:lists_resources' %}" role="button">
                     Reportes
                 </a>
             </div>
@@ -63,7 +58,7 @@ Reportes
                 <a class="btn btn-primary m-2" href="#" role="button">
                     MAIL
                 </a>
-                <a class="btn btn-primary m-2" href="{% url 'reportes:reports_sms' %}" role="button">
+                <a class="btn btn-primary m-2" href="{% url 'reportes:sms_resources' %}" role="button">
                     SMS
                 </a>
                 <a class="btn btn-primary m-2" href="#" role="button">

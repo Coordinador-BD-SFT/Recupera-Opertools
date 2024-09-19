@@ -38,6 +38,18 @@ def index(request):
     )
 
 
+def tipos_reporte(request):
+    tipos_reporte = models.TipoReporte.objects.all()
+
+    return render(
+        request,
+        'reportes/tipos_reportes.html',
+        context={
+            'tipos_reporte': tipos_reporte,
+        }
+    )
+
+
 def reporte(request, tipo_reporte_name):
     # Vista de la lista de instancias del modelo Reportes
 
@@ -45,7 +57,7 @@ def reporte(request, tipo_reporte_name):
     reportes = models.Reporte.objects.filter(
         report_type=tipo_reporte_name).order_by('-id')[:5]
     # Traemos las instancias necesarias desde la base de datos
-    report_type = models.TipoReporte.objects.get(name=tipo_reporte_name)
+    report_type = get_object_or_404(models.TipoReporte, name=tipo_reporte_name)
     sms_bases = models.SMSBase.objects.all()
 
     # Renderizamos vista
@@ -57,6 +69,14 @@ def reporte(request, tipo_reporte_name):
             'report_type': report_type,
             'sms_bases': sms_bases,
         }
+    )
+
+
+def resources(request):
+    return render(
+        request,
+        'reportes/resources.html',
+        # context=
     )
 
 
@@ -395,7 +415,7 @@ class UpdateLists(FormView):
         return [file.stem for file in path.iterdir()]
 
 
-def lists_reports(request):
+def lists_resources(request):
     # Funcion para renderizar reportes sobre las listas de IVRs y Transaccionales
 
     # Tomamos el tiempo en el que comienza la tarea
@@ -408,20 +428,23 @@ def lists_reports(request):
     dataframe = telematica.read_lists(files_dir, 'TRANS')
     values = telematica.count_reg_per_camppaign(dataframe, columna)
 
+    total = reduce(lambda x, y: x + y.recuento, values, 0)
+
     end_time = time.time()
     execution_time = end_time - start_time
 
     return render(
         request,
-        'reportes/lists_reports.html',
+        'reportes/lists_resources.html',
         context={
-            'values': values.items(),
+            'values': values,
             'execution_time': round(execution_time, 3),
+            'total': total,
         }
     )
 
 
-def reports_sms(request):
+def sms_resources(request):
     start_time = time.time()
 
     files_dir = Path('files/upload/envio_sms')
@@ -435,7 +458,7 @@ def reports_sms(request):
 
     return render(
         request,
-        'reportes/reports_sms.html',
+        'reportes/sms_resources.html',
         context={
             'records': records,
             'execution_time': round(execution_time, 3),

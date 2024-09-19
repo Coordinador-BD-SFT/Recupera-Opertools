@@ -4,6 +4,7 @@
 {% block web_name %}Reportes{% endblock web_name %}
 
 {% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/tipos_reporte.css' %}">
 {% endblock link_tags %}
 
 {% block content %}
@@ -20,9 +21,15 @@
             <p class="text-center">{{ reporte.name }}</p>
         </a>
         {% endfor %}
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:resources' %}">
+            <p class="text-center">Recursos</p>
+        </a>
         <a class="list-group-item list-group-item-action" href="#">
             <p class="text-center">Archivos y Bases</p>
         </a>
     </ul>
+    <div class="container d-flex justify-content-center">
+        <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">Volver</a>
+    </div>
 </div>
 {% endblock content %}
