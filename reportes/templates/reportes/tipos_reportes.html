@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}Reportes{% endblock web_name %}
+
+{% block link_tags %}
+{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Modulo Reportes</h2>
+    <p class="text-center">En este módulo podrás ver y crear reportes asi como gestionar y actualizar los archivos de
+        donde provienen</p>
+    <ul class="list-group">
+        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+            <p class="text-center">The current link item</p>
+        </a>
+        {% for reporte in tipos_reporte %}
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:reporte' reporte.name %}">
+            <p class="text-center">{{ reporte.name }}</p>
+        </a>
+        {% endfor %}
+        <a class="list-group-item list-group-item-action" href="#">
+            <p class="text-center">Archivos y Bases</p>
+        </a>
+    </ul>
+</div>
+{% endblock content %}
