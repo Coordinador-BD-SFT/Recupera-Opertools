@@ -30,13 +30,7 @@ class SMSBaseAdmin(admin.ModelAdmin):
     list_display = ('id', 'tipo_reporte', 'name', 'sms_base', 'created_at')
 
 
-class RecursoAdmin(admin.ModelAdmin):
-    fields = ('name', 'report_type')
-    list_display = ('id', 'name', 'report_type', 'created_at')
-
-
 # Registramos las clases, con su modelo relacionado, en el sitio del Administrador
 admin.site.register(models.TipoReporte, TipoReporteAdmin)
 admin.site.register(models.SMSBase, SMSBaseAdmin)
 admin.site.register(models.Reporte, ReporteAdmin)
-admin.site.register(models.Recurso, RecursoAdmin)

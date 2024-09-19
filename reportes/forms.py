@@ -177,19 +177,3 @@ class UpdateListsForm(forms.Form):
             Field('lists_files', css_class='form_control',
                   id='formFileMultiple')
         )
-
-
-class RecursoForm(forms.ModelForm):
-    class Meta:
-        model = models.Recurso
-        fields = ['name', 'report_type']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Field('name', css_class='form_control', id='validationCustom01'),
-            Field('report_type', css_class='form_control',
-                  id='validationCustom01')
-        )

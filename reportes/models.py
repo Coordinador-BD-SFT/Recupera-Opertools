@@ -217,17 +217,3 @@ class SMSBase(models.Model):
             self.limpiar_base()
         # Invocamos a save() del modelo padre para que se guarde correctamente la instancia
         super().save()
-
-
-class Recurso(models.Model):
-    """
-    Tipo de reporte para generar los reportes de recursos.
-    """
-
-    name = models.CharField(max_length=50)
-    report_type = models.ForeignKey(
-        TipoReporte, on_delete=models.CASCADE, to_field='name')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def _str__(self):
-        return self.name
