@@ -91,7 +91,7 @@ def reporte_form(request, tipo_reporte_name):
         form = forms.Reporteform(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(f'/reportes/{tipo_reporte_name}')
+            return HttpResponseRedirect(f'/reportes/reportes/{tipo_reporte_name}')
     else:
         form = forms.Reporteform()
 
@@ -167,6 +167,14 @@ def sms_bases(request, tipo_reporte_name):
     )
 
 
+def files_and_bases(request):
+
+    return render(
+        request,
+        'reportes/files&bases.html',
+    )
+
+
 def sms_base_update(request, report_type_name, sms_base_id):
     # Vista para actuaizar las bases de SMS
 
@@ -183,7 +191,9 @@ def sms_base_update(request, report_type_name, sms_base_id):
             # Eejcutamos el metodo actualizar_base de la instancia
             sms_base.actualizar_base(archivo)
             print(f'Base envio SMS {sms_base.name} actualizada con exito!')
-            return HttpResponseRedirect(f'/reportes/{report_type_name}')
+            url_response = reverse('reportes:reporte', kwargs={
+                                   'tipo_reporte_name': report_type_name})
+            return HttpResponseRedirect(url_response)
 
     else:
         form = forms.SMSBaseUpdateForm()
@@ -306,6 +316,14 @@ def whatsapp_scraping(request):
     )
 
 
+def vicidial(request):
+
+    return render(
+        request,
+        'reportes/vicidial.html'
+    )
+
+
 def clean_lists(request):
     # Definimos los links que visitara el scraper
     driver = get_driver()
@@ -400,6 +418,36 @@ class UpdateLists(FormView):
         # Agregamos los nuevos
         for file in files:
             file_path = lists_dir / file.name
+            with open(file_path, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["inside_files"] = self.get_files(self.files_dir)
+        return context
+
+    def get_files(self, path):
+        return [file.stem for file in path.iterdir()]
+
+
+class UpdateSMSFiles(FormView):
+    form_class = forms.UpdateSMSFilesForm
+    template_name = 'reportes/update_sms_files.html'
+    success_url = reverse_lazy('reportes:success')
+    files_dir = Path('files/upload/envio_sms')
+
+    def form_valid(self, form):
+        # files = form.cleaned_data['lists_files']
+        files = self.request.FILES.getlist('sms_files')
+        sms_files_dir = Path('files/upload/envio_sms')
+        for file in sms_files_dir.iterdir():
+            os.remove(file)
+        # Agregamos los nuevos
+        for file in files:
+            file_path = sms_files_dir / file.name
             with open(file_path, 'wb+') as destination:
                 for chunk in file.chunks():
                     destination.write(chunk)

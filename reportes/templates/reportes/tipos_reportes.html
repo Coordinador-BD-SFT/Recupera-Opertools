@@ -14,7 +14,7 @@
         donde provienen</p>
     <ul class="list-group">
         <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-            <p class="text-center">The current link item</p>
+            <p class="text-center">TIPOS DE REPORTE</p>
         </a>
         {% for reporte in tipos_reporte %}
         <a class="list-group-item list-group-item-action" href="{% url 'reportes:reporte' reporte.name %}">
@@ -24,7 +24,7 @@
         <a class="list-group-item list-group-item-action" href="{% url 'reportes:resources' %}">
             <p class="text-center">Recursos</p>
         </a>
-        <a class="list-group-item list-group-item-action" href="#">
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:files_bases' %}">
             <p class="text-center">Archivos y Bases</p>
         </a>
     </ul>

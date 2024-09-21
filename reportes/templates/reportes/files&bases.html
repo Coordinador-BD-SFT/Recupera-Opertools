@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}Archivos y Bases{% endblock web_name %}
+
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/resources.css' %}">
+{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Gestión de Archivos y Bases</h2>
+    <ul class="list-group">
+        <a href="#" class="list-group-item list-group-item-action active">
+            <p class="text-center">Bases de y archivos</p>
+        </a>
+        <a href="{% url 'reportes:update_lists' %}" class="list-group-item list-group-item-action">
+            <p class="text-center">Archivos de listas IVR y Trans</p>
+        </a>
+        <a href="{% url 'reportes:update_sms_files' %}" class="list-group-item list-group-item-action">
+            <p class="text-center">Archivos de envio SMS</p>
+        </a>
+    </ul>
+    <div class="container d-flex justify-content-center">
+        <a href="{% url 'reportes:tipos_reporte' %}" class="btn btn-secondary" role="button">Volver</a>
+    </div>
+</div>
+{% endblock content %}

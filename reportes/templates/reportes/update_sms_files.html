@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block web_name %}Actualizar listas{% endblock web_name %}
+{% block web_name %}Actualizar Archvos de mensajes{% endblock web_name %}
 
 {% block link_tags %}
 <link rel="stylesheet" href="{% static 'reportes/css/update_lists.css' %}">
@@ -15,7 +15,7 @@
 <br>
 <sec class="d-flex p-2">
     <div class="container">
-        <h4 class="text-center">Actualizar listas</h4>
+        <h4 class="text-center">Actualizar archivos de envio SMS</h4>
         <form novalidate method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form|crispy }}
@@ -28,7 +28,7 @@
     <div class="vertical-line"></div>
     <div class="container">
         <ul class="list-group">
-            <li class="list-group-item active">Listas actuales</li>
+            <li class="list-group-item active">Archivos actuales</li>
             {% for file in inside_files %}
             <li class="list-group-item">{{ file }}</li>
             {% endfor %}

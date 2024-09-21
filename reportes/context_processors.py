@@ -6,10 +6,10 @@ from django.urls import reverse_lazy
 def global_context(request):
     return {
         'sidebar_urls': {
-            'act_see_lists': reverse('reportes:update_lists'),
+            'resources': reverse('reportes:resources'),
             'upload_lists': reverse('reportes:upload_lists'),
-            'lists_reports': reverse('reportes:lists_reports'),
-            'telematic_reports': reverse('reportes:reports_sms'),
+            'lists_resources': reverse('reportes:lists_resources'),
+            'sms_resources': reverse('reportes:sms_resources'),
         },
         'succes': reverse_lazy('reportes:success')
     }

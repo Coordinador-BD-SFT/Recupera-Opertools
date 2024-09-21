@@ -177,3 +177,15 @@ class UpdateListsForm(forms.Form):
             Field('lists_files', css_class='form_control',
                   id='formFileMultiple')
         )
+
+
+class UpdateSMSFilesForm(forms.Form):
+    sms_files = MultipleFileField(label='selecciona los nuevos archivos')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('sms_files', css_class='form_control', id='formFileMultiple')
+        )

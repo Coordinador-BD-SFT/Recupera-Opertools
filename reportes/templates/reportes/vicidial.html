@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}Vicidial interaction{% endblock web_name %}
+
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/resources.css' %}">
+{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Plataforma Vicidial</h2>
+    <ul class="list-group">
+        <a class="list-group-item list-group-item-action active" href="#" role="button">
+            <p class="text-center">
+                Acciones Disponibles
+            </p>
+        </a>
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:clean_lists' %}" role="button">
+            <p class="text-center">
+                Limpiar listas
+            </p>
+        </a>
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:update_lists' %}" role="button">
+            <p class="text-center">
+                Actualizar listas
+            </p>
+        </a>
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:download_lists' %}" role="button">
+            <p class="text-center">
+                Descargar listas
+            </p>
+        </a>
+        <a class="list-group-item list-group-item-action" href="{% url 'reportes:upload_lists' %}" role="button">
+            <p class="text-center">
+                Cargar listas
+            </p>
+        </a>
+    </ul>
+    <div class="container d-flex justify-content-center">
+        <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">Volver</a>
+    </div>
+</div>
+{% endblock content %}

@@ -13,35 +13,14 @@ Reportes
 <section class="container content">
     <div class="row mb-4">
         <h2 class="text-center">Módulo de reportería</h2>
-        <a href="{% url 'reportes:tipos_reporte' %}" class="btn btn-primary" role="button">
+        <a href="{% url 'reportes:tipos_reporte' %}" class="btn btn-primary module-btn" role="button">
             Ir al módulo
         </a>
     </div>
+    <div class="row">
+        <h2 class="text-center">Plataforma Vicidial</h2>
+        <a href="{% url 'reportes:vicidial' %}" class="btn btn-primary module-btn">Interactuar con plataforma Vicidial</a>
     </div>
-
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <h2>Plataforma Vicidial</h2>
-            <div class="d-flex flex-wrap">
-                <a class="btn btn-primary m-2" href="{% url 'reportes:clean_lists' %}" role="button">
-                    Limpiar listas
-                </a>
-                <a class="btn btn-primary m-2" href="{% url 'reportes:update_lists' %}" role="button">
-                    Actualizar listas
-                </a>
-                <a class="btn btn-primary m-2" href="{% url 'reportes:download_lists' %}" role="button">
-                    Descargar listas
-                </a>
-                <a class="btn btn-primary m-2" href="{% url 'reportes:upload_lists' %}" role="button">
-                    Cargar listas
-                </a>
-                <a class="btn btn-primary m-2" href="{% url 'reportes:lists_resources' %}" role="button">
-                    Reportes
-                </a>
-            </div>
-        </div>
-    </div>
-
     <div class="row mb-4">
         <div class="col-md-12 text-center">
             <img src="{% static 'reportes/images/file.jpg' %}" alt="Regupera SAS logo" class="img-fluid">
