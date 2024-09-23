@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}Telemática{% endblock web_name %}
+
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'reportes/css/resources.css' %}">
+{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Telemática</h2>
+    <ul class="list-group">
+        <a href="" class="list-group-item list-group-item-action active">
+            <p class="text-center">Acciones disponibles</p>
+        </a>
+        <a href="{% url 'reportes:whatsapp_scraping' %}" class="list-group-item list-group-item-action">
+            <p class="text-center">Envío masivo whatsapp</p>
+        </a>
+    </ul>
+    <div class="container d-flex justify-content-center">
+        <a href="{% url 'reportes:index' %}" class="btn btn-secondary" role="button">Volver</a>
+    </div>
+</div>
+{% endblock content %}

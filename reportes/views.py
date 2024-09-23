@@ -515,6 +515,14 @@ def sms_resources(request):
     )
 
 
+def telematica(request):
+
+    return render(
+        request,
+        'reportes/telematica.html',
+    )
+
+
 def success(request):
     # Vista para retornar una vista de <¡exito!>
     return render(

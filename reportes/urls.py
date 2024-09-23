@@ -60,6 +60,7 @@ urlpatterns = [
     path('vicidial/upload_lists', views.upload_lists, name='upload_lists'),
     # Fin modulo vdicial
     # Modulo trelematica
+    path('telematica', views.telematica, name='telematica'),
     path('telematica/whatsapp', views.whatsapp_scraping, name='whatsapp_scraping'),
     # Fin modulo telematica
     path('process/success', views.success, name='success'),

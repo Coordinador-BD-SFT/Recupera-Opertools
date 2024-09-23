@@ -10,41 +10,22 @@ Reportes
 {% endblock link_tags %}
 
 {% block content %}
-<section class="container content">
-    <div class="row mb-4">
+<section class="container">
+    <div class="container">
         <h2 class="text-center">Módulo de reportería</h2>
         <a href="{% url 'reportes:tipos_reporte' %}" class="btn btn-primary module-btn" role="button">
             Ir al módulo
         </a>
     </div>
-    <div class="row">
+    <div class="container">
         <h2 class="text-center">Plataforma Vicidial</h2>
-        <a href="{% url 'reportes:vicidial' %}" class="btn btn-primary module-btn">Interactuar con plataforma Vicidial</a>
+        <a href="{% url 'reportes:vicidial' %}" class="btn btn-primary module-btn">Interactuar con plataforma
+            Vicidial</a>
     </div>
-    <div class="row mb-4">
-        <div class="col-md-12 text-center">
-            <img src="{% static 'reportes/images/file.jpg' %}" alt="Regupera SAS logo" class="img-fluid">
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Telemática</h2>
-            <div class="d-flex flex-wrap">
-                <a class="btn btn-primary m-2" href="{% url 'reportes:whatsapp_scraping' %}" role="button">
-                    WHATSAPP
-                </a>
-                <a class="btn btn-primary m-2" href="#" role="button">
-                    MAIL
-                </a>
-                <a class="btn btn-primary m-2" href="{% url 'reportes:sms_resources' %}" role="button">
-                    SMS
-                </a>
-                <a class="btn btn-primary m-2" href="#" role="button">
-                    CALL
-                </a>
-            </div>
-        </div>
+    <img src="{% static 'reportes/images/file.jpg' %}" alt="Regupera SAS logo" class="img-fluid">
+    <div class="container">
+        <h2>Telemática</h2>
+        <a href="{% url 'reportes:telematica' %}" class="btn btn-primary">Ir al módulo</a>
     </div>
 </section>
 {% endblock %}
