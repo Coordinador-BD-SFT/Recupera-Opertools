@@ -78,7 +78,7 @@ def search_num(
     """
     try:
         # Buscamos y clickeamos boton de nevo chat
-        new_chat_btn = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
+        new_chat_btn = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((
             By.XPATH,
             '//*[@id="app"]/div/div[2]/div[3]/header/header/div/span/div/span/div[1]/div/span'
         )))

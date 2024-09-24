@@ -18,12 +18,10 @@ def get_info(
     ext -> str: La extension del archivo referenciado
     """
     # Creamos el dataframe dependiendo de la extensión
+    print(ext)
     try:
         if ext == '.xlsx':
             df = pd.read_excel(path, usecols=cols, dtype=str)
-        elif ext == '.json':
-            df = pd.read_json(path, orient='records')
-            df = df.astype(str)
         elif ext == '.csv':
             df = pd.read_csv(path, usecols=cols, dtype=str)
         else:

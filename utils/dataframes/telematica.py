@@ -116,7 +116,11 @@ def read_sms(
         print(hora)
 
         # Leemos el archivo para sacar las moras
-        df = pd.read_excel(file, dtype=str, usecols=['Edad_Mora'])
+        df = None
+        if file.suffix == '.csv':
+            df = pd.read_csv(file, dtype=str, usecols=['Edad_Mora'])
+        elif file.suffix == '.xlsx':
+            df = pd.read_excel(file, dtype=str, usecols=['Edad_Mora'])
         values = df['Edad_Mora'].value_counts().to_dict()
         print(values)
 

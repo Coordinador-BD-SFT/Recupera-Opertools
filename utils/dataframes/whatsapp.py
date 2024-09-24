@@ -6,19 +6,29 @@ from pathlib import Path
 
 def chat_filter(
     numeros_intervalo: list,
-    path: str
+    path: str,
+    ext: str
 ):
     """
     Retorna una lista de numeros en base a un intervalo y a un archivo
 
     numeros_intervalo -> list: max length must be 2.
     path -> str: Reference to a chat excel file with phone_number column.
+    ext -> str: File extension
     """
 
     # Proximamente logica para aceptar .json y .csv
 
     # Obtenemos el dataframe
-    numeros = pd.read_excel(path, usecols=['phone_number'], dtype=str)
+    numeros = None
+    print(ext, type(numeros))
+    if ext == 'csv':
+        numeros = pd.read_csv(
+            # path, dtype=str, header=0, sep=',')
+            path, usecols=['phone_number'], dtype=str, header=0, sep=',')
+        print(numeros.columns())
+    elif ext == 'xlsx':
+        numeros = pd.read_excel(path, usecols=['phone_number'], dtype=str)
     # convertimos la columna a un array numpy
     phones = numeros.to_numpy()
     # Creamos una lista para almacenarlos
@@ -92,8 +102,10 @@ def data_base_filter(
         sep=','
     )
 
+    extension = path_chats.name.split('.')[-1]
+
     # Obtenemos la lista de números a cruzar
-    numeros = chat_filter(intervalo, path_chats)
+    numeros = chat_filter(intervalo, path_chats, extension)
     # Cruzamos los datos
     filtrado = info[info['Dato_Contacto'].isin(numeros)]
 

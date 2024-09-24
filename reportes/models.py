@@ -143,7 +143,7 @@ def ruta_dinamica(instance):
     instance -> models.Model: Instancia de un modelo que contenga un campo name.
     """
     if not instance.pk:
-        return f'files/upload/sms_databases/{instance.name}/sms.xlsx'
+        return f'files/upload/sms_databases/{instance.name}/sms.csv'
 
 
 class SMSBase(models.Model):

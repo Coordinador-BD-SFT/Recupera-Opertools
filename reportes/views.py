@@ -243,7 +243,7 @@ def whatsapp_scraping(request):
             df = churn.get_info(
                 messages,
                 ['Dato_Contacto', 'Cuenta', 'SMS'],
-                os.path.splitext(messages.name)[1]
+                os.path.splitext(messages.name)[-1]
             )
 
            # Definimos una funcion para aplicar a cada fila del dataframe
