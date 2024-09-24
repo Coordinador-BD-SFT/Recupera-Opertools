@@ -238,6 +238,8 @@ def whatsapp_scraping(request):
         if form.is_valid():
             # Obtenemos el archivo con los numeros y mensajes y lo filtramos
             messages = form.cleaned_data['messages']
+            verify_num = form.cleaned_data['nums_verify']
+
             df = churn.get_info(
                 messages,
                 ['Dato_Contacto', 'Cuenta', 'SMS'],
@@ -245,12 +247,12 @@ def whatsapp_scraping(request):
             )
 
            # Definimos una funcion para aplicar a cada fila del dataframe
-            def auto_send(row, driver, not_wsp):
+            def auto_send(row, driver):
                 # Creamos el indice
                 idx = row.name
                 # Pausamos la operacion por 5 min cada 200 mensajes
-                if (int(idx) % 200) == 0:
-                    time.sleep(300)
+                # if (int(idx) % 200) == 0:
+                # time.sleep(300)
                 try:
                     # Obtenemos el número y el mensaje
                     dato_contacto = row['Dato_Contacto']
@@ -258,13 +260,20 @@ def whatsapp_scraping(request):
                     # Buscamos el numero con selenium
                     is_wsp = whatsapp_scraper.search_num(driver, dato_contacto)
                     if is_wsp:
-                        # Si existe, enviamos el mensaje y modificamos el dataframe
-                        whatsapp_scraper.send_msj(driver, mensaje)
-                        df.at[idx, 'tipologia'] = 'ENVIADO'
-                        enviados = len(df[df['tipologia'] == 'ENVIADO'])
+                        # Si existe, enviamos el mensaje (*) y modificamos el dataframe
+                        if not verify_num:
+                            whatsapp_scraper.send_msj(driver, mensaje)
+                            df.at[idx, 'tipologia'] = 'ENVIADO'
+                            enviados = len(df[df['tipologia'] == 'ENVIADO'])
+                            print(
+                                f'{idx} - {dato_contacto}, ENVIADO, {datetime.now()}\nEnviados: {enviados}')
+                        else:
+                            # Si solo estamos verificando numeros, llenamos el dataframe segun corresponda
+                            df.at[idx, 'tipologia'] = 'Si Es Whatsapp'
+                            print(
+                                f'{idx} - {dato_contacto}, si es whatsapp, {datetime.now()}'
+                            )
                         # Brindamos informacion en la terminal
-                        print(
-                            f'{idx} - {dato_contacto}, ENVIADO, {datetime.now()}\nEnviados: {enviados}')
                     else:
                         # Si no existe, modificamos el dataframe e imprimimos informacin en la terminal
                         df.at[idx, 'tipologia'] = 'No es WhatsApp'
@@ -285,7 +294,7 @@ def whatsapp_scraping(request):
                     whatsapp_scraper.get_whatsapp(driver)
 
                     # Reintentar iteracion
-                    auto_send(row, driver, not_wsp)
+                    auto_send(row, driver)
 
             try:
                 # Creamos una columna para mapear datos
@@ -295,7 +304,7 @@ def whatsapp_scraping(request):
                 whatsapp_scraper.get_whatsapp(driver)
 
                 # Ejecutamos una funcion para cada fila del dataframe (mas eficiente que un for)
-                df.apply(lambda row: auto_send(row, driver, not_wsp), axis=1)
+                df.apply(lambda row: auto_send(row, driver), axis=1)
 
                 quit_driver(driver)
 

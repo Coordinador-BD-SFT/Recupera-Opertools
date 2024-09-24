@@ -127,7 +127,17 @@ class SMSBaseUpdateForm(forms.Form):
 
 
 class WhatsappScrapingForm(forms.Form):
+    search_types = [
+        ('num_veryfing', 'Verificar Numeros'),
+        ('send_messages', 'Enviar Mensajes'),
+    ]
+
     messages = forms.FileField(required=True, label='Mensajes')
+    nums_verify = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput,
+        label='Solo verificar números'
+    )
 
     # Reescribimos el constructor para utilizar libreria de renderizado de formularios con Bootstrap5
     def __init__(self, *args, **kwargs):
@@ -137,7 +147,13 @@ class WhatsappScrapingForm(forms.Form):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             # Agregamos clases e identificadores Bootstrap5
-            Field('messages', css_class='form-control', id='validationCustom01')
+            Field('messages', css_class='form-control', id='validationCustom01'),
+            Field(
+                'nums_verify',
+                css_class='form-check-input',
+                id='flexSwitchCheckReverse',
+                type='checkbox'
+            )
         )
 
 

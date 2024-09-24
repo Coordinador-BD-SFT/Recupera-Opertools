@@ -25,12 +25,16 @@ def chat_filter(
     numbers = []
 
     for num in phones:
-        # Accedemos al primer elemento de la tupla
-        num = num[0]
-        # Quitamos el identificador (57) del string
-        num = num[2:]
-        # Aregamos a la lista
-        numbers.append(num)
+        if num:
+            try:
+                # Accedemos al primer elemento de la tupla
+                num = num[0]
+                # Quitamos el identificador (57) del string
+                num = num[2:]
+                # Aregamos a la lista
+                numbers.append(num)
+            except TypeError as err:
+                continue
 
     intervalo = clean_rows(
         numbers,

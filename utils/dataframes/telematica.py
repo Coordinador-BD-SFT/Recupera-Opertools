@@ -53,7 +53,7 @@ def read_lists(
     for file in dir.iterdir():
         if stem in file.stem:
             if file.suffix == '.csv':
-                df = pd.read_csv(file, dtype=str)
+                df = pd.read_csv(file, dtype=str, sep=';')
             elif file.suffix == '.xlsx':
                 df = pd.read_excel(file, dtype=str)
             else:
@@ -81,7 +81,19 @@ def count_reg_per_camppaign(
     :type col: str
     """
 
-    return dataframe[col].value_counts().to_dict()
+    values = dataframe[col].value_counts().to_dict()
+    records = []
+
+    hora = datetime.now().strftime('%H:%M')
+
+    for key, value in values.items():
+        nums = ['0', '30', '60', '90', '120', '180', '150', '210']
+        if any(num in key for num in nums):
+            key = f'MORA {key}'
+        record = ReporteSMS(hora, key.upper(), int(value))
+        records.append(record)
+
+    return records
 
 
 def read_sms(
