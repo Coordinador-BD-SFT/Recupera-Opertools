@@ -24,7 +24,6 @@ def chat_filter(
     print(ext, type(numeros))
     if ext == 'csv':
         numeros = pd.read_csv(
-            # path, dtype=str, header=0, sep=',')
             path, usecols=['phone_number'], dtype=str, header=0, sep=',')
         print(numeros.columns())
     elif ext == 'xlsx':

@@ -128,10 +128,6 @@ class SMSBaseUpdateForm(forms.Form):
 
 
 class WhatsappScrapingForm(forms.Form):
-    search_types = [
-        ('num_veryfing', 'Verificar Numeros'),
-        ('send_messages', 'Enviar Mensajes'),
-    ]
 
     messages = forms.FileField(required=True, label='Mensajes')
     nums_verify = forms.BooleanField(
@@ -205,4 +201,21 @@ class UpdateSMSFilesForm(forms.Form):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Field('sms_files', css_class='form_control', id='formFileMultiple')
+        )
+
+
+class ListsResourcesReportForm(forms.Form):
+    channels = [
+        ('IVR', 'IVR'),
+        ('TRANS', 'TRANS')
+    ]
+
+    channel = forms.ChoiceField(choices=channels, label='Canal')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('chanel', css_class='form_control', id='validationCustom01')
         )

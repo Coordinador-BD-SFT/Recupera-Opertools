@@ -474,18 +474,25 @@ class UpdateSMSFiles(FormView):
 
 def lists_resources(request):
     # Funcion para renderizar reportes sobre las listas de IVRs y Transaccionales
-
     # Tomamos el tiempo en el que comienza la tarea
     start_time = time.time()
     # Referenciamos el directorio de las listas
     files_dir = Path('files/upload/listas')
-    # Obtenemos el tipo de lista a iterar proxiamente formulario)
     columna = 'FIRST NAME'
+    values = {}
+    total = 0
 
-    dataframe = telematica.read_lists(files_dir, 'IVR')
-    values = telematica.count_reg_per_camppaign(dataframe, columna)
-
-    total = reduce(lambda x, y: x + y.recuento, values, 0)
+    if request.method == 'POST':
+        print(f'Data recibida: {request.POST}')
+        form = forms.ListsResourcesReportForm(request.POST)
+        if form.is_valid():
+            # Obtenemos el tipo de lista a iterar
+            chanel = form.cleaned_data['channel']
+            dataframe = telematica.read_lists(files_dir, chanel)
+            values = telematica.count_reg_per_camppaign(dataframe, columna)
+            total = reduce(lambda x, y: x + y.recuento, values, 0)
+    else:
+        form = forms.ListsResourcesReportForm()
 
     end_time = time.time()
     execution_time = end_time - start_time
@@ -494,6 +501,7 @@ def lists_resources(request):
         request,
         'reportes/lists_resources.html',
         context={
+            'form': form,
             'values': values,
             'execution_time': round(execution_time, 3),
             'total': total,
