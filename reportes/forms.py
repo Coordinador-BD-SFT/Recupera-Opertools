@@ -52,10 +52,11 @@ class Reporteform(forms.ModelForm):
 
         chats = self.cleaned_data.get('chats_file')
         cols_needed = ['phone_number']
+        extension = chats.name.split('.')[-1]
 
         # Verificamos que el archivo cumpla con tener una de las extensiones válidas
         if chats:
-            if not (any(chats.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(chats, cols_needed)):
+            if not (any(chats.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(chats, cols_needed, extension)):
                 # Levantamos un ValidaionError en caso de que no cumpla
                 raise forms.ValidationError(
                     f"""

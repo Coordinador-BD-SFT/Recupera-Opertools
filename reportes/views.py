@@ -482,7 +482,7 @@ def lists_resources(request):
     # Obtenemos el tipo de lista a iterar proxiamente formulario)
     columna = 'FIRST NAME'
 
-    dataframe = telematica.read_lists(files_dir, 'TRANS')
+    dataframe = telematica.read_lists(files_dir, 'IVR')
     values = telematica.count_reg_per_camppaign(dataframe, columna)
 
     total = reduce(lambda x, y: x + y.recuento, values, 0)
@@ -524,7 +524,7 @@ def sms_resources(request):
     )
 
 
-def telematica(request):
+def telematica_module(request):
 
     return render(
         request,

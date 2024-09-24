@@ -103,7 +103,7 @@ class Reporte(models.Model):
             # Seteamos el intervalo
             [self.numero_inicio, self.numero_final],
             # Referenciamos la base de SMS de la campaña asociada
-            Path(f'files/upload/sms_databases/{self.campaign}/sms.xlsx'),
+            Path(f'files/upload/sms_databases/{self.campaign}/sms.csv'),
             # Archivo con numeros de whatsapp
             self.chats_file,
         )
@@ -157,21 +157,25 @@ class SMSBase(models.Model):
     sms_base -> file: Archivo con registros de envio de SMS.
     created_at -> datetime: Fecha y hora de creación del objeto.
     """
+
+    # QUITAR
     sms_type = (
         ('mora_30', 'MORA 30'),
         ('especiales', 'ESPECIALES'),
         ('castigo', 'CASTIGO'),
     )
+    # QUITAR
 
     tipo_reporte = models.ForeignKey(
         TipoReporte, on_delete=models.CASCADE, to_field='name')
+    # Pasar a CharField común
     name = models.CharField(max_length=50, choices=sms_type)
     sms_base = models.FileField(upload_to=ruta_dinamica)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         """
-        Función que retorna el campo nombre de la instancia
+        Función que retorna el campo name de la instancia
         """
         return self.name
 
@@ -187,14 +191,21 @@ class SMSBase(models.Model):
         Función que agrega nuevos registros al campo sms_base de la instancia, descartando duplicados
 
         Parámetros:
-        nueva_base -> file: Archivo con nueovs registros para la actualizar la base existente
+        nueva_base -> file: Archivo con nuevos registros para la actualizar la base existente
         """
+        if self.sms_base.path.endswith('.csv'):
+            try:
+                # Creamos los dataframes de las bases nueva y antigua
+                old_base = pd.read_csv(self.sms_base, usecols=[
+                    'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str, sep=',')
+            except ValueError as err:
+                print('Efectivamente el error es aqui')
+        elif self.sms_base.path.endswith('.xlsx'):
+            old_base = pd.read_excel(self.sms_base, usecols=[
+                'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
 
-        # Creamos los dataframes de las bases nueva y antigua
-        old_base = pd.read_excel(self.sms_base, usecols=[
-                                 'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
         new_base = pd.read_excel(nueva_base, usecols=[
-                                 'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
+            'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
 
         # Concatenamos la nueva base con la antigua
         df_unido = pd.concat([old_base, new_base], ignore_index=True)
@@ -205,8 +216,8 @@ class SMSBase(models.Model):
 
         # Limpiamos la base de los duplicados y la retornamos
         file = df_unido.drop_duplicates(keep='last')
-        file.to_excel(
-            f'files/upload/sms_databases/{self.name}/sms.xlsx', index=False)
+        file.to_csv(
+            f'files/upload/sms_databases/{self.name}/sms.csv', index=False, header=True, sep=',')
 
     def save(self):
         """

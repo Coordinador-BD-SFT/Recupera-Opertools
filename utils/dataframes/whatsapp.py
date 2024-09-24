@@ -84,11 +84,12 @@ def data_base_filter(
     # proximamente Añadir logica para la compatibilidad con .json y .csv
 
     # Creamos el dataframe a partir del archivo
-    info = pd.read_excel(
+    info = pd.read_csv(
         path_base,
         usecols=['Dato_Contacto', 'Identificacion',
                  'Cuenta_Next', 'Edad_Mora'],
-        dtype=str
+        dtype=str,
+        sep=','
     )
 
     # Obtenemos la lista de números a cruzar
@@ -111,7 +112,8 @@ def data_base_filter(
 
 def file_verify(
     file: str,
-    cols: list
+    cols: list,
+    ext: str
 ):
     """
     Función para verificar si el archivo contiene las columnas requeridas
@@ -119,8 +121,12 @@ def file_verify(
     PARAMS
     file -> A reference to a .xlsx file (.json/.csv soon)
     cols -> list: columns needed in the file
+    ext -> File extension
     """
-
-    df = pd.read_excel(file)
+    df = None
+    if ext == 'csv':
+        df = pd.read_csv(file)
+    elif ext == 'xlsx':
+        df = pd.read_excel(file)
     df_cols = df.columns
     return all(col in df_cols for col in cols)
