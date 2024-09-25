@@ -13,6 +13,8 @@ name = "pypi"
 'crispy-bootstrap5' = "2024.2"
 'pyautogui' = "0.9.54"
 'python-decouple' = "3.8"
+pyspark = "*"
+pymongo = "*"
 
 [dev-packages]
 
