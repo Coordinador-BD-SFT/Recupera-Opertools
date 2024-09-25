@@ -223,7 +223,7 @@ def sms_base_download(request, report_type_name, sms_base_id):
         file = pd.read_excel(sms_base.sms_base)
         # Usamos la clase FileResponse para la descarga
         response = FileResponse(
-            open(sms_base.sms_base.path, 'rb'), as_attachment=True, filename=f'{sms_base.name}.xlsx')
+            open(sms_base.sms_base.path, 'rb'), as_attachment=True, filename=f'{sms_base.name}.csv')
         response['Content-Type'] = 'application/octet-stream'
         return response
     except FileNotFoundError as err:

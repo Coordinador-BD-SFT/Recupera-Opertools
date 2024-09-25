@@ -50,6 +50,7 @@ class Reporte(models.Model):
         ('mora_30', 'MORA 30'),
         ('especiales', 'ESPECIALES'),
         ('castigo', 'CASTIGO'),
+        ('multimarca', 'MULTIMARCA'),
     )
     campaign = models.CharField(max_length=15, choices=campaigns_list)
     chats_file = models.FileField(upload_to='files/upload/chats/')
@@ -131,6 +132,7 @@ class Reporte(models.Model):
 
         # Creamos una ruta para el archivo que se va a servir
         path = Path(f'files/download/{self.name}')
+        file_no_encontrado.drop_duplicates()
         final_file = file_no_encontrado.to_excel(path, index=False)
         # return FileResponse(open(path, 'rb'), as_attachment=True, filename=self.name)
 
@@ -163,6 +165,7 @@ class SMSBase(models.Model):
         ('mora_30', 'MORA 30'),
         ('especiales', 'ESPECIALES'),
         ('castigo', 'CASTIGO'),
+        ('multimarca', 'MULTIMARCA'),
     )
     # QUITAR
 
