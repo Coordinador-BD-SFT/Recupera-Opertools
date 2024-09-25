@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}Manejo Asignación{% endblock web_name %}
+
+{% block link_tags %}
+{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h4 class="text-center">Aqui podras modificar registros de la asignacion manualmente o desde archivo</h4><br>
+    <p class="text-center">Proximamente renderizado de cantidad de registros en MongoDB (#, cant*marca, MES, etc)</p>
+    <br>
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'customer_management:upload_information' %}" class="btn btn-primary">Cargar información</a>
+    </div><br>
+    <p class="text-center">proximamente formulario de busqueda en base de datos MongoDB para CRUD</p>
+</div>
+{% endblock content %}
