@@ -1,11 +1,18 @@
+from django.core.files.uploadedfile import TemporaryUploadedFile
 from pyspark.sql import SparkSession
-from django.db.models import FileField
+import os
 
 
-def read_file(file):
+def read_file(file: TemporaryUploadedFile):
     sesion = SparkSession.builder \
         .appName('common_features') \
         .getOrCreate()
-    file_entry = sesion.read.csv(file, header=True, inferSchema=True)
+
+    path = file.name
+    print(path)
+    # abspath =
+    file_entry = sesion.read.csv(path, header=True, inferSchema=True)
+    file_entry.show()
     sesion.stop()
-    return file_entry.show()
+
+    return True

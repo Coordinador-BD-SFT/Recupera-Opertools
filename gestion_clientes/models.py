@@ -1,9 +1,14 @@
+from pyspark.sql import SparkSession
 from django.db import models
-
+from datetime import datetime
+from django.conf import settings
+from random import randint
+import pandas as pd
+import os
 # Create your models here.
 
 
-def ruta_dinamica(instance):
+def ruta_dinamica(instance, filename):
     """
     Función para dinamizar el guardado de un archivo en base a su nombre
 
@@ -11,7 +16,9 @@ def ruta_dinamica(instance):
     instance -> models.Model: Instancia de un modelo que contenga un campo name.
     """
     if not instance.pk:
-        return f'files/upload/asignation/{instance.name}/{instance.created_at}.csv'
+        path = f'files/upload/asignation/{instance.name}/{datetime.now()}.csv'
+        return path.replace(':', '-')
+    return filename
 
 
 class AsignationModification(models.Model):
@@ -22,29 +29,36 @@ class AsignationModification(models.Model):
     ]
 
     name = models.CharField(max_length=100, choices=modify_types)
-    registers = models.IntegerField()
-    file = models.FileField(
-        upload_to=ruta_dinamica,
-        max_length=100
-    )
+    registers = models.IntegerField(default=0)
+    file = models.FileField(upload_to=ruta_dinamica)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
+        # self.registers = randint(500000, 2500000)
 
-        count = SparkSession.Builder \
-            .appName('count_registers') \
-            .getOrCreate()
+        # session = SparkSession.builder \
+        #     .appName('count') \
+        #     .getOrCreate()
 
-        entry = count.read.csv(
+        # entry = session.read.csv(self.file.path, header=True, inferSchema=True)
+
+        # entry.show()
+        # self.registers = entry.count()
+
+        # session.stop()
+        super().save(*args, **kwargs)
+
+        fullpath = os.path.join(settings.MEDIA_ROOT, self.file.name)
+        print(self.file.name, fullpath)
+
+        entry = pd.read_csv(
             self.file.name,
-            header=True,
-            inferSchema=True
+            dtype=str
         )
 
-        self.registers = entry.count()
-        count.stop()
+        entry.head()
 
-        super().save(*args, **kwargs)
+        self.registers = entry.count()
