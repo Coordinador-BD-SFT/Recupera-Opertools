@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import exceptions as selexceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
+from random import randint
 
 
 def get_whatsapp(
@@ -134,14 +135,14 @@ def send_msj(
         time.sleep(sleep)
         text_box = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
             By.XPATH,
-            '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[1]/p'
+            '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p'
         )))
         # Enviamos el mensaje
         if text_box:
             text_box.click()
             text_box.clear()
             text_box.send_keys(msj)
-            time.sleep(1)
+            time.sleep(randint(1, 10))
             text_box.send_keys(Keys.ENTER)
         else:
             print(f'No se encontro la caja de texto.\nReiniciando funcion...')
