@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
     'reportes.apps.ReportesConfig',
-    'customer_management.apps.CustomerManagementConfig',
+    'gestion_clientes.apps.GestionClientesConfig',
     'crispy_forms',
     'crispy_bootstrap5',
 ]
