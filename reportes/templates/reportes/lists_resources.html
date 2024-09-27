@@ -38,9 +38,15 @@
             <tr>
                 <th>{{ item.hora }}</th>
                 <td>{{ item.marca }}</td>
-                <td>IVR TRANSACCIONAL</td>
+                <td>
+                    {% if chanel == 'IVR' %}
+                    IVR INTERCOM
+                    {% elif chanel == 'TRANS' %}
+                    IVR TRANSACCIONAL
+                    {% endif %}
+                </td>
                 <td>{{ item.recuento }}</td>
-                <td>Claro</td>
+                <td>CLARO</td>
             </tr>
             {% endfor %}
             <tr>

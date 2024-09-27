@@ -481,6 +481,7 @@ def lists_resources(request):
     columna = 'FIRST NAME'
     values = {}
     total = 0
+    chanel = ''
 
     if request.method == 'POST':
         print(f'Data recibida: {request.POST}')
@@ -505,6 +506,7 @@ def lists_resources(request):
             'values': values,
             'execution_time': round(execution_time, 3),
             'total': total,
+            'chanel': chanel,
         }
     )
 
