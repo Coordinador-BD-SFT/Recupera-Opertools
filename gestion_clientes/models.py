@@ -1,6 +1,9 @@
 from pyspark.sql import SparkSession
+from pyspark import errors as sparkerrors
 from django.db import models
 from datetime import datetime
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.conf import settings
 from random import randint
 import pandas as pd
@@ -36,29 +39,33 @@ class AsignationModification(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        # self.registers = randint(500000, 2500000)
 
-        # session = SparkSession.builder \
-        #     .appName('count') \
-        #     .getOrCreate()
+@receiver(post_save, sender=AsignationModification)
+def _post_save_receiver(sender, instance, created, ** kwargs):
+    if created:
+        session = SparkSession.builder \
+            .appName('count') \
+            .getOrCreate()
+        try:
+            entry = session.read.csv(
+                instance.file.path, header=True, inferSchema=True)
+            print(entry.count())
+            instance.registers = entry.count()
+            instance.save(update_fields=['registers'])
+        except Exception as err:
+            print(f'Error al contar registros: {err}')
+            instance.registers = 0
+            instance.save(update_fields=['registers'])
+        finally:
+            pass
+            # session.stop()
 
-        # entry = session.read.csv(self.file.path, header=True, inferSchema=True)
 
-        # entry.show()
-        # self.registers = entry.count()
+def count_registers(file):
+    session = SparkSession.builder \
+        .appName('count') \
+        .getOrCreate()
 
-        # session.stop()
-        super().save(*args, **kwargs)
+    entry = session.read.csv(file, header=True, inferSchema=True)
 
-        fullpath = os.path.join(settings.MEDIA_ROOT, self.file.name)
-        print(self.file.name, fullpath)
-
-        entry = pd.read_csv(
-            self.file.name,
-            dtype=str
-        )
-
-        entry.head()
-
-        self.registers = entry.count()
+    return entry.count()
