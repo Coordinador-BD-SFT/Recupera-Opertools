@@ -18,39 +18,41 @@ def chat_filter(
     """
 
     # Proximamente logica para aceptar .json y .csv
+    try:
+        # Obtenemos el dataframe
+        numeros = None
+        print(ext, type(numeros))
+        if ext == 'csv':
+            numeros = pd.read_csv(
+                path, usecols=['phone_number'], dtype=str, header=0, sep=',')
+            print(numeros.columns())
+        elif ext == 'xlsx':
+            numeros = pd.read_excel(path, usecols=['phone_number'], dtype=str)
+        # convertimos la columna a un array numpy
+        phones = numeros.to_numpy()
+        # Creamos una lista para almacenarlos
+        numbers = []
 
-    # Obtenemos el dataframe
-    numeros = None
-    print(ext, type(numeros))
-    if ext == 'csv':
-        numeros = pd.read_csv(
-            path, usecols=['phone_number'], dtype=str, header=0, sep=',')
-        print(numeros.columns())
-    elif ext == 'xlsx':
-        numeros = pd.read_excel(path, usecols=['phone_number'], dtype=str)
-    # convertimos la columna a un array numpy
-    phones = numeros.to_numpy()
-    # Creamos una lista para almacenarlos
-    numbers = []
+        for num in phones:
+            if num:
+                try:
+                    # Accedemos al primer elemento de la tupla
+                    num = num[0]
+                    # Quitamos el identificador (57) del string
+                    num = num[2:]
+                    # Aregamos a la lista
+                    numbers.append(num)
+                except TypeError as err:
+                    continue
 
-    for num in phones:
-        if num:
-            try:
-                # Accedemos al primer elemento de la tupla
-                num = num[0]
-                # Quitamos el identificador (57) del string
-                num = num[2:]
-                # Aregamos a la lista
-                numbers.append(num)
-            except TypeError as err:
-                continue
-
-    intervalo = clean_rows(
-        numbers,
-        num_ini=numeros_intervalo[0],
-        num_fin=numeros_intervalo[1],
-    )
-    return intervalo
+        intervalo = clean_rows(
+            numbers,
+            num_ini=numeros_intervalo[0],
+            num_fin=numeros_intervalo[1],
+        )
+        return intervalo
+    except UnicodeDecodeError as err:
+        print(f'Error en chat_filter\nError -> {err}')
 
 
 def clean_rows(
@@ -68,9 +70,14 @@ def clean_rows(
     num_ini -> str: start of the interval.
     num_fin -> str: end of the interval (not included).
     """
-    num_ini = lista.index(lista[0]) if not num_ini else lista.index(num_ini)
-    num_fin = lista.index(num_fin)
-    return lista[num_ini:num_fin]
+    try:
+        num_ini = lista.index(
+            lista[0]) if not num_ini else lista.index(num_ini)
+        num_fin = lista.index(num_fin)
+        return lista[num_ini:num_fin]
+    except UnicodeDecodeError as err:
+        print(f'Error en clean_rows\nError -> {err}')
+
 # Chat .xls file management until here
 
 
@@ -92,30 +99,38 @@ def data_base_filter(
     """
     # proximamente Añadir logica para la compatibilidad con .json y .csv
 
-    # Creamos el dataframe a partir del archivo
-    info = pd.read_csv(
-        path_base,
-        usecols=['Dato_Contacto', 'Identificacion',
-                 'Cuenta_Next', 'Edad_Mora'],
-        dtype=str,
-        sep=','
-    )
+    try:
+        info = pd.DataFrame()
+        try:
+            # Creamos el dataframe a partir del archivo
+            info = pd.read_csv(
+                path_base,
+                usecols=['Dato_Contacto', 'Identificacion',
+                         'Cuenta_Next', 'Edad_Mora'],
+                dtype=str,
+                sep=','
+            )
+        except UnicodeDecodeError as err:
+            print(f'error en la lectura del df {err}')
 
-    extension = path_chats.name.split('.')[-1]
+        extension = path_chats.name.split('.')[-1]
+        print(extension)
+        # Obtenemos la lista de números a cruzar
+        numeros = chat_filter(intervalo, path_chats, extension)
+        # Cruzamos los datos
+        filtrado = info[info['Dato_Contacto'].isin(numeros)]
 
-    # Obtenemos la lista de números a cruzar
-    numeros = chat_filter(intervalo, path_chats, extension)
-    # Cruzamos los datos
-    filtrado = info[info['Dato_Contacto'].isin(numeros)]
+        # Obtenemos los numeros que no se encuentran
+        no_encontrado = []
+        for num in numeros:
+            if num not in str(filtrado['Dato_Contacto']):
+                no_encontrado.append(num)
 
-    # Obtenemos los numeros que no se encuentran
-    no_encontrado = []
-    for num in numeros:
-        if num not in str(filtrado['Dato_Contacto']):
-            no_encontrado.append(num)
-
-    # Retornamos el dataframe filtrado y la lista de números
-    return filtrado, no_encontrado
+        # Retornamos el dataframe filtrado y la lista de números
+        print(f'No encontrado:{filtrado}, Filtrado:{no_encontrado}')
+        return filtrado, no_encontrado
+    except UnicodeDecodeError as err:
+        print(f'Error en data_base_filter\nError -> {err}')
 # SMS sending .xls file management until here
 
 # File structure validation management

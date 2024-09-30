@@ -18,12 +18,12 @@
                 <span class="align-middle">
                     {% if sms_base.name == 'mora_30' %}
                     MORA 30
-                    {% endif %}
-                    {% if sms_base.name == 'especiales' %}
+                    {% elif sms_base.name == 'especiales' %}
                     ESPECIALES
-                    {% endif %}
-                    {% if sms_base.name == 'castigo' %}
+                    {% elif sms_base.name == 'castigo' %}
                     CASTIGO
+                    {% elif sms_base.name == 'multimarca' %}
+                    MULTIMARCA
                     {% endif %}
                 </span>
                 <div class="btn-group">

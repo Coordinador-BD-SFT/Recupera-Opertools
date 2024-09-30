@@ -50,6 +50,7 @@ class Reporte(models.Model):
         ('mora_30', 'MORA 30'),
         ('especiales', 'ESPECIALES'),
         ('castigo', 'CASTIGO'),
+        ('multimarca', 'MULTIMARCA'),
     )
     campaign = models.CharField(max_length=15, choices=campaigns_list)
     chats_file = models.FileField(upload_to='files/upload/chats/')
@@ -135,7 +136,7 @@ class Reporte(models.Model):
         # return FileResponse(open(path, 'rb'), as_attachment=True, filename=self.name)
 
 
-def ruta_dinamica(instance):
+def ruta_dinamica(instance, filename):
     """
     Función para dinamizar el guardado de un archivo en base a su nombre
 
@@ -144,6 +145,7 @@ def ruta_dinamica(instance):
     """
     if not instance.pk:
         return f'files/upload/sms_databases/{instance.name}/sms.csv'
+    return filename
 
 
 class SMSBase(models.Model):
@@ -163,6 +165,7 @@ class SMSBase(models.Model):
         ('mora_30', 'MORA 30'),
         ('especiales', 'ESPECIALES'),
         ('castigo', 'CASTIGO'),
+        ('multimarca', 'MULTIMARCA'),
     )
     # QUITAR
 
@@ -193,13 +196,16 @@ class SMSBase(models.Model):
         Parámetros:
         nueva_base -> file: Archivo con nuevos registros para la actualizar la base existente
         """
+
+        old_base = pd.DataFrame()
+
         if self.sms_base.path.endswith('.csv'):
             try:
                 # Creamos los dataframes de las bases nueva y antigua
                 old_base = pd.read_csv(self.sms_base, usecols=[
                     'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str, sep=',')
             except ValueError as err:
-                print('Efectivamente el error es aqui')
+                print(f'Efectivamente el error es aqui\nError -> {err}')
         elif self.sms_base.path.endswith('.xlsx'):
             old_base = pd.read_excel(self.sms_base, usecols=[
                 'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
