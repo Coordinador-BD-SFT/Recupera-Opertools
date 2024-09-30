@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}Gestión Clientes{% endblock web_name %}
+
+{% block link_tags %}
+{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">App Gestión de clientes</h2>
+    <div class="container">
+        <a href="{% url 'gestion_clientes:asignation_mgmnt' %}" class="btn btn-primary">Manipular asignación</a>
+    </div>
+</div>
+{% endblock content %}

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
     'reportes.apps.ReportesConfig',
+    'gestion_clientes.apps.GestionClientesConfig',
     'crispy_forms',
     'crispy_bootstrap5',
 ]
@@ -157,3 +158,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 # Crispy forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# pymongo variables
+MONGO_URI = config('MONGO_URI')
