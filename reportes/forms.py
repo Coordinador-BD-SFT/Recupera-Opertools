@@ -112,9 +112,12 @@ class SMSBaseUpdateForm(forms.Form):
         base = self.cleaned_data.get('nueva_base')
         cols_needed = ['Dato_Contacto', 'Identificacion',
                        'Cuenta_Next', 'Edad_Mora']
+
+        extension = base.name.split('.')[-1]
+
         # Verificamos que el archivo cumpla con las extensiones validas y las columnas necesarias
         if base:
-            if not (any(base.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(base, cols_needed)):
+            if not (any(base.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(base, cols_needed, extension)):
                 # En caso de no cumplir levntamos un ValidationError
                 raise forms.ValidationError(
                     f"""

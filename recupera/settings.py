@@ -158,3 +158,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 # Crispy forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# pymongo variables
+MONGO_URI = config('MONGO_URI')

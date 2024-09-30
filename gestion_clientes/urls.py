@@ -14,4 +14,9 @@ urlpatterns = [
         views.UploadInformationView.as_view(),
         name='upload_information'
     ),
+    path(
+        'asignation-management/browse',
+        views.mongo_browser,
+        name='mongo_browser'
+    ),
 ]
