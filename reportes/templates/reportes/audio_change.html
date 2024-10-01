@@ -1,0 +1,36 @@
+{% extends "base_form.html" %}
+{% block web_name %}Cambiar audios{% endblock web_name %}
+{% block button_label %}Cargar{% endblock button_label %}
+{% block form_title %}Cambiar audios{% endblock form_title %}
+{% block back_url %}{% url 'reportes:vicidial' %}{% endblock back_url %}
+
+{% block extra_content %}
+<br><br>
+<h3 class="text-center">Estructura de cargue</h3>
+<p class="text-center">
+    A continuacion se uestra la estructura del archivo que se debe cargar para poder cambiar los audios correctamete. Si
+    esta vista no es útil, puedes<br>
+    hechar un vistazo a <a href="../../static/images/structures/audio_change.jpeg">nuestro ejemplo</a>.
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Nombre_Campaña</th>
+            <th scope="col">Nombre_Audio</th>
+            <th scope="col">Otros</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>IVR CLARO 1</td>
+            <td>ACELERACION</td>
+            <td>*</td>
+        </tr>
+        <tr>
+            <td>Obligatorio</td>
+            <td>Obligatorio</td>
+            <td>Opcional</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock extra_content %}

@@ -345,4 +345,103 @@ def upload_lists(
     except (selexeptions.WebDriverException, selexeptions.NoSuchElementException, selexeptions.TimeoutException) as err:
         print(f'Error -> {err}')
 
-    # Volvemos un paso para evitar conflictos entre iteraciones
+
+def get_campaigns(driver: WebDriver):
+    login_keys()
+    campaign_module = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((
+        By.XPATH,
+        '/html/body/center/table[1]/tbody/tr[1]/td[1]/table/tbody/tr[6]/td/a/font'
+    )))
+    campaign_module.click()
+
+    tabla = WebDriverWait(driver, 15).until(EC.presence_of_element_located((
+        By.XPATH,
+        '/html/body/center/table[1]/tbody/tr[1]/td[2]/table/tbody/tr[5]/td/table/tbody/tr/td/font/font/center/table/tbody'
+    )))
+
+    rows = tabla.find_elements(By.TAG_NAME, 'tr')
+    return rows
+
+
+def change_audio(
+    driver: WebDriver,
+    row: WebElement,
+    items: dict,
+    sleep: int = 2
+):
+    """
+    Cambia un audio dentro de una campaña
+
+    :param driver: Instancia de WebDriver para intercactuar con el navegador
+    :type driver: selenium.webdriver.chrome.webdriver.WebDriver
+
+    :param row: Fila de una tabla para interactuar con las columnas de esta
+    :type row: selenium.webdriver.remote.webelement.WebElement
+
+    :param items: Diccionario con nombre campaña: audio
+    :type items: dict
+
+    :param sleep: tiempo de espera
+    :type sleep: int
+    """
+
+    try:
+        # Nos dirigimos a vista detallada
+        detailed_view = row.find_element(
+            By.XPATH,
+            './td[10]/font/a'
+        )
+        if detailed_view:
+            detailed_view.click()
+        time.sleep(sleep)
+
+        # Identificamos nombre de campaña
+        campaign_name_input = driver.find_element(
+            By.XPATH, '/html/body/center/table[1]/tbody/tr[1]/td[2]/table/tbody/tr[5]/td/table[2]/tbody/tr/td/font/center[1]/form/table/tbody/tr[2]/td[2]/input'
+        )
+        campaign_name = campaign_name_input.get_attribute('value')
+        print(f'Cambiando audio a lista {campaign_name}.')
+
+        # Obtenemos el nombre del audio a colocar segun el nombre de la campaña
+        audio = ''
+        for record in items:
+            if campaign_name in record.values():
+                audio = record['Nombre_Audio']
+
+        print(f'Audio a colocar: {audio}')
+
+        # Vamos a apartado encuesta
+        poll = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((
+            By.XPATH,
+            '/html/body/center/table[1]/tbody/tr[1]/td[2]/table/tbody/tr[5]/td/table[1]/tbody/tr/td[8]/a/font'
+        )))
+        if poll:
+            poll.click()
+        time.sleep(sleep)
+
+        # Cambiamos el audio
+        audio_input = driver.find_element(
+            By.XPATH,
+            '//*[@id="survey_first_audio_file"]'
+        )
+        print(f'Audio anterior: {audio_input.get_attribute("value")}\n')
+        if audio_input:
+            audio_input.clear()
+            audio_input.send_keys(audio)
+
+        # Enviamos el fomrulario
+        submit_button = driver.find_element(
+            By.XPATH,
+            '//*[@id="admin_form"]/center/table/tbody/tr[25]/td/input'
+        )
+        # submit_button.submit()
+        # print(f'Audio camiado exitosamente!\n')
+
+        time.sleep(sleep)
+
+        # Volvemos a la lista de campañas
+        driver.back()
+        driver.back()
+
+    except selexeptions.NoSuchElementException as err:
+        print(f'Error al localizar elemento -> {err}')

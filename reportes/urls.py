@@ -58,6 +58,7 @@ urlpatterns = [
     path('vicidial/clean_lists', views.clean_lists, name='clean_lists'),
     path('vicidial/download_lists', views.download_lists, name='download_lists'),
     path('vicidial/upload_lists', views.upload_lists, name='upload_lists'),
+    path('vicidial/audio_change', views.audio_change, name='audio_change'),
     # Fin modulo vdicial
     # Modulo trelematica
     path('telematica-module', views.telematica_module, name='telematica'),

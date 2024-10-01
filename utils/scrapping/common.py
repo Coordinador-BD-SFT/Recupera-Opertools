@@ -10,7 +10,7 @@ from selenium import webdriver
 import time
 
 
-def get_driver():
+def get_driver() -> webdriver:
     driver = None
     try:
         chrome_options = Options()

@@ -412,6 +412,52 @@ def upload_lists(request):
     )
 
 
+def audio_change(request):
+    if request.method == 'POST':
+        form = forms.AudioChangeForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                # Obtenemos el driver
+                driver = get_driver()
+                # Obtenemos y manipulamos el archivos para
+                df = pd.read_excel(form.cleaned_data['file'], dtype=str)
+                audio_dict = df.to_dict(orient='records')
+                print(audio_dict)
+
+                # Obtenemos el modulo de campañas en vicidial
+                driver.get(request.vicidial_links['ivrs_link'])
+                time.sleep(3)
+                rows = vicidial_scraper.get_campaigns(driver)
+
+                primera_fila = True
+
+                for row in rows:
+                    if primera_fila:
+                        primera_fila = False
+                        continue
+                    vicidial_scraper.change_audio(
+                        driver,
+                        row,
+                        audio_dict
+                    )
+                driver.quit()
+
+                # return reverse('success')
+
+            except selexceptions.WebDriverException as err:
+                print(f'No se pudieron cambiar los audios.\nError -> {err}')
+    else:
+        form = forms.AudioChangeForm()
+
+    return render(
+        request,
+        'reportes/audio_change.html',
+        context={
+            'form': form,
+        }
+    )
+
+
 class UpdateLists(FormView):
     form_class = forms.UpdateListsForm
     template_name = 'reportes/update_lists.html'

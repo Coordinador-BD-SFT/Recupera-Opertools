@@ -222,3 +222,15 @@ class ListsResourcesReportForm(forms.Form):
         self.helper.layout = Layout(
             Field('chanel', css_class='form_control', id='validationCustom01')
         )
+
+
+class AudioChangeForm(forms.Form):
+    file = forms.FileField(label='Lista de audios', required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('file', css_class='form-control', id='validationCustom01')
+        )
