@@ -43,7 +43,7 @@ class MongoSampleDataForm(forms.Form):
     collections = [
         ('accounts', 'Cuentas'),
         ('customers', 'Clientes'),
-        # ('transactions', 'Tranzacciones')
+        ('transactions', 'Transacciones')
     ]
 
     collection = forms.ChoiceField(choices=collections, label='Buscar por')
@@ -51,16 +51,16 @@ class MongoSampleDataForm(forms.Form):
         label='Numero de cuenta',
         required=False
     )
-    account_limit = forms.IntegerField(
+    limit = forms.IntegerField(
         label='Limite de cuenta',
         required=False
     )
-    customer_username_name = forms.CharField(
+    username = forms.CharField(
         max_length=200,
         label='Nombre/Username',
         required=False
     )
-    customer_mail = forms.EmailField(
+    email = forms.EmailField(
         max_length=200,
         label='Email',
         required=False

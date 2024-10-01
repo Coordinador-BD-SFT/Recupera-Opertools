@@ -3,11 +3,15 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.http import request, JsonResponse, HttpResponse
 from . import models, forms
-from mongo.connection import get_database
+from mongo.connection import get_database, get_connection
 from mongo.utils.serializer import data_serializer
+from mongo.shortcuts import multi_collection_search
 from pymongo import errors as mongoerrors
 
 # Create your views here.
+
+# Creando conexion global a mongo
+client = get_connection()
 
 
 def index(request):
@@ -47,25 +51,34 @@ def mongo_browser(request):
         form = forms.MongoSampleDataForm(request.POST)
         if form.is_valid():
             try:
-                db = get_database('sample_analytics')
+                db = get_database('sample_analytics', client)
                 collection_name = form.cleaned_data['collection']
+                # other_collections = [
+                #     collection for collection in db.list_collection_names() if collection != collection_name]
+
                 data = []
 
-                if collection_name == 'accounts':
+                if collection_name:
+                    no_keys = ['collection', 'csrfmiddlewaretoken']
                     collection = db.get_collection(collection_name)
-                    account_id = form.cleaned_data['account_id']
-                    limit = form.cleaned_data['limit']
+                    search = {}
+                    for key in request.POST.keys():
+                        if any(key in llave for llave in no_keys):
+                            continue
+                        value = form.cleaned_data[key]
+                        if value:
+                            print(f'{key}: {value}')
+                            search[key] = value
+                    print(search)
 
-                    data = list(collection.find_one(
-                        {'account_id': account_id}))
+                    data = list(collection.find(search))
+                    data = [data_serializer(doc) for doc in data]
 
-                elif collection_name == 'customers':
-                    collection = db.get_collection(collection_name)
-                elif collection_name == 'transactions':
-                    collection = db.get_collection(collection_name)
+                    return JsonResponse(data, safe=False)
+
                 else:
                     raise NameError('No se encontro la coleccion')
-            except (mongoerrors.ConnectionFailure, NameError) as err:
+            except Exception as err:
                 print(
                     f'Error al buscar la informacion solicitada\nError -> {err}')
             finally:
