@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'css/base_form.css' %}">
+{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">
+        {% block form_title %}
+        {% endblock form_title %}
+    </h2>
+    <form novalidate enctype="multipart/form-data" method="post" action="">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="btn-group d-flex justify-content-center">
+            <button class="btn btn-primary">
+                {% block button_label %}
+                {% endblock button_label %}
+            </button>
+            <a href="{% block back_url %}{% endblock back_url %}" class="btn btn-secondary">Volver</a>
+        </div>
+    </form>
+    <div class="container">
+        {% block extra_content %}
+
+        {% endblock extra_content %}
+    </div>
+</div>
+{% endblock content %}
