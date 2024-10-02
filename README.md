@@ -5,11 +5,11 @@ Este aplicativo consiste en un conjunto de funcionalidades que reducen el tiempo
 para automatizar y aligerar la carga a los coordinadores operativos.
 
 ## Características
-- Reporte de whatsapp: Toma un extracto realizado por la extension WASUP de chrome, y lo cruza con las bases de envio de SMS .xlsx para generar reportes.
+- Reporte de whatsapp: Toma un extracto realizado por la extension WASUP de chrome, y lo cruza con las bases de envio de SMS .csv para generar reportes.
 - Envío de whatsapp: Toma control de una ventana del navegador para realizar envios automáticos  en base a un archivo excel el cual debe contener
     las columnas Dato_Contacto y SMS.
 - Administración de listas IVRs y transaccionales: Esta funcionalidad se encargara por sí sola de cargar, reiniciar(*), descargar y
-    limpiar las listas transaccionales e IVRs que se manejan en la plataforma coroprativa VICIDIAL.
+    limpiar las listas transaccionales e IVRs que se manejan en la plataforma coroprativa VICIDIAL, además de cambiar los audios de las listas de IVRs desde archivo.
 
 ## Tecnologías y dependencias
 Este proyecto utiliza pipenv para la gestión de las dependencias, en el archivo Pipfile y Pipfile.lock se encuentran todos los detalles sobre las
@@ -32,7 +32,7 @@ dependencias utilizadas.
     pipenv install
 
 4. **Selecciona el interprete y activa el entorno:**
-    Usa ´ctrl + shift + P´ en windows o ´cmd + shift + P´ en macOS/Linux, busca la opcion "Python: Select Interpreter" y selecciona el interprete que corresponda al ambiente virtual
+    Usa ´ctrl + shift + P´ en windows o ´cmd + shift + P´ en macOS/Linux, busca la opcion "Python: Select Interpreter" y selecciona el interprete que corresponda al ambiente virtual.
     Luego ejecuta el siguiente comando
     ```bash
     pipenv shell
