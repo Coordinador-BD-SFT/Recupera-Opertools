@@ -12,6 +12,10 @@
         {% block form_title %}
         {% endblock form_title %}
     </h2>
+    <p>
+        {% block form_description %}
+        {% endblock form_description %}
+    </p>
     <form novalidate enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}
         {{ form|crispy }}

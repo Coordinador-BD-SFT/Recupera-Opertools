@@ -2,12 +2,24 @@ from utils.dataframes import whatsapp
 from django import forms
 from . import models
 import pandas as pd
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 # Importamos modulo de renderizado de formularios con Bootstrap
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 
 # create your forms here
+
+# Auth forms
+
+
+class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True, max_length=200)
+
+    class meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
 
 
 class Reporteform(forms.ModelForm):

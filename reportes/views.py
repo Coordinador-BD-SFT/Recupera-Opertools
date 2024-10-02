@@ -7,9 +7,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from utils.dataframes import whatsapp, churn
 from utils.scrapping.common import get_driver, quit_driver
 from utils.scrapping import whatsapp_scraper, vicidial_scraper
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
 from django.urls import reverse, reverse_lazy
 from utils.dataframes import telematica
+from django.contrib import messages
 from datetime import datetime
 from functools import reduce
 from pathlib import Path
@@ -23,6 +26,7 @@ import os
 # Create your views here.
 
 
+@login_required
 def index(request):
     # Vista de la raiz de la ruta de la app
 
@@ -38,6 +42,50 @@ def index(request):
     )
 
 
+def register(request):
+    if request.method == 'POST':
+        form = forms.UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = forms.UserRegisterForm()
+
+    return render(
+        request,
+        'registration/register.html',
+        context={
+            'form': form,
+        }
+    )
+
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        user = request.user
+        user.username = username
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+        messages.success(request, 'Informacion Actualizada con exitos')
+        return redirect('reportes:profile')
+
+    return render(
+        request,
+        'reportes/profile.html',
+        context={
+            'user': request.user,
+        }
+    )
+
+
+@login_required
 def tipos_reporte(request):
     tipos_reporte = models.TipoReporte.objects.all()
 
@@ -50,6 +98,7 @@ def tipos_reporte(request):
     )
 
 
+@login_required
 def reporte(request, tipo_reporte_name):
     # Vista de la lista de instancias del modelo Reportes
 
@@ -72,6 +121,7 @@ def reporte(request, tipo_reporte_name):
     )
 
 
+@login_required
 def resources(request):
     return render(
         request,
@@ -80,6 +130,7 @@ def resources(request):
     )
 
 
+@login_required
 def reporte_form(request, tipo_reporte_name):
     # Vista del formulario para crear una instancia de Reporte
 
@@ -106,6 +157,7 @@ def reporte_form(request, tipo_reporte_name):
     )
 
 
+@login_required
 def reporte_detalle(request, tipo_reporte_name, reporte_id):
     # Vista del detalle de cada instancia de Rporte
 
@@ -127,6 +179,7 @@ def reporte_detalle(request, tipo_reporte_name, reporte_id):
     )
 
 
+@login_required
 def reporte_download(request, tipo_reporte_name, reporte_id):
     # Vista controladora de la descarga del reporte de una instancia Reporte
 
@@ -149,6 +202,7 @@ def reporte_download(request, tipo_reporte_name, reporte_id):
         raise Http404('Archivo no encontrado')
 
 
+@login_required
 def sms_bases(request, tipo_reporte_name):
     # Vista del listado de las bases de SMS
 
@@ -167,6 +221,7 @@ def sms_bases(request, tipo_reporte_name):
     )
 
 
+@login_required
 def files_and_bases(request):
 
     return render(
@@ -175,6 +230,7 @@ def files_and_bases(request):
     )
 
 
+@login_required
 def sms_base_update(request, report_type_name, sms_base_id):
     # Vista para actuaizar las bases de SMS
 
@@ -210,6 +266,7 @@ def sms_base_update(request, report_type_name, sms_base_id):
     )
 
 
+@login_required
 def sms_base_download(request, report_type_name, sms_base_id):
     # Vista que controla la descarga del archivo de registros de envio de SMS
 
@@ -231,6 +288,7 @@ def sms_base_download(request, report_type_name, sms_base_id):
         raise Http404('Archivo no encontrado')
 
 
+@login_required
 def whatsapp_scraping(request):
     # Vista que controla el envio masivo automatico de whatsapp
     if request.method == 'POST':
@@ -325,6 +383,7 @@ def whatsapp_scraping(request):
     )
 
 
+@login_required
 def vicidial(request):
 
     return render(
@@ -333,6 +392,7 @@ def vicidial(request):
     )
 
 
+@login_required
 def clean_lists(request):
     # Definimos los links que visitara el scraper
     driver = get_driver()
@@ -349,6 +409,7 @@ def clean_lists(request):
     )
 
 
+@login_required
 def download_lists(request):
     driver = get_driver()
 
@@ -366,6 +427,7 @@ def download_lists(request):
     )
 
 
+@login_required
 def upload_lists(request):
     # Obtenemos el navegador
     driver = get_driver()
@@ -412,6 +474,7 @@ def upload_lists(request):
     )
 
 
+@login_required
 def audio_change(request):
     if request.method == 'POST':
         form = forms.AudioChangeForm(request.POST, request.FILES)
@@ -422,7 +485,6 @@ def audio_change(request):
                 # Obtenemos y manipulamos el archivos para
                 df = pd.read_excel(form.cleaned_data['file'], dtype=str)
                 audio_dict = df.to_dict(orient='records')
-                print(audio_dict)
 
                 # Obtenemos el modulo de campañas en vicidial
                 driver.get(request.vicidial_links['ivrs_link'])
@@ -438,11 +500,12 @@ def audio_change(request):
                     vicidial_scraper.change_audio(
                         driver,
                         row,
-                        audio_dict
+                        audio_dict,
+                        sleep=0.5
                     )
                 driver.quit()
 
-                # return reverse('success')
+                return reverse_lazy('success')
 
             except selexceptions.WebDriverException as err:
                 print(f'No se pudieron cambiar los audios.\nError -> {err}')
@@ -458,7 +521,7 @@ def audio_change(request):
     )
 
 
-class UpdateLists(FormView):
+class UpdateLists(LoginRequiredMixin, FormView):
     form_class = forms.UpdateListsForm
     template_name = 'reportes/update_lists.html'
     success_url = reverse_lazy('reportes:success')
@@ -488,7 +551,7 @@ class UpdateLists(FormView):
         return [file.stem for file in path.iterdir()]
 
 
-class UpdateSMSFiles(FormView):
+class UpdateSMSFiles(LoginRequiredMixin, FormView):
     form_class = forms.UpdateSMSFilesForm
     template_name = 'reportes/update_sms_files.html'
     success_url = reverse_lazy('reportes:success')
@@ -518,6 +581,7 @@ class UpdateSMSFiles(FormView):
         return [file.stem for file in path.iterdir()]
 
 
+@login_required
 def lists_resources(request):
     # Funcion para renderizar reportes sobre las listas de IVRs y Transaccionales
     # Tomamos el tiempo en el que comienza la tarea
@@ -557,6 +621,7 @@ def lists_resources(request):
     )
 
 
+@login_required
 def sms_resources(request):
     start_time = time.time()
 
@@ -580,6 +645,7 @@ def sms_resources(request):
     )
 
 
+@login_required
 def telematica_module(request):
 
     return render(
@@ -588,6 +654,7 @@ def telematica_module(request):
     )
 
 
+@login_required
 def success(request):
     # Vista para retornar una vista de <¡exito!>
     return render(

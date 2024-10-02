@@ -1,0 +1,16 @@
+{% extends "base_form.html" %}
+
+{% block web_name %}Iniciar Sesión{% endblock web_name %}
+
+{% block form_title %}Iniciar Sesión{% endblock form_title %}
+{% block button_label %}Ingresar{% endblock button_label %}
+{% block back_url %}{% url 'home' %}{% endblock back_url %}
+{% block extra_content %}
+<br>
+<div>
+    <p>
+        ¿No estas registrado? Crea una cuenta <a href="{% url 'reportes:register' %}">aqui</a><br>
+        ¿Olvidaste tu contraseña? Restablesela <a href="{% url 'reportes:password_reset' %}">aqui</a>
+    </p>
+</div>
+{% endblock extra_content %}
