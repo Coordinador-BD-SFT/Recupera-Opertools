@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="container">
-    <h2>Perfil de {{ user.first_name }} {{ user.last_name }}</h2>
+    <h2>Bienvenido {{ user.first_name }} {{ user.last_name }}</h2>
     <hr>
     <div class="user-info">
         <p><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
@@ -18,24 +18,6 @@
     <h3>Actualizar Información</h3>
     <form novalidate enctype="multipart/form-data" action="{% url 'reportes:profile' %}" method="post">
         {% csrf_token %}
-        <!-- <div class="form-group">
-            <label for="username">Nombre de Usuario:</label>
-            <input type="text" name="username" id="username" value="{{ user.username }}" class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" value="{{ user.email }}" class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="first_name">Nombre:</label>
-            <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="last_name">Apellido:</label>
-            <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" class="form-control">
-        </div>
-        <br>
-        <button type="submit" class="btn btn-primary">Actualizar</button> -->
         <div class="input-group mb-3">
             <span class="input-group-text" id="username">Nombre de usuario</span>
             <input type="text" name="username" class="form-control" aria-label="Username" id="username"
@@ -63,5 +45,8 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Cerrar sesion</button>
     </form>
+    {% if user.is_staff %}
+    <a href="{% url 'reportes:register' %}" class="btn btn-primary">Crear un usuario</a>
+    {% endif %}
 </div>
 {% endblock %}

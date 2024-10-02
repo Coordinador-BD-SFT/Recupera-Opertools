@@ -14,12 +14,40 @@ from crispy_forms.layout import Layout, Field
 # Auth forms
 
 
+class UserCreationRequestForm(forms.Form):
+    email = forms.EmailField(label='Correo electrónico', required=True)
+    username = forms.CharField(max_length=20, required=True)
+    first_name = forms.CharField(max_length=20, required=True)
+    last_name = forms.CharField(max_length=20, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('username', css_class='form-control', id='validationCustom01'),
+            Field('password1', css_class='form-control',
+                  id='validationCustom01'),
+            Field('password2', css_class='form-control', id='validationCustom01')
+        )
+
+
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True, max_length=200)
 
     class meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ['username', 'password1', 'password2']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('username', css_class='form-control', id='validationCustom01'),
+            Field('password1', css_class='form-control',
+                  id='validationCustom01'),
+            Field('password2', css_class='form-control', id='validationCustom01')
+        )
 
 
 class Reporteform(forms.ModelForm):

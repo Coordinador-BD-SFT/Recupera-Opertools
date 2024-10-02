@@ -42,14 +42,19 @@ def index(request):
     )
 
 
+@login_required
 def register(request):
-    if request.method == 'POST':
-        form = forms.UserRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
+    if request.user.is_staff:
+        if request.method == 'POST':
+            form = forms.UserRegisterForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('login')
+        else:
+            form = forms.UserRegisterForm()
     else:
-        form = forms.UserRegisterForm()
+        messages.error(request, 'No tienes permiso para acceder a esta vista')
+        return redirect('reportes:profile')
 
     return render(
         request,
@@ -73,7 +78,7 @@ def profile(request):
         user.first_name = first_name
         user.last_name = last_name
         user.save()
-        messages.success(request, 'Informacion Actualizada con exitos')
+        messages.success(request, 'Informacion Actualizada con exito')
         return redirect('reportes:profile')
 
     return render(
