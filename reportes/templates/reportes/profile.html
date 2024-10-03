@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}{{ user.username }} - Perfil{% endblock web_name %}
+{% block link_tags %}{% endblock link_tags %}
+
+{% block content %}
+<div class="container">
+    <h2>Bienvenido {{ user.first_name }} {{ user.last_name }}</h2>
+    <hr>
+    <div class="user-info">
+        <p><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Fecha de Registro:</strong> {{ user.date_joined }}</p>
+        <p><strong>Último Inicio de Sesión:</strong> {{ user.last_login }}</p>
+    </div>
+    <hr>
+    <h3>Actualizar Información</h3>
+    <form novalidate enctype="multipart/form-data" action="{% url 'reportes:profile' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="username">Nombre de usuario</span>
+            <input type="text" name="username" class="form-control" aria-label="Username" id="username"
+                value="{{ user.username }}">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="email">Correo</span>
+            <input type="text" name="email" class="form-control" id="email" value="{{ user.email }}">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="first_name">Nombre</span>
+            <input type="text" name="first_name" class="form-control" id="first_name" value="{{ user.first_name }}">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="last_name">Apellido</span>
+            <input type="text" name="last_name" class="form-control" id="last_name" value="{{ user.last_name }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+    </form>
+
+    <hr>
+
+    <a href="{% url 'password_change' %}" class="btn btn-secondary">Cambiar Contraseña</a>
+    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Cerrar sesion</button>
+    </form>
+    {% if user.is_staff %}
+    <a href="{% url 'reportes:register' %}" class="btn btn-primary">Crear un usuario</a>
+    {% endif %}
+</div>
+{% endblock %}

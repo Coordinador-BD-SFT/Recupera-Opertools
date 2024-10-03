@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 """
 Modulo de definición de las URLs de la app
@@ -10,6 +11,9 @@ app_name = 'reportes'
 
 # (Convención) Lista de funciones path que definen las URLs del proyecto
 urlpatterns = [
+    # Auth views
+    path('profile', views.profile, name='profile'),
+    path('registration/', views.register, name='register'),
     path('', views.index, name='index'),
     # Modulo reportes
     path('reportes', views.tipos_reporte, name='tipos_reporte'),

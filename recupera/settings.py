@@ -56,9 +56,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'reportes.middleware.GlobalDataMiddleWare',
+    'recupera.middlewares.SessionTimeOutMiddleware',
 ]
 
 ROOT_URLCONF = 'recupera.urls'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 
 TEMPLATES = [
     {
@@ -109,6 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SESSION_TIMEOUT = 1800
+
 
 # Login keys for corporative platforms
 VICIDIAL_USER = config('VICIDIAL_USER')
@@ -149,8 +156,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('GMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PASSWORD')
+EMAIL_HOST_USER = config('GMAIL_USER')
+EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD')
+DEFAULT_FROM_EMAIL = config('GMAIL_USER')
 
 
 # Third-part packages viariables

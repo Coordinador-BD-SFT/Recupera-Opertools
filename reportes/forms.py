@@ -2,12 +2,52 @@ from utils.dataframes import whatsapp
 from django import forms
 from . import models
 import pandas as pd
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 # Importamos modulo de renderizado de formularios con Bootstrap
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 
 # create your forms here
+
+# Auth forms
+
+
+class UserCreationRequestForm(forms.Form):
+    email = forms.EmailField(label='Correo electrónico', required=True)
+    username = forms.CharField(max_length=20, required=True)
+    first_name = forms.CharField(max_length=20, required=True)
+    last_name = forms.CharField(max_length=20, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('username', css_class='form-control', id='validationCustom01'),
+            Field('password1', css_class='form-control',
+                  id='validationCustom01'),
+            Field('password2', css_class='form-control', id='validationCustom01')
+        )
+
+
+class UserRegisterForm(UserCreationForm):
+
+    class meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('username', css_class='form-control', id='validationCustom01'),
+            Field('password1', css_class='form-control',
+                  id='validationCustom01'),
+            Field('password2', css_class='form-control', id='validationCustom01')
+        )
 
 
 class Reporteform(forms.ModelForm):

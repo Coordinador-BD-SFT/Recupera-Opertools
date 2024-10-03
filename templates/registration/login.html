@@ -1,0 +1,15 @@
+{% extends "base_form.html" %}
+
+{% block web_name %}Iniciar Sesión{% endblock web_name %}
+
+{% block form_title %}Iniciar Sesión{% endblock form_title %}
+{% block button_label %}Ingresar{% endblock button_label %}
+{% block back_url %}{% url 'home' %}{% endblock back_url %}
+{% block extra_content %}
+<br>
+<div>
+    <p>
+        ¿Olvidaste tu contraseña? <a href="{% url 'password_reset' %}">Restablecer</a>
+    </p>
+</div>
+{% endblock extra_content %}
