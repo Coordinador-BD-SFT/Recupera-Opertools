@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'reportes.middleware.GlobalDataMiddleWare',
+    'recupera.middlewares.SessionTimeOutMiddleware',
 ]
 
 ROOT_URLCONF = 'recupera.urls'
@@ -112,6 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+SESSION_TIMEOUT = 1800
 
 
 # Login keys for corporative platforms

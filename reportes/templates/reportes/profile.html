@@ -40,8 +40,8 @@
 
     <hr>
 
-    <a href="{% url 'reportes:password_change' %}" class="btn btn-secondary">Cambiar Contraseña</a>
-    <form action="{% url 'reportes:logout' %}" method="post" style="display: inline;">
+    <a href="{% url 'password_change' %}" class="btn btn-secondary">Cambiar Contraseña</a>
+    <form action="{% url 'logout' %}" method="post" style="display: inline;">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Cerrar sesion</button>
     </form>
