@@ -2,6 +2,8 @@ from django.views.generic import FormView, ListView, CreateView, UpdateView, Del
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.http import request, JsonResponse, HttpResponse
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from . import models, forms
 from mongo.connection import get_database
 from mongo.utils.serializer import data_serializer
@@ -10,6 +12,8 @@ from pymongo import errors as mongoerrors
 # Create your views here.
 
 
+@login_required
+@permission_required('reportes.acces_to_customer_management', raise_exception=True)
 def index(request):
 
     return render(
@@ -18,6 +22,8 @@ def index(request):
     )
 
 
+@login_required
+@permission_required('reportes.acces_to_customer_management', raise_exception=True)
 def asignation_management(request):
 
     return render(
@@ -26,7 +32,8 @@ def asignation_management(request):
     )
 
 
-class UploadInformationView(CreateView):
+class UploadInformationView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'reportes.acces_to_customer_management'
     model = models.AsignationModification
     template_name = 'gestion_clientes/upload_information.html'
     form_class = forms.AsignationModificationForm
@@ -41,7 +48,8 @@ class UploadInformationView(CreateView):
 
 #     return JsonResponse(data, safe=False)
 
-
+@login_required
+@permission_required('reportes.acces_to_customer_management')
 def mongo_browser(request):
     if request.method == 'POST':
         form = forms.MongoSampleDataForm(request.POST)

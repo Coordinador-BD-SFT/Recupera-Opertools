@@ -7,8 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from utils.dataframes import whatsapp, churn
 from utils.scrapping.common import get_driver, quit_driver
 from utils.scrapping import whatsapp_scraper, vicidial_scraper
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.edit import FormView
 from django.urls import reverse, reverse_lazy
 from utils.dataframes import telematica
@@ -27,6 +27,7 @@ import os
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app', raise_exception=True)
 def index(request):
     # Vista de la raiz de la ruta de la app
 
@@ -43,6 +44,7 @@ def index(request):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def register(request):
     if request.user.is_staff:
         if request.method == 'POST':
@@ -50,6 +52,8 @@ def register(request):
             if form.is_valid():
                 form.save()
                 return redirect('login')
+            elif not form.is_valid():
+                print('error')
         else:
             form = forms.UserRegisterForm()
     else:
@@ -66,31 +70,7 @@ def register(request):
 
 
 @login_required
-def profile(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        user = request.user
-        user.username = username
-        user.email = email
-        user.first_name = first_name
-        user.last_name = last_name
-        user.save()
-        messages.success(request, 'Informacion Actualizada con exito')
-        return redirect('reportes:profile')
-
-    return render(
-        request,
-        'reportes/profile.html',
-        context={
-            'user': request.user,
-        }
-    )
-
-
-@login_required
+@permission_required('reportes.can_view_tiporeporte')
 def tipos_reporte(request):
     tipos_reporte = models.TipoReporte.objects.all()
 
@@ -104,6 +84,7 @@ def tipos_reporte(request):
 
 
 @login_required
+@permission_required('reportes.can_view_reporte')
 def reporte(request, tipo_reporte_name):
     # Vista de la lista de instancias del modelo Reportes
 
@@ -127,6 +108,7 @@ def reporte(request, tipo_reporte_name):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def resources(request):
     return render(
         request,
@@ -136,6 +118,7 @@ def resources(request):
 
 
 @login_required
+@permission_required('reportes.can_add_reporte')
 def reporte_form(request, tipo_reporte_name):
     # Vista del formulario para crear una instancia de Reporte
 
@@ -163,6 +146,7 @@ def reporte_form(request, tipo_reporte_name):
 
 
 @login_required
+@permission_required('reportes.can_view_reporte')
 def reporte_detalle(request, tipo_reporte_name, reporte_id):
     # Vista del detalle de cada instancia de Rporte
 
@@ -185,6 +169,7 @@ def reporte_detalle(request, tipo_reporte_name, reporte_id):
 
 
 @login_required
+@permission_required('reportes.can_add_reporte')
 def reporte_download(request, tipo_reporte_name, reporte_id):
     # Vista controladora de la descarga del reporte de una instancia Reporte
 
@@ -208,6 +193,7 @@ def reporte_download(request, tipo_reporte_name, reporte_id):
 
 
 @login_required
+@permission_required('reportes.can_view_smsbase')
 def sms_bases(request, tipo_reporte_name):
     # Vista del listado de las bases de SMS
 
@@ -227,6 +213,7 @@ def sms_bases(request, tipo_reporte_name):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def files_and_bases(request):
 
     return render(
@@ -236,6 +223,7 @@ def files_and_bases(request):
 
 
 @login_required
+@permission_required('reportes.can_change_smsbase')
 def sms_base_update(request, report_type_name, sms_base_id):
     # Vista para actuaizar las bases de SMS
 
@@ -272,6 +260,7 @@ def sms_base_update(request, report_type_name, sms_base_id):
 
 
 @login_required
+@permission_required('reportes.can_add_smsbase')
 def sms_base_download(request, report_type_name, sms_base_id):
     # Vista que controla la descarga del archivo de registros de envio de SMS
 
@@ -294,6 +283,7 @@ def sms_base_download(request, report_type_name, sms_base_id):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def whatsapp_scraping(request):
     # Vista que controla el envio masivo automatico de whatsapp
     if request.method == 'POST':
@@ -389,6 +379,7 @@ def whatsapp_scraping(request):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def vicidial(request):
 
     return render(
@@ -398,6 +389,7 @@ def vicidial(request):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def clean_lists(request):
     # Definimos los links que visitara el scraper
     driver = get_driver()
@@ -415,6 +407,7 @@ def clean_lists(request):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def download_lists(request):
     driver = get_driver()
 
@@ -433,6 +426,7 @@ def download_lists(request):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def upload_lists(request):
     # Obtenemos el navegador
     driver = get_driver()
@@ -480,6 +474,7 @@ def upload_lists(request):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def audio_change(request):
     if request.method == 'POST':
         form = forms.AudioChangeForm(request.POST, request.FILES)
@@ -526,7 +521,8 @@ def audio_change(request):
     )
 
 
-class UpdateLists(LoginRequiredMixin, FormView):
+class UpdateLists(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+    permission_required = 'reportes.complete_access_to_reportes_app'
     form_class = forms.UpdateListsForm
     template_name = 'reportes/update_lists.html'
     success_url = reverse_lazy('reportes:success')
@@ -556,7 +552,8 @@ class UpdateLists(LoginRequiredMixin, FormView):
         return [file.stem for file in path.iterdir()]
 
 
-class UpdateSMSFiles(LoginRequiredMixin, FormView):
+class UpdateSMSFiles(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+    permission_required = 'reportes.complete_access_to_reportes_app'
     form_class = forms.UpdateSMSFilesForm
     template_name = 'reportes/update_sms_files.html'
     success_url = reverse_lazy('reportes:success')
@@ -587,6 +584,7 @@ class UpdateSMSFiles(LoginRequiredMixin, FormView):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def lists_resources(request):
     # Funcion para renderizar reportes sobre las listas de IVRs y Transaccionales
     # Tomamos el tiempo en el que comienza la tarea
@@ -627,6 +625,7 @@ def lists_resources(request):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def sms_resources(request):
     start_time = time.time()
 
@@ -651,6 +650,7 @@ def sms_resources(request):
 
 
 @login_required
+@permission_required('reportes.complete_access_to_reportes_app')
 def telematica_module(request):
 
     return render(
@@ -665,4 +665,17 @@ def success(request):
     return render(
         request,
         'success.html'
+    )
+
+
+@login_required
+def ranking(request):
+    asesores = models.Usuario.objects.all().filter(is_staff=False)
+
+    return render(
+        request,
+        'reportes/ranking_asesores.html',
+        context={
+            'asesores': asesores,
+        }
     )

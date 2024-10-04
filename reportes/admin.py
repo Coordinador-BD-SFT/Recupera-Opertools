@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
 from . import models
 
 """
@@ -30,7 +32,16 @@ class SMSBaseAdmin(admin.ModelAdmin):
     list_display = ('id', 'tipo_reporte', 'name', 'sms_base', 'created_at')
 
 
+class UsuarioAdmin(UserAdmin):
+    model = models.Usuario
+    # fields = ('username', 'email', 'is_staff', 'first_name',
+    #           'last_name', 'campaign')
+    # list_display = ('id', 'username', 'email', 'is_staff', 'first_name',
+    #                 'last_name', 'campaign', 'rank', 'points')
+
+
 # Registramos las clases, con su modelo relacionado, en el sitio del Administrador
 admin.site.register(models.TipoReporte, TipoReporteAdmin)
 admin.site.register(models.SMSBase, SMSBaseAdmin)
 admin.site.register(models.Reporte, ReporteAdmin)
+admin.site.register(models.Usuario, UsuarioAdmin)
