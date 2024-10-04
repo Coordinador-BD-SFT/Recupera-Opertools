@@ -16,7 +16,7 @@
     </div>
     <hr>
     <h3>Actualizar Información</h3>
-    <form novalidate enctype="multipart/form-data" action="{% url 'reportes:profile' %}" method="post">
+    <form novalidate enctype="multipart/form-data" action="{% url 'profile' %}" method="post">
         {% csrf_token %}
         <div class="input-group mb-3">
             <span class="input-group-text" id="username">Nombre de usuario</span>
@@ -35,6 +35,20 @@
             <span class="input-group-text" id="last_name">Apellido</span>
             <input type="text" name="last_name" class="form-control" id="last_name" value="{{ user.last_name }}">
         </div>
+        {% if not user.is_staff %}
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="campaign">Campaña</span>
+            <input type="text" class="form-control" id="campaign" value="{{ user.campaign }}">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="points">Puntos</span>
+            <input type="text" class="form-control" id="" value="{{ user.points }}" disabled>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="rank">Rango</span>
+            <input type="text" class="form-control" id="rank" value="{{ user.rank }}">
+        </div>
+        {% endif %}
         <button type="submit" class="btn btn-primary">Actualizar</button>
     </form>
 

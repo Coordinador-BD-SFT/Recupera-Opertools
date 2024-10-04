@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block web_name %}Ranking Asesores{% endblock web_name %}
+
+{% block link_tags %}
+{% endblock link_tags %}
+
+{% block content %}
+<div class="btn-group">
+    {% if user.is_staff %}
+    <a href="{% url 'reportes:register' %}" class="btn btn-primary">Añadir Asesor</a>
+    <a href="#" class="btn btn-outline-secondary">Descargar reporte</a>
+    {% endif %}
+</div>
+<br><br>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                <p class="text-center">Posición</p>
+            </th>
+            <th scope="col">
+                <p class="text-center">User</p>
+            </th>
+            <th scope="col">
+                <p class="text-center">Campaña</p>
+            </th>
+            <th scope="col">
+                <p class="text-center">Puntos</p>
+            </th>
+            <th scope="col">
+                <p class="text-center">Rango</p>
+            </th>
+        </tr>
+    </thead>
+    {% for user in usuarios %}
+    <tbody>
+        <tr>
+            <th scope="row">
+                <p class="text-center">N°</p>
+            </th>
+            <td>
+                <p class="text-center">{{ user.username }}</p>
+            </td>
+            <td>
+                <p class="text-center">{{ user.campaign }}</p>
+            </td>
+            <td>
+                <p class="text-center">{{ user.puntos }}</p>
+            </td>
+            <td>
+                <p class="text-center">{{ user.rango }}</p>
+            </td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+{% endblock content %}

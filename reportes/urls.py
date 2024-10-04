@@ -12,7 +12,6 @@ app_name = 'reportes'
 # (Convención) Lista de funciones path que definen las URLs del proyecto
 urlpatterns = [
     # Auth views
-    path('profile', views.profile, name='profile'),
     path('registration/', views.register, name='register'),
     path('', views.index, name='index'),
     # Modulo reportes
@@ -68,5 +67,8 @@ urlpatterns = [
     path('telematica-module', views.telematica_module, name='telematica'),
     path('telematica/whatsapp', views.whatsapp_scraping, name='whatsapp_scraping'),
     # Fin modulo telematica
+    # Modulo ranking asesores
+    path('ranking-asesores', views.ranking, name='ranking_asesores'),
+    # Fin modulo ranking
     path('process/success', views.success, name='success'),
 ]

@@ -23,13 +23,13 @@
             <a class="nav-link active" href="{% url 'home' %}">Inicio</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'reportes:tipos_reporte' %}">Reportes</a>
+            <a class="nav-link" href="{% url 'reportes:index' %}">Reportes</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'reportes:vicidial' %}">Vicidial</a>
+            <a class="nav-link" href="{% url 'gestion_clientes:index' %}">Gestion Clientes</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'reportes:telematica' %}">Telemadica</a>
+            <a class="nav-link" href="{% url 'reportes:ranking_asesores' %}">Ranking Asesores</a>
           </li>
         </ul>
       </div>
@@ -40,7 +40,7 @@
             <div class="d-flex p-2 user-i d-flex justify-content-evenly">
               {% if user.is_authenticated %}
               <p class="user-log">Hola,
-                <a href="{% url 'reportes:profile' %}"
+                <a href="{% url 'profile' %}"
                   class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                   {{ user.username }}
                 </a>
@@ -59,24 +59,27 @@
         </div>
       </div>
     </div>
-  </section>
-  {% if messages %}
+    {% if messages %}
     {% for message in messages %}
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <img src="..." class="rounded me-2" alt="...">
-        <strong class="me-auto">Warning</strong>
-        <small>now</small>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body">
-        {{ message }}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <img src="..." class="rounded me-2" alt="...">
+          <strong class="me-auto">{{ message.tags }}</strong>
+          <small>Ahora</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          {{message}}
+        </div>
       </div>
     </div>
     {% endfor %}
-  {% endif %}
+    {% endif %}
+  </section>
 
   {% block script_tags %} {% endblock script_tags %}
+  <script src="{% static 'js/base.js' %}"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
