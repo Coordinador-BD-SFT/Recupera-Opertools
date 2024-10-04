@@ -15,7 +15,7 @@ class SessionTimeOutMiddleware():
                 last_activity = timezone.datetime.fromisoformat(last_activity)
                 if (timezone.now() - last_activity).total_seconds() > settings.SESSION_TIMEOUT:
                     logout(request)
-                elif (timezone.now() - last_activity).total_seconds() < 300:
+                elif (timezone.now() - last_activity).total_seconds() > 1500:
                     messages.warning(request, 'Su sesion expirará pronto')
 
             request.session['last_activity'] = timezone.now().isoformat()
