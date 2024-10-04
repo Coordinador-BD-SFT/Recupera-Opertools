@@ -3,7 +3,6 @@ from django import forms
 from . import models
 import pandas as pd
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 
 # Importamos modulo de renderizado de formularios con Bootstrap
 from crispy_forms.helper import FormHelper
@@ -34,9 +33,9 @@ class UserCreationRequestForm(forms.Form):
 
 class UserRegisterForm(UserCreationForm):
 
-    class meta:
-        model = User
-        fields = ['username', 'password1', 'password2']
+    class Meta:
+        model = models.Usuario
+        fields = ('username', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

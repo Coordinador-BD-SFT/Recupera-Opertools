@@ -1,8 +1,10 @@
 from django.core.files.storage import default_storage
+from django.contrib.auth.models import AbstractUser
 from utils.dataframes import whatsapp
 from django.http import FileResponse
 from django.utils import timezone
 from django.db import models
+from django.conf import settings
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
@@ -235,3 +237,57 @@ class SMSBase(models.Model):
             self.limpiar_base()
         # Invocamos a save() del modelo padre para que se guarde correctamente la instancia
         super().save()
+
+
+class Usuario(AbstractUser):
+    ranks = [
+        ('trainee', 'TRAINEE'),
+        ('junior', 'JUNIOR'),
+        ('semisenior', 'SEMI SENIOR'),
+        ('senior', 'SENIOR'),
+    ]
+
+    # user = models.OneToOneField(
+    #     settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    campaign = models.CharField(
+        max_length=30, null=True,
+        default='Sin Asignar'
+    )
+    points = models.IntegerField(default=0)
+    rank = models.CharField(
+        max_length=30, choices=ranks,
+        null=True, default='Sin Asignar'
+    )
+    last_rank = models.CharField(max_length=30, choices=ranks)
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='usuario_set',
+        blank=True,
+        help_text='The groups this user belongs to',
+        verbose_name='groups'
+    )
+
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='usuario_permissions_set',
+        blank=True,
+        help_text='Specific permissions for this user',
+        verbose_name='user permissions'
+    )
+
+    class Meta:
+        permissions = [
+            ('complete_access_to_reportes_app', 'Complete access to reportes app'),
+            ('acces_to_customer_management', 'Access to customer management'),
+        ]
+
+    def __str__(self):
+        return self.username
+
+    def set_rank(self):
+        pass
+
+    @classmethod
+    def update_points(self):
+        pass

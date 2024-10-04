@@ -114,6 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+AUTH_USER_MODEL = 'reportes.Usuario'
 SESSION_TIMEOUT = 1800
 
 
