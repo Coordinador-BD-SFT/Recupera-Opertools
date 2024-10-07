@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
+from reportes.models import Usuario
 
 
 @login_required
@@ -13,7 +14,7 @@ def home(request):
 
 
 @login_required
-def profile(request):
+def profile(request, username):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -30,8 +31,15 @@ def profile(request):
             user.campaign = campaign
             user.rank = rank
         user.save()
+        if user.rank == 'senior':
+            pass
+        elif user.rank == 'semisenior':
+            pass
+        else:
+            pass
+
         messages.success(request, 'Informacion Actualizada con exito')
-        return redirect('profile')
+        return redirect('profile', username=request.user.username)
 
     return render(
         request,

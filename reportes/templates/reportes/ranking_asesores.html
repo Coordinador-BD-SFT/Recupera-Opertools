@@ -7,6 +7,7 @@
 {% endblock link_tags %}
 
 {% block content %}
+<h1 class="text-center">Ranking general de asesores</h1>
 <div class="btn-group">
     {% if user.is_staff %}
     <a href="{% url 'reportes:register' %}" class="btn btn-primary">Añadir Asesor</a>
@@ -47,10 +48,10 @@
                 <p class="text-center">{{ user.campaign }}</p>
             </td>
             <td>
-                <p class="text-center">{{ user.puntos }}</p>
+                <p class="text-center">{{ user.points }}</p>
             </td>
             <td>
-                <p class="text-center">{{ user.rango }}</p>
+                <p class="text-center">{{ user.rank }}</p>
             </td>
         </tr>
     </tbody>

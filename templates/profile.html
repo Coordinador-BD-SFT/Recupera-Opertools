@@ -6,17 +6,22 @@
 
 {% block content %}
 <div class="container">
-    <h2>Bienvenido {{ user.first_name }} {{ user.last_name }}</h2>
+    <h2>Bienvenido {{ user.username }}</h2>
     <hr>
     <div class="user-info">
         <p><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Fecha de Registro:</strong> {{ user.date_joined }}</p>
         <p><strong>Último Inicio de Sesión:</strong> {{ user.last_login }}</p>
+        {% if not user.is_staff %}
+        <p><strong>Campaña:</strong> {{ user.campaign}}</p>
+        <p><strong>Puntos:</strong> {{ user.points}}</p>
+        <h4><strong>Rango:</strong> {{ user.rank}}<span class="badge text-bg-secondary">New</span></h4>
+        {% endif %}
     </div>
     <hr>
     <h3>Actualizar Información</h3>
-    <form novalidate enctype="multipart/form-data" action="{% url 'profile' %}" method="post">
+    <form novalidate enctype="multipart/form-data" action="{% url 'profile' user.username %}" method="post">
         {% csrf_token %}
         <div class="input-group mb-3">
             <span class="input-group-text" id="username">Nombre de usuario</span>
@@ -38,18 +43,14 @@
         {% if not user.is_staff %}
         <div class="input-group mb-3">
             <span class="input-group-text" id="campaign">Campaña</span>
-            <input type="text" class="form-control" id="campaign" value="{{ user.campaign }}">
+            <input type="text" name="campaign" class="form-control" id="campaign" value="{{ user.campaign }}">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="points">Puntos</span>
-            <input type="text" class="form-control" id="" value="{{ user.points }}" disabled>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="rank">Rango</span>
-            <input type="text" class="form-control" id="rank" value="{{ user.rank }}">
-        </div>
+            <input type="" name="points" class="form-control" id="points" value="{{ user.points }}" disabled>
+        </div>  
         {% endif %}
-        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
     </form>
 
     <hr>

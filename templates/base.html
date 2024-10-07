@@ -40,7 +40,7 @@
             <div class="d-flex p-2 user-i d-flex justify-content-evenly">
               {% if user.is_authenticated %}
               <p class="user-log">Hola,
-                <a href="{% url 'profile' %}"
+                <a href="{% url 'profile' user.username %}"
                   class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                   {{ user.username }}
                 </a>
