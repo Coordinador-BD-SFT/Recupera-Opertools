@@ -34,9 +34,9 @@ class UserCreationRequestForm(forms.Form):
 
 class UserRegisterForm(UserCreationForm):
 
-    class meta:
-        model = User
-        fields = ['username', 'password1', 'password2']
+    class Meta:
+        model = models.Usuario
+        fields = ('username', 'password1', 'password2', 'is_staff')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -46,7 +46,14 @@ class UserRegisterForm(UserCreationForm):
             Field('username', css_class='form-control', id='validationCustom01'),
             Field('password1', css_class='form-control',
                   id='validationCustom01'),
-            Field('password2', css_class='form-control', id='validationCustom01')
+            Field('password2', css_class='form-control',
+                  id='validationCustom01'),
+            Field(
+                'is_staff',
+                css_class='form-check-input',
+                id='flexSwitchCheckReverse',
+                type='checkbox'
+            )
         )
 
 
