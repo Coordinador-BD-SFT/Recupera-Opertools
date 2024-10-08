@@ -247,8 +247,6 @@ class Usuario(AbstractUser):
         ('senior', 'SENIOR'),
     ]
 
-    # user = models.OneToOneField(
-    #     settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     campaign = models.CharField(
         max_length=30, null=True,
         default='Sin Asignar'
@@ -289,5 +287,5 @@ class Usuario(AbstractUser):
         pass
 
     @classmethod
-    def update_points(self):
+    def update_points(cls):
         pass

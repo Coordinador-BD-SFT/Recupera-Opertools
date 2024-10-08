@@ -424,7 +424,7 @@ def change_audio(
             By.XPATH,
             '//*[@id="survey_first_audio_file"]'
         )
-        print(f'Audio anterior: {audio_input.get_attribute("value")}\n')
+        print(f'Audio anterior: {audio_input.get_attribute("value")}')
         if audio_input:
             audio_input.clear()
             audio_input.send_keys(audio)
@@ -434,12 +434,13 @@ def change_audio(
             By.XPATH,
             '//*[@id="admin_form"]/center/table/tbody/tr[25]/td/input'
         )
-        # submit_button.submit()
-        # print(f'Audio camiado exitosamente!\n')
+        submit_button.click()
+        print(f'Audio cambiado exitosamente!\n')
 
         time.sleep(sleep)
 
         # Volvemos a la lista de campañas
+        driver.back()
         driver.back()
         driver.back()
 

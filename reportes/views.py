@@ -501,7 +501,7 @@ def audio_change(request):
                         driver,
                         row,
                         audio_dict,
-                        sleep=0.5
+                        sleep=0.6
                     )
                 driver.quit()
 

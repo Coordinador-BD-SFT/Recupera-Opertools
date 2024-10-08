@@ -35,23 +35,31 @@
             </th>
         </tr>
     </thead>
-    {% for user in asesores %}
+    {% for asesor in asesores %}
     <tbody>
         <tr>
             <th scope="row">
                 <p class="text-center">N°</p>
             </th>
             <td>
-                <p class="text-center">{{ user.username }}</p>
+                <p class="text-center">
+                    {% if user.is_staff %}
+                    <a href="{% url 'admin:reportes_usuario_change' asesor.id %}" style="text-decoration: none;">
+                        {{asesor.username}}
+                    </a>
+                    {% else %}
+                    {{ asesor.username }}
+                    {% endif %}
+                </p>
             </td>
             <td>
-                <p class="text-center">{{ user.campaign }}</p>
+                <p class="text-center">{{ asesor.campaign }}</p>
             </td>
             <td>
-                <p class="text-center">{{ user.points }}</p>
+                <p class="text-center">{{ asesor.points }}</p>
             </td>
             <td>
-                <p class="text-center">{{ user.rank }}</p>
+                <p class="text-center">{{ asesor.rank }}</p>
             </td>
         </tr>
     </tbody>
