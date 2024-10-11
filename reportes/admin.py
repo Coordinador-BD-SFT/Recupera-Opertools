@@ -44,6 +44,14 @@ class UsuarioAdmin(UserAdmin):
         ('Callcenter Info', {'fields': ('rank', 'points', 'campaign')})
     )
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if not request.user.is_superuser:
+            # Desactivar los campos si no es superusuario
+            form.base_fields['is_superuser'].disabled = True
+            form.base_fields['is_staff'].disabled = True
+        return form
+
 
 # Registramos las clases, con su modelo relacionado, en el sitio del Administrador
 admin.site.register(models.TipoReporte, TipoReporteAdmin)
