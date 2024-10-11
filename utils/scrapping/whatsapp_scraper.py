@@ -84,7 +84,7 @@ def search_num(
             '//*[@id="app"]/div/div[2]/div[3]/header/header/div/span/div/span/div[1]/div/span'
         )))
         if new_chat_btn:
-            time.sleep(randint(1, 3))
+            time.sleep(randint(1, 5))
             new_chat_btn.click()
 
         # Buscamos y seleccionamos caja de texto y enviamos número a buscar
@@ -108,7 +108,8 @@ def search_num(
         else:
             return False
 
-    except (selexceptions.NoSuchElementException, selexceptions.ElementClickInterceptedException):
+    except (selexceptions.NoSuchElementException, selexceptions.ElementClickInterceptedException, selexceptions.TimeoutException) as err:
+        print(f'Error: {err}')
         driver.refresh()
         return False
 

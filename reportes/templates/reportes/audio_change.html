@@ -1,4 +1,5 @@
 {% extends "base_form.html" %}
+{% load static %}
 {% block web_name %}Cambiar audios{% endblock web_name %}
 {% block button_label %}Cargar{% endblock button_label %}
 {% block form_title %}Cambiar audios{% endblock form_title %}
@@ -10,7 +11,7 @@
 <p class="text-center">
     A continuacion se uestra la estructura del archivo que se debe cargar para poder cambiar los audios correctamete. Si
     esta vista no es útil, puedes<br>
-    hechar un vistazo a <a href="../../static/images/structures/audio_change.jpeg">nuestro ejemplo</a>.
+    hechar un vistazo a <a href="{% static 'images/structures/audio_change.jpeg' %}">nuestro ejemplo</a>.
 </p>
 <table class="table">
     <thead>
