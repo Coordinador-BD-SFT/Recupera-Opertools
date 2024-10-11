@@ -69,6 +69,7 @@ urlpatterns = [
     # Fin modulo telematica
     # Modulo ranking asesores
     path('ranking-asesores', views.ranking, name='ranking_asesores'),
+    path('update-ranking', views.update_ranking, name='update_ranking'),
     # Fin modulo ranking
     path('process/success', views.success, name='success'),
 ]

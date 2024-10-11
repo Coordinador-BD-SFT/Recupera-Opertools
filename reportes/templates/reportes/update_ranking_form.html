@@ -1,0 +1,11 @@
+{% extends "base_form.html" %}
+
+{% block web_name %}Ranking asesores - Actualizar{% endblock web_name %}
+{% block form_title %}Actualizar rankning de asesores{% endblock form_title %}
+{% block form_description %}
+Carga un archivo con los datos de los puntos de cada asesor y los registra en la base de asesores
+{% endblock form_description %}
+
+{% block button_label %}Actualizar{% endblock button_label %}
+{% block back_url %}{% url 'reportes:ranking_asesores' %}{% endblock back_url %}
+{% block extra_content %}{% endblock extra_content %}

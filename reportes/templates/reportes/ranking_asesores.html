@@ -12,6 +12,7 @@
     {% if user.is_staff %}
     <a href="{% url 'reportes:register' %}" class="btn btn-primary">Añadir Asesor</a>
     <a href="#" class="btn btn-outline-secondary">Descargar reporte</a>
+    <a href="{% url 'reportes:update_ranking' %}" class="btn btn-outline-success">Actualizar ranking</a>
     {% endif %}
 </div>
 <br><br>
@@ -37,7 +38,11 @@
     </thead>
     {% for asesor in asesores %}
     <tbody>
+        {% if user.username == asesor.username %}
+        <tr class="table-primary">
+            {% else %}
         <tr>
+            {% endif %}
             <th scope="row">
                 <p class="text-center">N°</p>
             </th>
