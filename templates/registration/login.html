@@ -1,15 +1,37 @@
-{% extends "base_form.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="es">
 
-{% block web_name %}Iniciar Sesión{% endblock web_name %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}"> <!-- Enlace al archivo CSS -->
+</head>
 
-{% block form_title %}Iniciar Sesión{% endblock form_title %}
-{% block button_label %}Ingresar{% endblock button_label %}
-{% block back_url %}{% url 'home' %}{% endblock back_url %}
-{% block extra_content %}
-<br>
-<div>
-    <p>
+<body style="background-color: #f5f5f5;">
+
+    <div class="login-container mt-5">
+        <h2 class="text-center">Iniciar Sesión</h2>
+        <form novalidate enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary" type="submit">Ingresar</button>
+            </div>
+        </form>
+    </div>
+    <br>
+    <p class="text-center">
         ¿Olvidaste tu contraseña? <a href="{% url 'password_reset' %}">Restablecer</a>
     </p>
-</div>
-{% endblock extra_content %}
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+body {
+    background-color: #f5f5f5;
+    /* Gris oscuro */
+}
+
+.login-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 30px;
+    background-color: #333;
+    color: white;
+    /* Gris oscuro claro */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary {
+    width: 50%;
+}
