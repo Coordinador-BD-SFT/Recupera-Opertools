@@ -280,3 +280,15 @@ class AudioChangeForm(forms.Form):
         self.helper.layout = Layout(
             Field('file', css_class='form-control', id='validationCustom01')
         )
+
+
+class UpdateRankingForm(forms.Form):
+    file = forms.FileField(label='Data', required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('file', css_class='form-control', id='validationCustom01')
+        )

@@ -189,8 +189,24 @@ class SMSBase(models.Model):
         """
         Función que elimina las columnas innecesarias del archivo
         """
-        base = pd.read_excel(self.sms_base, usecols=[
-            'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
+        try:
+            base = pd.read_excel(
+                self.sms_base,
+                usecols=[
+                    'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'
+                ],
+                dtype=str
+            )
+        except ValueError as err:
+            base = pd.read_csv(
+                self.sms_base,
+                usecols=[
+                    'Identificacion', 'Cuenta_Next',
+                    'Edad_Mora', 'Dato_Contacto'
+                ],
+                dtype=str,
+                sep=','
+            )
 
     def actualizar_base(self, nueva_base):
         """
@@ -200,13 +216,20 @@ class SMSBase(models.Model):
         nueva_base -> file: Archivo con nuevos registros para la actualizar la base existente
         """
 
-        old_base = pd.DataFrame()
+        new_base = pd.DataFrame()
 
         if self.sms_base.path.endswith('.csv'):
             try:
+                print
                 # Creamos los dataframes de las bases nueva y antigua
-                old_base = pd.read_csv(self.sms_base, usecols=[
-                    'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str, sep=',')
+                old_base = pd.read_csv(self.sms_base,
+                                       usecols=[
+                                           'Identificacion', 'Cuenta_Next',
+                                           'Edad_Mora', 'Dato_Contacto'
+                                       ],
+                                       dtype=str,
+                                       sep=','
+                                       )
             except ValueError as err:
                 print(f'Efectivamente el error es aqui\nError -> {err}')
         elif self.sms_base.path.endswith('.xlsx'):

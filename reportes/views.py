@@ -670,12 +670,52 @@ def success(request):
 
 @login_required
 def ranking(request):
-    asesores = models.Usuario.objects.all().filter(is_staff=False)
+    asesores = models.Usuario.objects.all() \
+        .filter(is_staff=False) \
+        .order_by('points')
 
     return render(
         request,
         'reportes/ranking_asesores.html',
         context={
             'asesores': asesores,
+        }
+    )
+
+
+@permission_required(perm='reportes.complete_access_to_reportes_app', raise_exception=True)
+def update_ranking(request):
+    # Funcion que toma un archivo(s) .csv para actualizar los usuarios según el
+    if request.method == 'POST':
+        form = forms.UpdateRankingForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = form.cleaned_data['file']
+            df = pd.read_csv(
+                file, usecols=['Puntaje General', 'Agente', 'Categoria'], dtype=str, sep=',')
+            users_data = df.to_dict(orient='records')
+            print(users_data)
+
+            for record in users_data:
+                data = {
+                    'username': record['Agente'],
+                    'password': alphanumeric_password(),
+                    'points': record['Puntaje General'],
+                    'rank': record['Categoria'],
+                }
+
+                asesor, creado = models.Usuario.objects.update_or_create(
+                    username=record['Agente'],
+                    defaults=data
+                )
+
+            return HttpResponse('Proceso completado!')
+    else:
+        form = forms.UpdateRankingForm()
+
+    return render(
+        request,
+        'reportes/update_ranking_form.html',
+        context={
+            'form': form,
         }
     )
