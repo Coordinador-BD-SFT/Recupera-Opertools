@@ -1,5 +1,5 @@
 {% extends "base_form.html" %}
 
-{% block form_title %}Registrarse{% endblock form_title %}
-{% block button_label %}Registrarse{% endblock button_label %}
-{% block back_url %}{% url 'login' %}{% endblock back_url %}
+{% block form_title %}Registro de usuarios{% endblock form_title %}
+{% block button_label %}Registrar{% endblock button_label %}
+{% block back_url %}{% url 'profile' user.username %}{% endblock back_url %}

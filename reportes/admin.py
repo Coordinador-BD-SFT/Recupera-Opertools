@@ -34,10 +34,15 @@ class SMSBaseAdmin(admin.ModelAdmin):
 
 class UsuarioAdmin(UserAdmin):
     model = models.Usuario
-    # fields = ('username', 'email', 'is_staff', 'first_name',
-    #           'last_name', 'campaign')
-    # list_display = ('id', 'username', 'email', 'is_staff', 'first_name',
-    #                 'last_name', 'campaign', 'rank', 'points')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {
+         'fields': ('first_name', 'last_name', 'email')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff',
+         'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Callcenter Info', {'fields': ('rank', 'points', 'campaign')})
+    )
 
 
 # Registramos las clases, con su modelo relacionado, en el sitio del Administrador

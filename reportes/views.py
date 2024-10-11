@@ -9,6 +9,7 @@ from utils.scrapping.common import get_driver, quit_driver
 from utils.scrapping import whatsapp_scraper, vicidial_scraper
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from utils.security.security import alphanumeric_password
 from django.views.generic.edit import FormView
 from django.urls import reverse, reverse_lazy
 from utils.dataframes import telematica
