@@ -6,26 +6,44 @@ Reportes
 {% endblock web_name %}
 
 {% block link_tags %}
-<link rel="stylesheet" href="{% static 'reportes/css/index.css' %}">
+<link rel="stylesheet" href="{% static 'reportes/css/index_style.css' %}">
 {% endblock link_tags %}
 
 {% block content %}
-<section class="container">
-    <div class="container">
-        <h2 class="text-center">Módulo de reportería</h2>
-        <a href="{% url 'reportes:tipos_reporte' %}" class="btn btn-primary module-btn" role="button">
-            Ir al módulo
-        </a>
+<section class="container my-5">
+    <h2 class="text-center mb-4">Aplicación de reportería</h2>
+    
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Reportes</h5>
+                    <a href="{% url 'reportes:tipos_reporte' %}" class="btn btn-primary">Ir al módulo</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Plataforma Vicidial</h5>
+                    <a href="{% url 'reportes:vicidial' %}" class="btn btn-primary">Interactuar con plataforma Vicidial</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Telemática</h5>
+                    <a href="{% url 'reportes:telematica' %}" class="btn btn-primary">Ir al módulo</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="container">
-        <h2 class="text-center">Plataforma Vicidial</h2>
-        <a href="{% url 'reportes:vicidial' %}" class="btn btn-primary module-btn">Interactuar con plataforma
-            Vicidial</a>
-    </div>
-    <img src="{% static 'reportes/images/file.jpg' %}" alt="Regupera SAS logo" class="img-fluid">
-    <div class="container">
-        <h2>Telemática</h2>
-        <a href="{% url 'reportes:telematica' %}" class="btn btn-primary">Ir al módulo</a>
+
+    <div class="text-center mt-4">
+        <img src="{% static 'reportes/images/file.jpg' %}" alt="Regupera SAS logo" class="img-fluid" style="max-width: 30%;">
     </div>
 </section>
 {% endblock %}

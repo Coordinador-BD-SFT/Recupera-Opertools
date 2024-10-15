@@ -1,0 +1,19 @@
+body {
+    background-color: #f8f9fa;
+    /* Color de fondo suave */
+}
+
+.card {
+    transition: transform 0.2s;
+    /* Efecto de animación */
+}
+
+.card:hover {
+    transform: scale(1.05);
+    /* Aumenta ligeramente al pasar el cursor */
+}
+
+.module-btn {
+    width: 100%;
+    /* Botón ocupa todo el ancho de la tarjeta */
+}
