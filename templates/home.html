@@ -5,50 +5,53 @@
 
 {% block content %}
 
-<h1 class="text-center">Bienvenidos a la plataforma de automatizacion Recupera SAS</h1>
+<h1 class="text-center">Bienvenidos a la plataforma de automatización Recupera SAS</h1>
+<p class="text-center">Optimiza tus procesos operativos con nuestras aplicaciones diseñadas para ti.</p>
 <br>
-<section class="d-flex p-2">
-    <div class="container list-group w-25 p-3">
-        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-            The current link item
-        </a>
-        <a href="reportes/whatsapp/crear" class="list-group-item list-group-item-action">
-            Crear un reporte de whatsapp
-        </a>
-        <a href="reportes/whatsapp/sms_bases" class="list-group-item list-group-item-action">Actualizar bases de SMS</a>
-        <a href="{% url 'reportes:whatsapp_scraping' %}" class="list-group-item list-group-item-action">
-            Enviar masivos via WhatsApp
-        </a>
-        <!-- <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link item</a> -->
-    </div>
-    <div class="container w-50 p-3">
-        <div class="card">
-            <div class="card-header">
-                Featured
+
+<section class="text-center p-4">
+    <h2>Funciones Destacadas</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>App de Reportería</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Herramientas para agilizar los procesos operativos como generar reportes de recursos, whatsapp o incluso interactuar con la plataforma vicidial.</p>
+                        <a class="btn btn-primary" href="{% url 'reportes:index' %}" role="button">Ir a la APP</a>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">App de Reportería</h5>
-                <p class="card-text">En esta app, encontrarás herramientas para agilizar los procesos
-                    operativos.<br>Para saber mas, ingresa pulsando en el boton de ir a la app.</p>
-                <a class="btn btn-primary" href="{% url 'reportes:index' %}" role="button">
-                    Ir a la APP
-                </a>
-            </div>
-        </div>
-        <br><br>
-        <div class="card">
-            <div class="card-header">
-                Featured
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">App Gestión de clientes</h5>
-                <p class="card-text">Dentro de esta app podrás ver, actualizar manipular y filtrar a tu antojo la asignacion de clientes actual.</p>
-                <a href="{% url "gestion_clientes:index" %}" class="btn btn-primary" role="button">
-                    Ir a la APP
-                </a>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>App Gestión de Clientes</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Visualiza, actualiza y manipula la asignación de clientes con filtros avanzados mediante la API proporcionada por el proveedor de Control Next, Intercom.</p>
+                        <a href="{% url "gestion_clientes:index" %}" class="btn btn-primary" role="button">Ir a la APP</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</section>
+
+<section class="text-center p-4">
+    <h2>Beneficios de Usar Nuestra Plataforma</h2>
+    <ul class="list-unstyled">
+        <li>Agiliza tus procesos operativos</li>
+        <li>Mejora la gestión de clientes</li>
+        <li>Interfaz intuitiva y fácil de usar</li>
+    </ul>
+</section>
+
+<section class="text-center p-4">
+    <blockquote class="blockquote">
+        <p>"¿Como sabes cual es tu límite?, si no te esfuerzas al Máximo."</p>
+    </blockquote>
 </section>
 
 {% endblock content %}
