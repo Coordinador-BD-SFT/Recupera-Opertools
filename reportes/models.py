@@ -147,7 +147,8 @@ def ruta_dinamica(instance, filename):
     instance -> models.Model: Instancia de un modelo que contenga un campo name.
     """
     if not instance.pk:
-        return f'upload/sms_databases/{instance.name}/sms.csv'
+        ext = instance.sms_base.path.split('.')[-1]
+        return f'upload/sms_databases/{instance.name}/sms.{ext}'
     return filename
 
 
@@ -200,43 +201,89 @@ class SMSBase(models.Model):
         nueva_base -> file: Archivo con nuevos registros para la actualizar la base existente
         """
 
-        old_base = pd.DataFrame()
-
-        if self.sms_base.path.endswith('.csv'):
-            try:
-                # Creamos los dataframes de las bases nueva y antigua
-                old_base = pd.read_csv(self.sms_base, usecols=[
-                    'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str, sep=',')
-            except ValueError as err:
-                print(f'Efectivamente el error es aqui\nError -> {err}')
-        elif self.sms_base.path.endswith('.xlsx'):
-            old_base = pd.read_excel(self.sms_base, usecols=[
+        try:
+            print(f'Actualizando base {self.name}')
+            # Creamos los dataframes de las bases nueva y antigua
+            old_base = pd.read_csv(
+                self.sms_base.path,
+                usecols=[
+                    'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'
+                ],
+                dtype=str,
+                sep=',',
+                encoding='utf-8'
+            )
+            new_base = pd.read_excel(nueva_base, usecols=[
                 'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
 
-        new_base = pd.read_excel(nueva_base, usecols=[
-            'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
+            # Concatenamos la nueva base con la antigua
+            df_unido = pd.concat([old_base, new_base], ignore_index=True)
 
-        # Concatenamos la nueva base con la antigua
-        df_unido = pd.concat([old_base, new_base], ignore_index=True)
+            # Contamos duplicados para obtener informacion
+            print(
+                f'Se encontraron {df_unido.duplicated().sum()} registros repetidos.\nLimpiando...')
 
-        # Contamos duplicados para obtener informacion
-        print(
-            f'Se encontraron {df_unido.duplicated().sum()} registros repetidos.\nLimpiando...')
+            # Limpiamos la base de los duplicados y la retornamos
+            df_unido = df_unido.drop_duplicates(keep='last')
+            df_unido.to_csv(
+                self.sms_base.path,
+                index=False,
+                header=True,
+                sep=',',
+                encoding='utf-8'
+            )
 
-        # Limpiamos la base de los duplicados y la retornamos
-        file = df_unido.drop_duplicates(keep='last')
-        file.to_csv(
-            f'files/upload/sms_databases/{self.name}/sms.csv', index=False, header=True, sep=',')
+        except (ValueError, UnicodeEncodeError, UnicodeDecodeError) as err:
+            print(f'Error al actualizar base\nError -> {err}')
 
-    def save(self):
+    def save(self, *args, **kwargs):
         """
         Reescribimos el método save para que el campo sms_base sea limpiado antes de que
         se guarde la instancia
         """
-        if self.pk == None:
-            self.limpiar_base()
-        # Invocamos a save() del modelo padre para que se guarde correctamente la instancia
-        super().save()
+        try:
+            if self.sms_base:
+                # Leemos la base segun su extension
+                if '.xlsx' in self.sms_base.name:
+                    print('Archivo excel')
+                    base = pd.read_excel(
+                        self.sms_base,
+                        usecols=[
+                            'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'
+                        ],
+                        dtype=str
+                    )
+
+                elif '.csv' in self.sms_base.name:
+                    print('Archivo csv')
+                    base = pd.read_csv(
+                        self.sms_base,
+                        usecols=[
+                            'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'
+                        ],
+                        dtype=str
+                    )
+
+                # save_path = ruta_dinamica(self, self.sms_base.name)
+
+                # os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+                # print(save_path)
+
+                # Escribimos el archivo en la ruta designada
+                base.to_csv(
+                    f'media/upload/sms_databases/{self.name}/sms.csv',
+                    index=False,
+                    encoding='utf-8',
+
+                )
+                self.sms_base = f'upload/sms_databases/{self.name}/sms.csv'
+
+            # Invocamos a save() del modelo padre para que se guarde correctamente la instancia
+            super().save(*args, **kwargs)
+        except Exception as err:
+            print(f'Error al guardar el archivo de sms\nError -> {err}')
+            print(self.sms_base.path)
 
 
 class Usuario(AbstractUser):
