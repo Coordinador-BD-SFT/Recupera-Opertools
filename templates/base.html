@@ -32,6 +32,15 @@
             <a class="nav-link" href="{% url 'reportes:ranking_asesores' %}">Ranking Asesores</a>
           </li>
         </ul>
+        {% if user.is_staff %}
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <div class="mt-auto">
+          <a href="{% url 'admin:index' %}"
+            class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+            Admin Site
+          </a>
+        </div>
+        {% endif %}
       </div>
       <div class="container container-base">
         <nav class="navbar bg-body-tertiary">
@@ -44,13 +53,6 @@
                   class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                   {{ user.username }}
                 </a>
-                {% if user.is_staff %}
-                , 
-                <a href="{% url 'admin:index' %}"
-                  class="link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-                  admin site
-                </a>
-                {% endif %}
               </p>
               {% else %}
               <a href="{% url 'login' %}"
