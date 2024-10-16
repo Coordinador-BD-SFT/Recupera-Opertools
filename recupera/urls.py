@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import handler403
 from . import views
+
+handler403 = views.custom_403_handler
 
 urlpatterns = [
     path('', views.home, name='home'),

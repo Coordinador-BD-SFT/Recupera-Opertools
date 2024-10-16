@@ -48,3 +48,11 @@ def profile(request, username):
             'user': request.user,
         }
     )
+
+
+def custom_403_handler(request, exception):
+    return render(
+        request,
+        '403.html',
+        status=403
+    )
