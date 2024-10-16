@@ -108,8 +108,7 @@ def search_num(
         else:
             return False
 
-    except (selexceptions.NoSuchElementException, selexceptions.ElementClickInterceptedException, selexceptions.TimeoutException) as err:
-        print(f'Error: {err}')
+    except (selexceptions.NoSuchElementException, selexceptions.ElementClickInterceptedException, selexceptions.TimeoutException):
         driver.refresh()
         return False
 
