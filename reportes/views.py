@@ -487,13 +487,20 @@ def audio_change(request):
                 df = pd.read_excel(form.cleaned_data['file'], dtype=str)
                 audio_dict = df.to_dict(orient='records')
 
-                # Obtenemos el modulo de campañas en vicidial
-                driver.get(request.vicidial_links['ivrs_link'])
+                # Obtenemos el canal al que le vamos a cambiar los audios
+                channel = form.cleaned_data['channel']
+                if channel == 'IVR':
+                    driver.get(request.vicidial_links['ivrs_link'])
+                elif channel == 'TRANS':
+                    driver.get(request.vicidial_links['trans_link'])
+
                 time.sleep(3)
+                # Obtenemos el modulo de campañas en vicidial
                 rows = vicidial_scraper.get_campaigns(driver)
 
                 primera_fila = True
 
+                # Nos saltamos la primera iteracion
                 for row in rows:
                     if primera_fila:
                         primera_fila = False

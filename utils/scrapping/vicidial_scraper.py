@@ -397,7 +397,8 @@ def change_audio(
 
         # Identificamos nombre de campaña
         campaign_name_input = driver.find_element(
-            By.XPATH, '/html/body/center/table[1]/tbody/tr[1]/td[2]/table/tbody/tr[5]/td/table[2]/tbody/tr/td/font/center[1]/form/table/tbody/tr[2]/td[2]/input'
+            By.XPATH,
+            '/html/body/center/table[1]/tbody/tr[1]/td[2]/table/tbody/tr[5]/td/table[2]/tbody/tr/td/font/center[1]/form/table/tbody/tr[2]/td[2]/input'
         )
         campaign_name = campaign_name_input.get_attribute('value')
         print(f'Cambiando audio a lista {campaign_name}.')
@@ -445,4 +446,6 @@ def change_audio(
         driver.back()
 
     except selexeptions.NoSuchElementException as err:
-        print(f'Error al localizar elemento -> {err}')
+        print(f'Error al intentar localizar elemento -> {err}')
+    except selexeptions.TimeoutException as err:
+        print(f'Tiempo de espera agotado\nError ->{err}')

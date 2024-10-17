@@ -266,17 +266,24 @@ class ListsResourcesReportForm(forms.Form):
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Field('chanel', css_class='form_control', id='validationCustom01')
+            Field('channel', css_class='form_control', id='validationCustom01')
         )
 
 
 class AudioChangeForm(forms.Form):
+    channels = [
+        ('IVR', 'IVR'),
+        ('TRANS', 'TRANS')
+    ]
+
     file = forms.FileField(label='Lista de audios', required=True)
+    channel = forms.ChoiceField(choices=channels, label='Canal')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            Field('file', css_class='form-control', id='validationCustom01')
+            Field('file', css_class='form-control', id='validationCustom01'),
+            Field('channel', css_class='form_control', id='validationCustom01')
         )
