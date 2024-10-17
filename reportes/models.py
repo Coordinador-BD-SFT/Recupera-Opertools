@@ -106,7 +106,7 @@ class Reporte(models.Model):
             # Seteamos el intervalo
             [self.numero_inicio, self.numero_final],
             # Referenciamos la base de SMS de la campaña asociada
-            Path(f'files/upload/sms_databases/{self.campaign}/sms.csv'),
+            Path(f'media/upload/sms_databases/{self.campaign}/sms.csv'),
             # Archivo con numeros de whatsapp
             self.chats_file,
         )
