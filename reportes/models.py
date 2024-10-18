@@ -8,6 +8,7 @@ from django.conf import settings
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
+from pandas import errors as pderrors
 import os
 
 
@@ -213,8 +214,46 @@ class SMSBase(models.Model):
                 sep=',',
                 encoding='utf-8'
             )
-            new_base = pd.read_excel(nueva_base, usecols=[
-                'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'], dtype=str)
+            new_base = pd.DataFrame()
+            try:
+                new_base = pd.read_excel(
+                    nueva_base,
+                    usecols=[
+                        'Identificacion', 'Cuenta_Next', 'Edad_Mora', 'Dato_Contacto'
+                    ],
+                    dtype=str
+                )
+            except (ValueError, KeyError) as err:
+                if 'Demograficos' in nueva_base.name:
+
+                    demographic_rename = {
+                        'identificacion': 'Identificacion',
+                        'cuenta': 'Cuenta_Next',
+                        'dato': 'Dato_Contacto',
+                        'marca': 'Edad_Mora',
+                    }
+
+                    cols_required = demographic_rename.keys()
+
+                    print('Archivo de demograficos detectado\nProcesando...')
+                    new_base = pd.read_csv(
+                        nueva_base,
+                        usecols=cols_required,
+                        dtype=str,
+                        sep=',',
+                        encoding='utf-8'
+                    )
+
+                    if all(col in new_base.columns for col in cols_required):
+                        new_base.rename(demographic_rename, inplace=True)
+                    else:
+                        print(
+                            f'Algunas columnas requeridas no estan presentes en el archivo\nColumnas requeridas: {cols_required}'
+                        )
+
+                else:
+                    print(
+                        f'No se pudo identificar el archivo cargado.\nError -> {err}')
 
             # Concatenamos la nueva base con la antigua
             df_unido = pd.concat([old_base, new_base], ignore_index=True)

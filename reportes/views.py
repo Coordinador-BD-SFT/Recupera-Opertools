@@ -18,7 +18,6 @@ from datetime import datetime
 from functools import reduce
 from pathlib import Path
 from . import models
-from io import BytesIO
 from . import forms
 import pandas as pd
 import math
@@ -513,7 +512,8 @@ def audio_change(request):
                     )
                 driver.quit()
 
-                return reverse_lazy('success')
+                # Usamos reverse_lazy dentro de un redirect para construir la url y luego retornar una respuesta http
+                return redirect(reverse_lazy('success'))
 
             except selexceptions.WebDriverException as err:
                 print(f'No se pudieron cambiar los audios.\nError -> {err}')
