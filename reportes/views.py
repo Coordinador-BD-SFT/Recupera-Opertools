@@ -513,7 +513,7 @@ def audio_change(request):
                 driver.quit()
 
                 # Usamos reverse_lazy dentro de un redirect para construir la url y luego retornar una respuesta http
-                return redirect(reverse_lazy('success'))
+                return redirect(reverse_lazy('reportes:success'))
 
             except selexceptions.WebDriverException as err:
                 print(f'No se pudieron cambiar los audios.\nError -> {err}')

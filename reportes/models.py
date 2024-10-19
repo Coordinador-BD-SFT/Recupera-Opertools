@@ -246,9 +246,12 @@ class SMSBase(models.Model):
                         sep=';',
                         encoding='utf-8'
                     )
+                    print(all(col in new_base.columns for col in cols_required))
 
                     if all(col in new_base.columns for col in cols_required):
-                        new_base.rename(demographic_rename, inplace=True)
+                        new_base.rename(
+                            columns=demographic_rename, inplace=True)
+                        print()
                     else:
                         print(
                             f'Algunas columnas requeridas no estan presentes en el archivo\nColumnas requeridas: {cols_required}'

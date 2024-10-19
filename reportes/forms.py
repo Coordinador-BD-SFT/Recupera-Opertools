@@ -166,8 +166,6 @@ class SMSBaseUpdateForm(forms.Form):
         if base:
             if 'Demograficos' in base.name:
                 cols = ['identificacion', 'cuenta', 'dato', 'Marca']
-                # a = whatsapp.file_verify(base, cols, extension)
-                # print(a)
                 if not (any(base.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(base, cols, extension)):
                     raise forms.ValidationError(
                         f"""
@@ -186,7 +184,6 @@ class SMSBaseUpdateForm(forms.Form):
                             Las columnas/propiedades necesarias son: {', '.join(cols_needed)}.
                             """
                     )
-        # Retornamos el archivo
         return base
 
 
