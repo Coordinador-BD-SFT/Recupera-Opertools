@@ -214,7 +214,9 @@ class SMSBase(models.Model):
                 sep=',',
                 encoding='utf-8'
             )
+            # Lemos la nueva base para
             new_base = pd.DataFrame()
+            # Validamos las columnas del archivo
             try:
                 new_base = pd.read_excel(
                     nueva_base,
@@ -223,6 +225,7 @@ class SMSBase(models.Model):
                     ],
                     dtype=str
                 )
+            # Si no tiene las columnas de un archivo de Envio_SMS
             except (ValueError, KeyError) as err:
                 if 'Demograficos' in nueva_base.name:
 
@@ -230,7 +233,7 @@ class SMSBase(models.Model):
                         'identificacion': 'Identificacion',
                         'cuenta': 'Cuenta_Next',
                         'dato': 'Dato_Contacto',
-                        'marca': 'Edad_Mora',
+                        'Marca': 'Edad_Mora',
                     }
 
                     cols_required = demographic_rename.keys()
@@ -240,7 +243,7 @@ class SMSBase(models.Model):
                         nueva_base,
                         usecols=cols_required,
                         dtype=str,
-                        sep=',',
+                        sep=';',
                         encoding='utf-8'
                     )
 

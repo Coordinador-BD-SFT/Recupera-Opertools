@@ -135,7 +135,7 @@ class SMSBaseUpdateForm(forms.Form):
     """
 
     # Definimos extensiones válidas
-    VALID_EXTENSIONS = ['.csv', '.json', '.xlsx']
+    VALID_EXTENSIONS = ['csv', 'json', 'xlsx']
 
     # Campo del formulario
     nueva_base = forms.FileField(required=True, label='Nueva base de SMS')
@@ -160,18 +160,32 @@ class SMSBaseUpdateForm(forms.Form):
                        'Cuenta_Next', 'Edad_Mora']
 
         extension = base.name.split('.')[-1]
+        print(extension)
 
         # Verificamos que el archivo cumpla con las extensiones validas y las columnas necesarias
         if base:
-            if not (any(base.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(base, cols_needed, extension)):
-                # En caso de no cumplir levntamos un ValidationError
-                raise forms.ValidationError(
-                    f"""
-                        Hubo un error al procesar el archivo, por favor revise el tipo de archivo o su contenido.
-                        Las extensiones soportadas son: {', '.join(self.VALID_EXTENSIONS)}.
-                        Las columnas/propiedades necesarias son: {', '.join(cols_needed)}.
+            if 'Demograficos' in base.name:
+                cols = ['identificacion', 'cuenta', 'dato', 'Marca']
+                # a = whatsapp.file_verify(base, cols, extension)
+                # print(a)
+                if not (any(base.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(base, cols, extension)):
+                    raise forms.ValidationError(
+                        f"""
+                          Hubo un error al procesar el archivo, por favor revise el tip de archivo o su contenido.
+                          Las extensiones soportadas son: {', '.join(self.VALID_EXTENSIONS)}.
+                          Las columnas/propiedades necesarias son: {' '.join(cols)}.
                         """
-                )
+                    )
+            elif 'Demograficos' not in base.name:
+                if not (any(base.name.endswith(ext) for ext in self.VALID_EXTENSIONS) and whatsapp.file_verify(base, cols_needed, extension)):
+                    # En caso de no cumplir levntamos un ValidationError
+                    raise forms.ValidationError(
+                        f"""
+                            Hubo un error al procesar el archivo, por favor revise el tipo de archivo o su contenido.
+                            Las extensiones soportadas son: {', '.join(self.VALID_EXTENSIONS)}.
+                            Las columnas/propiedades necesarias son: {', '.join(cols_needed)}.
+                            """
+                    )
         # Retornamos el archivo
         return base
 

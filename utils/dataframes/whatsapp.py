@@ -145,14 +145,25 @@ def file_verify(
     Función para verificar si el archivo contiene las columnas requeridas
 
     PARAMS
-    file -> A reference to a .xlsx file (.json/.csv soon)
+    file -> A reference to a .xlsx/.csv file (.json soon)
     cols -> list: columns needed in the file
     ext -> File extension
     """
     df = None
     if ext == 'csv':
-        df = pd.read_csv(file)
+        df = pd.read_csv(
+            file,
+            usecols=cols,
+            sep=';',
+            encoding='utf-8',
+            dtype=str
+        )
     elif ext == 'xlsx':
-        df = pd.read_excel(file)
+        df = pd.read_excel(
+            file,
+            usecols=cols,
+            dtype=str
+        )
     df_cols = df.columns
+    print(df_cols)
     return all(col in df_cols for col in cols)
