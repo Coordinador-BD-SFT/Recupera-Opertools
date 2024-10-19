@@ -56,7 +56,7 @@ class Reporte(models.Model):
         ('multimarca', 'MULTIMARCA'),
     )
     campaign = models.CharField(max_length=15, choices=campaigns_list)
-    chats_file = models.FileField(upload_to='files/upload/chats/')
+    chats_file = models.FileField(upload_to='upload/chats/')
     numero_inicio = models.CharField(max_length=11, blank=True)
     numero_final = models.CharField(max_length=11)
     hora = models.TimeField()
@@ -134,7 +134,7 @@ class Reporte(models.Model):
         # print(no_encontrado)
 
         # Creamos una ruta para el archivo que se va a servir
-        path = Path(f'files/download/{self.name}')
+        path = Path(f'media/download/{self.name}')
         file_no_encontrado.drop_duplicates()
         final_file = file_no_encontrado.to_excel(path, index=False)
         # return FileResponse(open(path, 'rb'), as_attachment=True, filename=self.name)
@@ -251,7 +251,6 @@ class SMSBase(models.Model):
                     if all(col in new_base.columns for col in cols_required):
                         new_base.rename(
                             columns=demographic_rename, inplace=True)
-                        print()
                     else:
                         print(
                             f'Algunas columnas requeridas no estan presentes en el archivo\nColumnas requeridas: {cols_required}'

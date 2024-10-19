@@ -334,7 +334,7 @@ def whatsapp_scraping(request):
                             f'{idx} - {dato_contacto}, No es WhatsApp, {datetime.now()}')
                     # Rescribimos el dataframe en cada iteracion para no perder la información en caso de algún fallo
                     df.to_excel(
-                        f'files/download/auto_wsp/Auto_Envio_wsp{messages.name}', index=False)
+                        f'media/download/auto_wsp/Auto_Envio_wsp{messages.name}', index=False)
 
                 except (Exception, selexceptions.NoSuchWindowException) as err:
                     print(
@@ -534,12 +534,12 @@ class UpdateLists(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     form_class = forms.UpdateListsForm
     template_name = 'reportes/update_lists.html'
     success_url = reverse_lazy('reportes:success')
-    files_dir = Path('files/upload/listas')
+    files_dir = Path('media/upload/listas')
 
     def form_valid(self, form):
         # files = form.cleaned_data['lists_files']
         files = self.request.FILES.getlist('lists_files')
-        lists_dir = Path('files/upload/listas')
+        lists_dir = Path('media/upload/listas')
         for file in lists_dir.iterdir():
             os.remove(file)
         # Agregamos los nuevos
@@ -565,12 +565,12 @@ class UpdateSMSFiles(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     form_class = forms.UpdateSMSFilesForm
     template_name = 'reportes/update_sms_files.html'
     success_url = reverse_lazy('reportes:success')
-    files_dir = Path('files/upload/envio_sms')
+    files_dir = Path('media/upload/envio_sms')
 
     def form_valid(self, form):
         # files = form.cleaned_data['lists_files']
         files = self.request.FILES.getlist('sms_files')
-        sms_files_dir = Path('files/upload/envio_sms')
+        sms_files_dir = Path('media/upload/envio_sms')
         for file in sms_files_dir.iterdir():
             os.remove(file)
         # Agregamos los nuevos
@@ -598,7 +598,7 @@ def lists_resources(request):
     # Tomamos el tiempo en el que comienza la tarea
     start_time = time.time()
     # Referenciamos el directorio de las listas
-    files_dir = Path('files/upload/listas')
+    files_dir = Path('media/upload/listas')
     columna = 'FIRST NAME'
     values = {}
     total = 0
@@ -637,7 +637,7 @@ def lists_resources(request):
 def sms_resources(request):
     start_time = time.time()
 
-    files_dir = Path('files/upload/envio_sms')
+    files_dir = Path('media/upload/envio_sms')
 
     records = telematica.read_sms(files_dir)
 
