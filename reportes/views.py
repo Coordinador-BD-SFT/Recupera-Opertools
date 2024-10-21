@@ -181,7 +181,7 @@ def reporte_download(request, tipo_reporte_name, reporte_id):
     try:
         # Creamos una instancia de FileResponse y la agregamos a las descargas
         response = FileResponse(
-            open(f'files/download/{reporte.name}', 'rb'),
+            open(f'media/download/{reporte.name}', 'rb'),
             as_attachment=True,
             filename=reporte.name
         )
@@ -432,7 +432,7 @@ def upload_lists(request):
     driver = get_driver()
 
     # Obtenemos la carpeta con las listas
-    files_dir = Path('files/upload/listas')
+    files_dir = Path('media/upload/listas')
 
     # Obtenemos ls links para montar las listas
     print('Cargando listas...')
@@ -504,12 +504,17 @@ def audio_change(request):
                     if primera_fila:
                         primera_fila = False
                         continue
-                    vicidial_scraper.change_audio(
-                        driver,
-                        row,
-                        audio_dict,
-                        sleep=1.5
-                    )
+                    try:
+                        vicidial_scraper.change_audio(
+                            driver,
+                            row,
+                            audio_dict,
+                            sleep=1.5
+                        )
+                    except ValueError as err:
+                        print(err)
+                        driver.back()
+                        continue
                 driver.quit()
 
                 # Usamos reverse_lazy dentro de un redirect para construir la url y luego retornar una respuesta http
@@ -678,7 +683,9 @@ def success(request):
 
 @login_required
 def ranking(request):
-    asesores = models.Usuario.objects.all().filter(is_staff=False)
+    asesores = models.Usuario.objects \
+        .filter(is_staff=False) \
+        .order_by('-points')
 
     return render(
         request,

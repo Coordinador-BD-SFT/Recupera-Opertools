@@ -403,13 +403,21 @@ def change_audio(
         campaign_name = campaign_name_input.get_attribute('value')
         print(f'Cambiando audio a lista {campaign_name}.')
 
+        # Validamos si la campaña requiere o no cambio de audio (esta o no en el dataframe)
+        df_campaigns = [item['Nombre_Campaña'] for item in items]
+        if not campaign_name in df_campaigns:
+            raise ValueError(
+                f'La campaña {campaign_name} no requiere cambio de audio'
+            )
+
         # Obtenemos el nombre del audio a colocar segun el nombre de la campaña
         audio = ''
         for record in items:
+            print(record.values())
+            print(campaign_name)
             if campaign_name in record.values():
                 audio = record['Nombre_Audio']
-
-        print(f'Audio a colocar: {audio}')
+                print(f'Audio a colocar: {audio}')
 
         # Vamos a apartado encuesta
         poll = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((
