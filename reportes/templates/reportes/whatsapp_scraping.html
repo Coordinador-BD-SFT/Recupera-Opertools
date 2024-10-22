@@ -1,23 +1,13 @@
-{% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% extends "base_form.html" %}
 {% load static %}
 
 {% block web_name %} Auto Envío WhatsApp {% endblock web_name %}
-
 {% block link_tags %}
 <link rel="stylesheet" href="{% static 'reportes/css/whatsapp_scraping.css' %}">
 {% endblock link_tags %}
 
-{% block content %}
-<div class="form-check form-switch">
-    <h2 class="text-center">Enviar mensajes masivamente vía WhatsApp</h2>
-    <form novalidate method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <div class="btn-group">
-            <button class="btn btn-primary" type="submit">Enviar</button>
-            <a class="btn btn-secondary" href="{% url 'reportes:telematica' %}" role="button">volver</a>
-        </div>
-    </form>
-</div>
-{% endblock content %}
+{% block form_title %}
+<h2 class="text-center">Enviar mensajes masivamente vía WhatsApp</h2>
+{% endblock form_title %}
+{% block button_label %}Enviar{% endblock button_label %}
+{% block back_url %}{% url 'reportes:telematica' %}{% endblock back_url %}

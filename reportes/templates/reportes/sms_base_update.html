@@ -1,22 +1,12 @@
-{% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% extends "base_form.html" %}
 {% load static %}
 
-{% block web_name %}Actualizar bases de SMS{% endblock web_name %}
+{% block web_name %}Actualizar base SMS - {{ sms_base.name }}{% endblock web_name %}
 {% block link_tags %}
 <link rel="stylesheet" href="{% static 'reportes/css/sms_base_update.css' %}">
 {% endblock link_tags %}
-
-{% block content %}
-<h2 class="text-center">Actualizar una base de SMS</h2>
-<div class="container">
-    <form novalidate action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <div class="d-flex justify-content-center btn-group">
-            <button type="submit" class="btn btn-primary">Actualizar</button>
-            <a class="btn btn-secondary" href="{% url 'reportes:sms_bases' report_type.name %}" role="button">Volver</a>
-        </div>
-    </form>
-</div>
-{% endblock content %}
+{% block form_title %}
+<h2 class="text-center">Actualizar base SMS - {{ sms_base.name }}</h2>
+{% endblock form_title %}
+{% block button_label %}Actualizar{% endblock button_label %}
+{% block back_url %}{% url 'reportes:sms_bases' report_type.name %}{% endblock back_url %}

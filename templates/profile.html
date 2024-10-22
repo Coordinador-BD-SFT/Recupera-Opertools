@@ -2,11 +2,13 @@
 {% load static %}
 
 {% block web_name %}{{ user.username }} - Perfil{% endblock web_name %}
-{% block link_tags %}{% endblock link_tags %}
+{% block link_tags %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock link_tags %}
 
 {% block content %}
-<div class="container">
-    <h2>Bienvenido {{ user.username }}</h2>
+<div class="container" style="width: 100%;">
+    <h2>Bienvenid@ {{ user.username }}</h2>
     <hr>
     <div class="user-info">
         <p><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
@@ -19,49 +21,72 @@
         <h4><strong>Rango:</strong> {{ user.rank}}<span class="badge text-bg-secondary">New</span></h4>
         {% endif %}
     </div>
-    <hr>
-    <h3>Actualizar Información</h3>
-    <form novalidate enctype="multipart/form-data" action="{% url 'profile' user.username %}" method="post">
-        {% csrf_token %}
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="username">Nombre de usuario</span>
-            <input type="text" name="username" class="form-control" aria-label="Username" id="username"
-                value="{{ user.username }}">
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="email">Correo</span>
-            <input type="text" name="email" class="form-control" id="email" value="{{ user.email }}">
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="first_name">Nombre</span>
-            <input type="text" name="first_name" class="form-control" id="first_name" value="{{ user.first_name }}">
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="last_name">Apellido</span>
-            <input type="text" name="last_name" class="form-control" id="last_name" value="{{ user.last_name }}">
-        </div>
-        {% if not user.is_staff %}
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="campaign">Campaña</span>
-            <input type="text" name="campaign" class="form-control" id="campaign" value="{{ user.campaign }}">
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="points">Puntos</span>
-            <input type="" name="points" class="form-control" id="points" value="{{ user.points }}" disabled>
-        </div>  
-        {% endif %}
-        <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
-    </form>
+</div>
+</div>
+<div class="d-flex justify-content-center">
+    <div class="profile-c">
+        <h3 class="text-center">Actualizar Información</h3>
+        <form novalidate enctype="multipart/form-data" action="{% url 'profile' user.username %}" method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center">
+                <div class="personal-info container">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="email">Correo</span>
+                        <input type="text" name="email" class="form-control" id="email" value="{{ user.email }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="first_name">Nombre</span>
+                        <input type="text" name="first_name" class="form-control" id="first_name"
+                            value="{{ user.first_name }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="last_name">Apellido</span>
+                        <input type="text" name="last_name" class="form-control" id="last_name"
+                            value="{{ user.last_name }}">
+                    </div>
+                </div>
+                <div class="user-form container">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="username">Nombre de usuario</span>
+                        <input type="text" name="username" class="form-control" aria-label="Username" id="username"
+                            value="{{ user.username }}">
+                    </div>
+                    {% if not user.is_staff %}
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="campaign">Campaña</span>
+                        <input type="text" name="campaign" class="form-control" id="campaign"
+                            value="{{ user.campaign }}" disabled>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="points">Puntos</span>
+                        <input type="" name="points" class="form-control" id="points" value="{{ user.points }}"
+                            disabled>
+                    </div>
+                    {% endif %}
 
-    <hr>
-
-    <a href="{% url 'password_change' %}" class="btn btn-secondary">Cambiar Contraseña</a>
-    <form action="{% url 'logout' %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Cerrar sesion</button>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
+            </div>
+    </div>
     </form>
-    {% if user.is_staff %}
-    <a href="{% url 'reportes:register' %}" class="btn btn-primary">Crear un usuario</a>
-    {% endif %}
+    <div class="container profile-c d-flex justify-content-center btns">
+        <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+            <a href="{% url 'password_change' %}" class="btn btn-secondary">
+                <p class="btn-p">Cambiar Contraseña</p>
+            </a>
+            <form class="btn btn-danger logout-form" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger logout-btn">Cerrar sesión</button>
+            </form>
+            {% if user.is_staff %}
+            <a href="{% url 'reportes:register' %}" class="btn btn-primary">
+                <p class="btn-p">Crear un usuario</p>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
 </div>
 {% endblock %}

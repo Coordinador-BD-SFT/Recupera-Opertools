@@ -1,0 +1,9 @@
+.text-center {
+    margin: 0;
+}
+
+.alert-container {
+    padding-top: 250px;
+    height: 100%;
+    align-self: center;
+}

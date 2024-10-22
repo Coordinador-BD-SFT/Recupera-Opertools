@@ -1,25 +1,13 @@
-{% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% extends 'base_form.html' %}
 {% load static %}
 
 {% block web_name %}crear un reporte {{ report_type.name }}{% endblock web_name %}
-
 {% block link_tags %}
 <link rel="stylesheet" href="{% static 'reportes/css/reporte_form.css' %}">
 {% endblock link_tags %}
 
-{% block content %}
-
-<div class="container">
-    <h1>Crear reporte - {{ report_type.name }}</h1>
-    <form novalidate action="{% url 'reportes:crear' report_type.name %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <div class="d-flex justify-content-center btn-group">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a class="btn btn-secondary" href="{% url 'reportes:reporte' report_type.name %}" role="button">Volver</a>
-        </div>
-    </form>
-</div>
-
-{% endblock %}
+{% block form_title %}
+<h1 class="text-center">Crear reporte - {{ report_type.name }}</h1>
+{% endblock form_title %}
+{% block button_label %}Crear{% endblock button_label %}
+{% block back_url %}{% url 'reportes:reporte' report_type.name %}{% endblock back_url %}
