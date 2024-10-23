@@ -32,17 +32,28 @@ class SMSBaseAdmin(admin.ModelAdmin):
     list_display = ('id', 'tipo_reporte', 'name', 'sms_base', 'created_at')
 
 
+class PerformaceAdmin(admin.ModelAdmin):
+    fields = (
+        'user', 'rank', 'points', 'compliance',
+        'value_per_point', 'benefit'
+    )
+    list_display = (
+        'user', 'rank', 'points', 'compliance',
+        'value_per_point', 'benefit'
+    )
+
+
+class PerformanceInline(admin.StackedInline):
+    model = models.Performance
+    fields = (
+        'user', 'rank', 'points', 'compliance',
+        'value_per_point', 'benefit'
+    )
+
+
 class UsuarioAdmin(UserAdmin):
     model = models.Usuario
-    fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Personal info', {
-         'fields': ('first_name', 'last_name', 'email')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff',
-         'is_superuser', 'groups', 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
-        ('Callcenter Info', {'fields': ('rank', 'points', 'campaign')})
-    )
+    inlines = [PerformanceInline]
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -57,4 +68,5 @@ class UsuarioAdmin(UserAdmin):
 admin.site.register(models.TipoReporte, TipoReporteAdmin)
 admin.site.register(models.SMSBase, SMSBaseAdmin)
 admin.site.register(models.Reporte, ReporteAdmin)
+admin.site.register(models.Performance, PerformaceAdmin)
 admin.site.register(models.Usuario, UsuarioAdmin)

@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.files.storage import default_storage
 from django.contrib.auth.models import AbstractUser
 from utils.dataframes import whatsapp
@@ -331,24 +332,10 @@ class SMSBase(models.Model):
 
 
 class Usuario(AbstractUser):
-    ranks = [
-        ('trainee', 'TRAINEE'),
-        ('junior', 'JUNIOR'),
-        ('semisenior', 'SEMI SENIOR'),
-        ('senior', 'SENIOR'),
-    ]
-
     campaign = models.CharField(
         max_length=30, null=True,
         default='Sin Asignar'
     )
-    points = models.IntegerField(default=0)
-    rank = models.CharField(
-        max_length=30, choices=ranks,
-        null=True, default='Sin Asignar'
-    )
-    last_rank = models.CharField(max_length=30, choices=ranks)
-
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='usuario_set',
@@ -380,3 +367,50 @@ class Usuario(AbstractUser):
     @classmethod
     def update_points(cls):
         pass
+
+
+class Performance(models.Model):
+    ranks = [
+        ('trainee', 'TRAINEE'),
+        ('junior', 'JUNIOR'),
+        ('semisenior', 'SEMI SENIOR'),
+        ('senior', 'SENIOR'),
+    ]
+
+    user = models.OneToOneField(
+        'reportes.Usuario', on_delete=models.DO_NOTHING, primary_key=True
+    )
+    rank = models.CharField(
+        max_length=20, choices=ranks, default='trainee'
+    )
+    points = models.IntegerField(
+        default=0,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(500)
+        ]
+    )
+    compliance = models.FloatField(
+        default=0,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(800000)
+        ]
+    )
+    value_per_point = models.FloatField(
+        default=0,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(1500)
+        ]
+    )
+    benefit = models.FloatField(
+        default=0,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(800000)
+        ]
+    )
+
+    def __str__(self):
+        return f'{self.user.username} - {self.rank}'
