@@ -685,12 +685,34 @@ def success(request):
 def ranking(request):
     asesores = models.Usuario.objects \
         .filter(is_staff=False) \
-        .order_by('-points')
+        .order_by('-performance__points')
 
     return render(
         request,
         'reportes/ranking_asesores.html',
         context={
             'asesores': asesores,
+        }
+    )
+
+
+@permission_required('reportes.complete_access_to_reportes_app')
+def update_ranking(request):
+    if request.method == 'POST':
+        form = forms.UpdateRankingForm(request.POST, request.FILES)
+        if form.is_valid():
+            records = form.cleaned_data.get('file')
+
+            # Manejo de informacion de la lista de diccionarios (records) aqui.
+
+            return redirect(reverse_lazy('reportes:success'))
+    else:
+        form = forms.UpdateRankingForm()
+
+    return render(
+        request,
+        'reportes/update_ranking.html',
+        context={
+            'form': form,
         }
     )

@@ -8,6 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 
+from io import BytesIO
+
 # create your forms here
 
 # Auth forms
@@ -160,7 +162,6 @@ class SMSBaseUpdateForm(forms.Form):
                        'Cuenta_Next', 'Edad_Mora']
 
         extension = base.name.split('.')[-1]
-        print(extension)
 
         # Verificamos que el archivo cumpla con las extensiones validas y las columnas necesarias
         if base:
@@ -298,3 +299,66 @@ class AudioChangeForm(forms.Form):
             Field('file', css_class='form-control', id='validationCustom01'),
             Field('channel', css_class='form_control', id='validationCustom01')
         )
+
+
+class UpdateRankingForm(forms.Form):
+    """
+    Actualiza la tabla de ranking de asesores
+    """
+
+    VALID_EXTENSIONS = ['csv', 'xlsx', 'json']
+
+    categories = [
+        ('moras', 'MORAS'),
+        ('especiales', 'ESPECIALES'),
+    ]
+
+    category = forms.ChoiceField(
+        choices=categories, required=True, label='Tipo actualización'
+    )
+    file = forms.FileField(required=True, label='Archivo')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('category', css_class='form-control', id='validationCustom01'),
+            Field('file', css_class='form-control', id='validationCustom01')
+        )
+
+    def clean_file(self):
+        # Obtenemos el archivo y su extension
+        file = self.cleaned_data.get('file')
+        extension = file.name.split('.')[-1]
+
+        # Columnas necesarias para procesar correctamente el archivo
+        cols_needed = [
+            'Puntaje General', 'Agente', 'Categoria',
+            '% Cumplimiento', 'Valor por Punto', 'Beneficio'
+        ]
+
+        # Verificamos que el dataframe tenga dichas columnas
+        df = pd.read_csv(
+            file,
+            usecols=cols_needed,
+            sep=',',
+            dtype=str,
+            encoding='utf-8'
+        )
+        file_verified = None
+        if all(col in df.columns for col in cols_needed):
+            file_verified = True
+        else:
+            file_verified = False
+
+        # Validamos que la extension/formato del archivo sea correcto
+        ext_verified = any(ext == extension for ext in self.VALID_EXTENSIONS)
+
+        if not file_verified or not ext_verified:
+            raise forms.ValidationError(
+                f"El archivo no cumple con el formato requerido. Columnas requeridas -> {', '.join(cols_needed)}")
+        else:
+            # Convertimos el dataframe a un diccionario
+            file = df.to_dict(orient='records')
+
+        return file

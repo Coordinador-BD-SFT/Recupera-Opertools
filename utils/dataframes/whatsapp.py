@@ -1,5 +1,6 @@
 import pandas as pd
 from pathlib import Path
+from io import BytesIO
 
 
 # Chats .xls file management
@@ -153,8 +154,6 @@ def file_verify(
     if ext == 'csv':
         df = pd.read_csv(
             file,
-            usecols=cols,
-            sep=';',
             encoding='utf-8',
             dtype=str
         )
@@ -164,6 +163,4 @@ def file_verify(
             usecols=cols,
             dtype=str
         )
-    df_cols = df.columns
-    print(df_cols)
-    return all(col in df_cols for col in cols)
+    return all(col in df.columns for col in cols)

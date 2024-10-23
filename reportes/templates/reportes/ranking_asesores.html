@@ -12,6 +12,7 @@
     {% if user.is_staff %}
     <a href="{% url 'reportes:register' %}" class="btn btn-primary">Añadir Asesor</a>
     <a href="#" class="btn btn-outline-secondary">Descargar reporte</a>
+    <a href="{% url 'reportes:update_ranking' %}" class="btn btn-outline-success">Actualizar ranking</a>
     {% endif %}
 </div>
 <br><br>
@@ -56,10 +57,10 @@
                 <p class="text-center">{{ asesor.campaign }}</p>
             </td>
             <td>
-                <p class="text-center">{{ asesor.points }}</p>
+                <p class="text-center">{{ asesor.performance.points }}</p>
             </td>
             <td>
-                <p class="text-center">{{ asesor.rank }}</p>
+                <p class="text-center">{{ asesor.performance.rank }}</p>
             </td>
         </tr>
     </tbody>
